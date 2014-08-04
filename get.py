@@ -8,12 +8,7 @@ def get_stream(x = 1, y = 20000):
 		fd.read(5)
 
 		#debut des stream
-		a = np.fromstring(fd.read(252 * 2), dtype = np.uint16)[:, np.newaxis]
-		print(a)
-		b = np.zeros((252, 1))
-		while x < y:
-			b = np.fromstring(fd.read(252 * 2), dtype = np.uint16)[:, np.newaxis]
-			a = np.append(a, b, axis = 1)
-			x += 1
-	print('mdr')
+		a = np.fromstring(fd.read(252 * 2 * (y - x + 1)), dtype = np.uint16)
+		a = np.reshape(a, (-1, 252))
+		a = a.T
 	return (a)
