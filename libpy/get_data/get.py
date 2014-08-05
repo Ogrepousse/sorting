@@ -11,4 +11,5 @@ def get_stream(x = 0, y = 20000):
 		a = np.fromstring(fd.read(252 * 2 * (y - x)), dtype = np.uint16)
 		a = np.reshape(a, (-1, 252))
 		a = a.T
+		a = a.astype(np.int64)
 	return (a)

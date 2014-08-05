@@ -12,5 +12,10 @@ from libpy.fitting import block
 
 a = get.get_stream(x = 0, y = 39000)
 print(a)
-block.make_block(a)
-my_plot.trace(a, y = 39000, nb = 90)
+median = block.cal_median(a)
+mad = block.stand_dev(a, median)
+print(mad[90])
+print(median[90])
+#block.check_thresh(a, median, mad, 1000)
+s = block.make_block(a, y = 39000)
+my_plot.trace(a, median, mad, y = 39000, nb = 90)
