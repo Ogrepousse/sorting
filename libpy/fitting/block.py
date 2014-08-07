@@ -45,6 +45,7 @@ def get_spike(a, x = 0, y = 0):
 	median = cal_median(a)
 	mad = get_mad(a, median)
 	spike_list = np.sum(ct_bis(a, median, mad), axis = 0)
+	spike_list[np.where(spike_list > 0)[0]] = 1
 #	spike_list = np.zeros(y - x, dtype = np.int64)
 #	i = x
 #	while i < y:
@@ -55,5 +56,16 @@ def get_spike(a, x = 0, y = 0):
 	return (spike_list)
 
 def seperate_time(sp):
-	ind = np.where(sp == True)[0]
+	ind = np.where(sp > 0)[0]
 	return (ind)
+
+def get_block(sp):
+	ind = seperate_time(sp)
+	blc = np.zeros(ind.shape[0], dtype = np.int64)
+	blc[:blc.shape[0] - 1] = ind[1:] - ind[: ind.shape[0] - 1]
+	x = blc < 70
+	ind[x] = 0
+	ind[ind.shape[0] - 1] = sp.shape[0] - 1
+	return (ind)
+
+
