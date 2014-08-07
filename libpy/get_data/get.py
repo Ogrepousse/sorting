@@ -1,7 +1,7 @@
 import numpy as np
 
 def get_stream(x = 0, y = 20000):
-	with open('../files/test.filtered', 'rb') as fd:
+	with open('../files/ALL.filtered', 'rb') as fd:
 		ret = -1
 		while ret == -1:
 			ret = fd.readline().find('EOH')

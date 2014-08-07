@@ -12,7 +12,8 @@ from libpy.fitting import block
 from libpy import dot_prod
 from libpy.dot_prod import scal_prod
 
-a = get.get_stream(x = 0, y = 39000)
+set = 39000
+a = get.get_stream(x = 0, y = set)
 print(a)
 median = block.cal_median(a)
 mad = block.get_mad(a, median)
@@ -22,10 +23,10 @@ print(median[90])
 sp = block.get_spike(a)
 ind = block.seperate_time(sp)
 blc = block.get_block(sp)
-t = np.ones(39000) * -1
-x = np.arange(39000)
+t = np.ones(set) * -1
+x = np.arange(set)
 t[blc] = 0
 plt.plot(x, sp, x, t)
 plt.show()
-#my_plot.trace(a, median, mad, y = 39000, nb = 90)
+#my_plot.trace(a, median, mad, y = set, nb = 90)
 print('fini')
