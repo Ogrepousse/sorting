@@ -17,6 +17,8 @@ def cal_median(a):
 	return (median)
 
 def ct_bis(a, median, mad):
+	"""verification du depassement de seuil pour un spike
+	et minimum local"""
 	b1 = (a.T < median - 6 * mad).T
 	b2 = a[:, :a.shape[1] - 1] < a[:, 1:]
 	b3 = a[:, 1:] < a[:, :a.shape[1] - 1]
@@ -25,7 +27,7 @@ def ct_bis(a, median, mad):
 	return (b1)
 
 def get_spike(a, x = 0, y = 0):
-	"""renvoi un tableau de boolean pour chaque instant s'il y a eu un spike ou non"""
+	"""renvoi un tableau de boolean pour chaque instant s'il y a eu un spike qui satisfait les criteres de selection ou non"""
 	median = cal_median(a)
 	mad = get_mad(a, median)
 	spike_list = np.sum(ct_bis(a, median, mad), axis = 0)
@@ -34,14 +36,16 @@ def get_spike(a, x = 0, y = 0):
 	return (spike_list)
 
 def seperate_time(sp):
+	"""renvoi les dates ou il y a eu un spike"""
 	ind = np.where(sp > 0)[0]
 	return (ind)
 
 def get_block(sp):
+	"""renvoi les dates de spike qui marquent la fin d'un block"""
 	ind = seperate_time(sp)
 	blc = np.zeros(ind.shape[0], dtype = np.int64)
 	blc[:blc.shape[0] - 1] = ind[1:] - ind[: ind.shape[0] - 1]
-	x = blc < 100
+	x = blc < 130
 	ind[x] = 0
 	ind[ind.shape[0] - 1] = sp.shape[0] - 1
 	ind = ind[np.where(ind != 0)[0]]
