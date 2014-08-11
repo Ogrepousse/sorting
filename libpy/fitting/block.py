@@ -50,5 +50,3 @@ def get_block(sp):
 	ind[ind.shape[0] - 1] = sp.shape[0] - 1
 	ind = ind[np.where(ind != 0)[0]]
 	return (ind)
-
-
