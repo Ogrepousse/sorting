@@ -23,15 +23,18 @@ print(median[90])
 sp = block.get_spike(a)
 ti = block.seperate_time(sp)
 blc = block.get_block(sp)
-t = np.ones(set) * -1
-x = np.arange(set)
-t[blc] = 0
-si = scal_prod.get_si(a, scal_prod.select_ti(ti, blc, 0, a))
-tmp = scal_prod.get_temp()
-scal_prod.dot_prod(tmp, si)
+
+
+#si = scal_prod.get_si(a, scal_prod.select_ti(ti, blc, 0, a))
+#tmp = scal_prod.get_temp()
+#scal_prod.dot_prod(tmp, si)
+
+#t = np.ones(set) * -1
+#x = np.arange(set)
+#t[blc] = 0
 #plt.plot(x, sp, x, t)
 #plt.show()
 #my_plot.trace(a, median, mad, y = set, nb = 90)
-#bij = scal_prod.do_stuff(a, blc, ti)
+
 #print(bij)
 print('fini')
