@@ -12,7 +12,7 @@ from libpy.fitting import block
 from libpy import dot_prod
 from libpy.dot_prod import scal_prod
 
-set = 500
+set = 200
 a = get.get_stream(x = 0, y = set)
 print(a)
 median = block.cal_median(a)
@@ -24,6 +24,8 @@ sp = block.get_spike(a)
 ti = block.seperate_time(sp)
 blc = block.get_block(sp)
 
+#fitting
+bij = scal_prod.browse_bloc(a, blc, ti)
 
 #si = scal_prod.get_si(a, scal_prod.select_ti(ti, blc, 0, a))
 #tmp = scal_prod.get_temp()
