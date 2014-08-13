@@ -1,19 +1,27 @@
 import numpy as np
 import scipy.io
+import sys
 
 #all_temp = scipy.io.loadmat('../files/ALL.templates')
 #temp = all_temp['templates']
 
 def get_temp():
-	"""recupere les templates sur un fichier matlab"""
+	"""recupere les templates depuis un fichier matlab"""
 
 	all_temp = scipy.io.loadmat('../files/ALL.templates1')
 	temp = all_temp['templates'].astype(np.float64)
 	return (temp)
 
 
+def get_amp_lim():
+	"""recupere les limites hautes et basses des templates depuis un fichier matlab"""
+
+	amp_lim = scipy.io.loadmat('../files/ALL.templates1')['AmpLim'].astype(np.float64)
+	return (amp_lim)
+
+
 def select_ti(ti, blc, k, a):
-	"""recupere les temps de spike ds le block en excluant les spike extreme n'ayant pas assez de points autout pour les produit scalaire"""
+	"""recupere les temps de spike ds le block en excluant les spikes extremes n'ayant pas assez de points autour pour les produits scalaires"""
 
 	l = ti[np.where(ti <= blc[k])[0]]
 	if k > 0:
@@ -35,6 +43,7 @@ def normalize_temp(temp):
 def get_bij(a, l, temp):
 	"""calcul la matrice bij"""
 
+	print('obtention des bij')
 	bij = np.empty((l.shape[0], temp.shape[2]))
 	for i in range(bij.shape[0]):
 		si = a[:, l[i] - 64 : l[i] + 65]
@@ -43,22 +52,58 @@ def get_bij(a, l, temp):
 	return (bij)
 
 
-def part_aij(bij, norme, a):
+def is_explored(exploration):
+	print(exploration)
+	if np.all(exploration == 3):
+		return (0)
+	return (1)
+
+
+def get_max(bij, exploration, bij_bool):
+	bij[bij_bool] = -sys.maxint - 1
+	bij[exploration >= 3, :] = -sys.maxint - 1
+	c = np.unravel_index(bij.argmax(), bij.shape)
+	return (c)
+
+
+def substract_signal(a, l, aij, temp, c):
+	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]]
+
+
+def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l):
 	"""check max bij puis calcul aij verification contrainte aij"""
 
-
+	print('exploitation bij')
+	c = get_max(bij, exploration, bij_bool)
+	bij_bool[c] = True
+	aij = bij[c] / norme[c[1]]
+	limit = amp_lim[:, c[1]]
+	if aij > limit[0] and aij < limit[1]:
+		print('substract en', c[0])
+		substract_signal(a, l, aij, temp, c)
+		return (1)
+	else:
+		print('exploration en', c[0])
+		exploration[c[0]] += 1
+		return (0)
 
 
 def browse_bloc(a, blc, ti):
 	"""parcour les blocks pour appliquer le fitting"""
 
+	b = 1
 	temp = get_temp()
 	norme = normalize_temp(temp)
+	amp_lim = get_amp_lim()
 	for k in range(blc.shape[0]):
+		print('entre block')
 		l = select_ti(ti, blc, k, a)
-		bij = get_bij(a, l, temp)
-
-
+		exploration = np.zeros(l.shape[0])
+		bij_bool = np.zeros((l.shape[0], temp.shape[2]), dtype = bool)
+		while is_explored(exploration):
+			if b:
+				bij = get_bij(a, l, temp)
+			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l)
 
 
 #reecrite en plus aere

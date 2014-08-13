@@ -12,8 +12,8 @@ from libpy.fitting import block
 from libpy import dot_prod
 from libpy.dot_prod import scal_prod
 
-set = 200
-a = get.get_stream(x = 0, y = set)
+set = 2000
+a = get.get_stream(y = set)
 print(a)
 median = block.cal_median(a)
 mad = block.get_mad(a, median)
@@ -25,7 +25,7 @@ ti = block.seperate_time(sp)
 blc = block.get_block(sp)
 
 #fitting
-bij = scal_prod.browse_bloc(a, blc, ti)
+scal_prod.browse_bloc(a, blc, ti)
 
 #si = scal_prod.get_si(a, scal_prod.select_ti(ti, blc, 0, a))
 #tmp = scal_prod.get_temp()
@@ -36,7 +36,7 @@ bij = scal_prod.browse_bloc(a, blc, ti)
 #t[blc] = 0
 #plt.plot(x, sp, x, t)
 #plt.show()
-#my_plot.trace(a, median, mad, y = set, nb = 90)
-
+my_plot.trace(a, median, mad, y = set, nb = 90)
+plt.show()
 #print(bij)
 print('fini')
