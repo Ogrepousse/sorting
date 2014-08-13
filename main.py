@@ -12,7 +12,7 @@ from libpy.fitting import block
 from libpy import dot_prod
 from libpy.dot_prod import scal_prod
 
-set = 2000
+set = 200
 a = get.get_stream(y = set)
 print(a)
 median = block.cal_median(a)

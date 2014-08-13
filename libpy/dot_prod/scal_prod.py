@@ -48,11 +48,13 @@ def get_bij(a, l, temp):
 	for i in range(bij.shape[0]):
 		si = a[:, l[i] - 64 : l[i] + 65]
 		for j in range(bij.shape[1]):
-			bij[i, j] = np.sum(np.dot(si, temp[:, :, j].T))
+			bij[i, j] = np.sum(np.dot(temp[:, :, j].T, si))
 	return (bij)
 
 
 def is_explored(exploration):
+	""" verifie si tout les i ont ete explores"""
+
 	print(exploration)
 	if np.all(exploration == 3):
 		return (0)
@@ -60,6 +62,8 @@ def is_explored(exploration):
 
 
 def get_max(bij, exploration, bij_bool):
+	""" renvoi un tuple des coordonnee de la valeur max de bij en eliminant les couple (i,j) visites et les temps i explores"""
+
 	bij[bij_bool] = -sys.maxint - 1
 	bij[exploration >= 3, :] = -sys.maxint - 1
 	c = np.unravel_index(bij.argmax(), bij.shape)
@@ -67,6 +71,8 @@ def get_max(bij, exploration, bij_bool):
 
 
 def substract_signal(a, l, aij, temp, c):
+	"""soustrait au signal le scaled template"""
+
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]]
 
 
@@ -78,6 +84,7 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l):
 	bij_bool[c] = True
 	aij = bij[c] / norme[c[1]]
 	limit = amp_lim[:, c[1]]
+	print('aij =', aij)
 	if aij > limit[0] and aij < limit[1]:
 		print('substract en', c[0])
 		substract_signal(a, l, aij, temp, c)
