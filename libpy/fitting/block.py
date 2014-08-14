@@ -6,8 +6,10 @@ def get_mad(a, med):
 #	mean = a.sum(axis = 1) / a.shape[1]
 #	med = cal_median(a)
 	diff = (a - med[:, np.newaxis])**2
-	sq_diff = np.sqrt(diff).astype(np.int64)
-	mad = cal_median(sq_diff)
+#	sq_diff = np.sqrt(diff).astype(np.int64)
+	sq_diff = np.sqrt(diff)
+	#mad = cal_median(sq_diff)
+	mad = np.median(sq_diff, axis = 1)
 	return (mad)
 
 #pas necessaire il existe deja une fct numpy

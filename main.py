@@ -13,7 +13,8 @@ from libpy import dot_prod
 from libpy.dot_prod import scal_prod
 
 set = 200
-a = get.get_stream(y = set)
+x = 0
+a = get.get_stream(x = x, y = set)
 print(a)
 median = block.cal_median(a)
 mad = block.get_mad(a, median)
@@ -36,7 +37,7 @@ scal_prod.browse_bloc(a, blc, ti)
 #t[blc] = 0
 #plt.plot(x, sp, x, t)
 #plt.show()
-my_plot.trace(a, median, mad, y = set, nb = 90)
+my_plot.trace(a, median, mad, y = set - x, nb = 90)
 plt.show()
 #print(bij)
 print('fini')

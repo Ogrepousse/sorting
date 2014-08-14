@@ -17,6 +17,7 @@ def get_amp_lim():
 	"""recupere les limites hautes et basses des templates depuis un fichier matlab"""
 
 	amp_lim = scipy.io.loadmat('../files/ALL.templates1')['AmpLim'].astype(np.float64)
+#	amp_lim = (amp_lim / 0.01) + 32767
 	return (amp_lim)
 
 
@@ -40,15 +41,27 @@ def normalize_temp(temp):
 	return (norme)
 
 
+def calc_bij(temp, si):
+	res = 0
+	for i in range(temp.shape[0]):
+		for j in range(temp.shape[1]):
+			res += temp[i, j] * si[i, j]
+	return (res)
+
+
 def get_bij(a, l, temp):
 	"""calcul la matrice bij"""
 
 	print('obtention des bij')
 	bij = np.empty((l.shape[0], temp.shape[2]))
+	print(bij.shape[0])
 	for i in range(bij.shape[0]):
+		print(i)
 		si = a[:, l[i] - 64 : l[i] + 65]
 		for j in range(bij.shape[1]):
-			bij[i, j] = np.sum(np.dot(temp[:, :, j].T, si))
+			#bij[i, j] = np.sum(np.dot(temp[:, :, j].T, si))
+			bij[i, j] = calc_bij(temp[:, :, j], si)
+	print('max', np.amax(bij))
 	return (bij)
 
 
@@ -113,6 +126,7 @@ def browse_bloc(a, blc, ti):
 			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l)
 
 
+########################################################################
 #reecrite en plus aere
 def do_stuff(a, blc, ti):
 	bij = np.arange(0)

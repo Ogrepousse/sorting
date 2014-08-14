@@ -12,4 +12,5 @@ def get_stream(x = 0, y = 20000):
 		a = np.reshape(a, (-1, 252))
 		a = a.T
 		a = a.astype(np.int64)
+		a = (a - 32767) * 0.01
 	return (a)
