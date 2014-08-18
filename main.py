@@ -11,6 +11,7 @@ from libpy import fitting
 from libpy.fitting import block
 from libpy import dot_prod
 from libpy.dot_prod import scal_prod
+from libpy.dot_prod import prep_bij
 
 set = 200
 x = 0
@@ -25,7 +26,14 @@ sp = block.get_spike(a)
 ti = block.seperate_time(sp)
 blc = block.get_block(sp)
 
+#preparation
+print("ca commence")
+tem = scal_prod.get_temp()
+
+#om = prep_bij.omeg(tem)
+
 #fitting
+b = a.copy()
 scal_prod.browse_bloc(a, blc, ti)
 
 #si = scal_prod.get_si(a, scal_prod.select_ti(ti, blc, 0, a))
@@ -37,7 +45,7 @@ scal_prod.browse_bloc(a, blc, ti)
 #t[blc] = 0
 #plt.plot(x, sp, x, t)
 #plt.show()
-my_plot.trace(a, median, mad, y = set - x, nb = 90)
+my_plot.trace(a, b, median, mad, y = set - x, nb = 13)
 plt.show()
 #print(bij)
 print('fini')

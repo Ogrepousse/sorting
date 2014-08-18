@@ -42,33 +42,36 @@ def normalize_temp(temp):
 
 
 def calc_bij(temp, si):
-	res = 0
-	for i in range(temp.shape[0]):
-		for j in range(temp.shape[1]):
-			res += temp[i, j] * si[i, j]
+	"""dot poduct for matrix"""
+
+#	res = 0
+#	for i in range(temp.shape[0]):
+#		for j in range(temp.shape[1]):
+#			res += temp[i, j] * si[i, j]
+	res = np.sum(temp * si)
 	return (res)
 
 
 def get_bij(a, l, temp):
 	"""calcul la matrice bij"""
 
-	print('obtention des bij')
+#	print('obtention des bij')
 	bij = np.empty((l.shape[0], temp.shape[2]))
-	print(bij.shape[0])
+	#print(bij.shape[0])
 	for i in range(bij.shape[0]):
-		print(i)
+	#	print(i)
 		si = a[:, l[i] - 64 : l[i] + 65]
 		for j in range(bij.shape[1]):
 			#bij[i, j] = np.sum(np.dot(temp[:, :, j].T, si))
 			bij[i, j] = calc_bij(temp[:, :, j], si)
-	print('max', np.amax(bij))
+	#print('max', np.amax(bij))
 	return (bij)
 
 
 def is_explored(exploration):
 	""" verifie si tout les i ont ete explores"""
 
-	print(exploration)
+#	print(exploration)
 	if np.all(exploration == 3):
 		return (0)
 	return (1)
@@ -80,31 +83,40 @@ def get_max(bij, exploration, bij_bool):
 	bij[bij_bool] = -sys.maxint - 1
 	bij[exploration >= 3, :] = -sys.maxint - 1
 	c = np.unravel_index(bij.argmax(), bij.shape)
+
+#	b = bij[bij_bool]
+#	m = b.argmax()
+#	ind = np.unravel_index(m, b.shape)
+#	c = np.where(bij == b[ind])
+#	c = (c[0][0], c[1][0])
+#	print('mMAXx', bij[c])
 	return (c)
 
 
 def substract_signal(a, l, aij, temp, c):
 	"""soustrait au signal le scaled template"""
-
+#	t = get_temp()
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]]
-
+#	a[:, l[c[0]] - 64 : l[c[0]] + 65] = a[:, l[c[0]] - 64 : l[c[0]] + 65] - t[:, :, c[1]]
+#	print(t[90, :, c[1]])
 
 def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l):
 	"""check max bij puis calcul aij verification contrainte aij"""
 
-	print('exploitation bij')
+#	print('exploitation bij')
 	c = get_max(bij, exploration, bij_bool)
 	bij_bool[c] = True
 	aij = bij[c] / norme[c[1]]
 	limit = amp_lim[:, c[1]]
-	print('aij =', aij)
+#	print('aij =', aij)
 	if aij > limit[0] and aij < limit[1]:
-		print('substract en', c[0])
+	#	print('substract en', c[0])
 		substract_signal(a, l, aij, temp, c)
 		return (1)
 	else:
-		print('exploration en', c[0])
+	#	print('exploration en', c[0])
 		exploration[c[0]] += 1
+	#	bij_bool[c[0], :] = True
 		return (0)
 
 
@@ -123,6 +135,7 @@ def browse_bloc(a, blc, ti):
 		while is_explored(exploration):
 			if b:
 				bij = get_bij(a, l, temp)
+		#	print(np.where(bij == 67.513990737817764))
 			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l)
 
 
