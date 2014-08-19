@@ -1,6 +1,7 @@
 import numpy as np
 import scipy.io
 import sys
+import prep_bij
 
 #all_temp = scipy.io.loadmat('../files/ALL.templates')
 #temp = all_temp['templates']
@@ -99,25 +100,37 @@ def substract_signal(a, l, aij, temp, c):
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]]
 #	a[:, l[c[0]] - 64 : l[c[0]] + 65] = a[:, l[c[0]] - 64 : l[c[0]] + 65] - t[:, :, c[1]]
 #	print(t[90, :, c[1]])
+#	print('sub', a[143, l[c[0]]], temp[143, 65, c[1]])
 
-def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l):
+
+def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg):
 	"""check max bij puis calcul aij verification contrainte aij"""
 
 #	print('exploitation bij')
 	c = get_max(bij, exploration, bij_bool)
 	bij_bool[c] = True
 	aij = bij[c] / norme[c[1]]
+	print(aij)
 	limit = amp_lim[:, c[1]]
 #	print('aij =', aij)
 	if aij > limit[0] and aij < limit[1]:
 	#	print('substract en', c[0])
 		substract_signal(a, l, aij, temp, c)
+		maj_bij(bij, c, aij, omeg)
 		return (1)
 	else:
 	#	print('exploration en', c[0])
 		exploration[c[0]] += 1
 	#	bij_bool[c[0], :] = True
 		return (0)
+
+
+def maj_bij(bij, c, aij, omeg, l):
+	ome = omeg[i, :, :]
+	n = (l < c[0] + 129) and (l > c[0] - 128)
+	t = l[c[0]] - l[n]
+	om = ome[:, 
+	bij[:, t - 128 : t + 129] -= aij * om
 
 
 def browse_bloc(a, blc, ti):
@@ -127,16 +140,18 @@ def browse_bloc(a, blc, ti):
 	temp = get_temp()
 	norme = normalize_temp(temp)
 	amp_lim = get_amp_lim()
+	omeg = np.loadtxt('omeg').reshape(382, 382, 257)
 	for k in range(blc.shape[0]):
 		print('entre block')
 		l = select_ti(ti, blc, k, a)
 		exploration = np.zeros(l.shape[0])
 		bij_bool = np.zeros((l.shape[0], temp.shape[2]), dtype = bool)
+		bij = get_bij(a, l, temp)
 		while is_explored(exploration):
-			if b:
-				bij = get_bij(a, l, temp)
-		#	print(np.where(bij == 67.513990737817764))
-			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l)
+		#	if b:
+		#		bij = get_bij(a, l, temp)
+			
+			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg)
 
 
 ########################################################################
