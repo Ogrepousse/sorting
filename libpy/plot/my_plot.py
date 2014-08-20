@@ -11,5 +11,5 @@ def trace(a, copy, med, mad, x = 0, y = 15000, nb = 0):
 	mm = np.ones(y - x) * (med[nb] + 6 * mad[nb])
 	print(b.shape, c.shape)
 	plt.plot(c, cop, c, b, c, m, c, mp, c, mm)
-	plt.show()
+	#plt.show()
 	print('oui')

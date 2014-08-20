@@ -53,7 +53,7 @@ def calc_bij(temp, si):
 def get_bij(a, l, temp):
 	"""calculate the matrix bij"""
 
-#	print('obtention des bij')
+	print('obtention des bij')
 	bij = np.empty((l.shape[0], temp.shape[2]))
 	for i in range(bij.shape[0]):
 		si = a[:, l[i] - 64 : l[i] + 65]
@@ -93,7 +93,7 @@ def substract_signal(a, l, aij, temp, c):
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]]
 
 
-def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg):
+def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2):
 	"""get i and for max value of bij, then check if aij value is correct"""
 
 #	print('exploitation bij')
@@ -102,7 +102,7 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg):
 	aij = bij[c] / norme[c[1]]
 	limit = amp_lim[:, c[1]]
 	if aij > limit[0] and aij < limit[1]:
-		substract_signal(a, l, aij, temp, c)
+		substract_signal(a, l, aij, temp2, c)
 		maj_bij(bij, c, aij, omeg, l)
 		return (1)
 	else:
@@ -133,9 +133,11 @@ def browse_bloc(a, blc, ti):
 
 	b = 1
 	temp = get_temp()
+	temp2 = temp.copy()
 	norme = normalize_temp(temp)
 	amp_lim = get_amp_lim()
 	omeg = np.loadtxt('omeg').reshape(382, 382, 257)
+#	omeg = 0
 	for k in range(blc.shape[0]):
 		print('entre block')
 		l = select_ti(ti, blc, k, a)
@@ -145,6 +147,6 @@ def browse_bloc(a, blc, ti):
 		bij = get_bij(a, l, temp)
 		print('pot')
 		while is_explored(exploration):
-		#	if b:
-		#		bij = get_bij(a, l, temp)
-			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg)
+	#		if b:
+	#			bij = get_bij(a, l, temp)
+			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2)

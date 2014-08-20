@@ -13,7 +13,7 @@ from libpy import dot_prod
 from libpy.dot_prod import scal_prod
 from libpy.dot_prod import prep_bij
 
-set = 4000
+set = 200
 x = 0
 a = get.get_stream(x = x, y = set)
 print(a)
@@ -28,13 +28,19 @@ blc = block.get_block(sp)
 
 #preparation
 print("ca commence")
-tem = scal_prod.get_temp()
 
 #om = prep_bij.omeg(tem)
 
 #fitting
 b = a.copy()
 scal_prod.browse_bloc(a, blc, ti)
+
+#debug
+#temp = scal_prod.get_temp()
+#norme = scal_prod.normalize_temp(temp)
+#l = scal_prod.select_ti(ti, blc, 0, a)
+#bij = scal_prod.get_bij(a, l, temp)
+#omeg = np.loadtxt('omeg').reshape(382, 382, 257)
 
 #si = scal_prod.get_si(a, scal_prod.select_ti(ti, blc, 0, a))
 #tmp = scal_prod.get_temp()
@@ -45,7 +51,7 @@ scal_prod.browse_bloc(a, blc, ti)
 #t[blc] = 0
 #plt.plot(x, sp, x, t)
 #plt.show()
-my_plot.trace(a, b, median, mad, y = set - x, nb = 13)
+#my_plot.trace(a, b, median, mad, y = set - x, nb = 13)
 my_plot.trace(a, b, median, mad, y = set - x, nb = 90)
 plt.show()
 #print(bij)
