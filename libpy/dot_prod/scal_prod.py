@@ -110,13 +110,13 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg):
 	c = get_max(bij, exploration, bij_bool)
 	bij_bool[c] = True
 	aij = bij[c] / norme[c[1]]
-	print(aij)
+#	print(aij)
 	limit = amp_lim[:, c[1]]
 #	print('aij =', aij)
 	if aij > limit[0] and aij < limit[1]:
 	#	print('substract en', c[0])
 		substract_signal(a, l, aij, temp, c)
-		maj_bij(bij, c, aij, omeg)
+		maj_bij(bij, c, aij, omeg, l)
 		return (1)
 	else:
 	#	print('exploration en', c[0])
@@ -126,11 +126,19 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg):
 
 
 def maj_bij(bij, c, aij, omeg, l):
-	ome = omeg[i, :, :]
-	n = (l < c[0] + 129) and (l > c[0] - 128)
-	t = l[c[0]] - l[n]
-	om = ome[:, 
-	bij[:, t - 128 : t + 129] -= aij * om
+	ome = omeg[c[1], :, :]
+	n1 = l < c[0] + 129
+	n2 = l > c[0] - 128
+	n = n1 & n2
+	l2 = l[n]
+	linf = l2[l2 <= c[0]]
+	lsup = l2[l2 > c[0]]
+	t1 = np.where(np.in1d(l, linf) == True)[0]
+	t2 = np.where(np.in1d(l, lsup) == True)[0]
+	om_inf = ome[:, linf - c[0] + 128]
+	om_sup = ome[:, lsup - c[0] + 128]
+	bij[t1, :] -= aij * om_inf.T
+	bij[t2, :] -= aij * om_sup.T
 
 
 def browse_bloc(a, blc, ti):
@@ -146,7 +154,9 @@ def browse_bloc(a, blc, ti):
 		l = select_ti(ti, blc, k, a)
 		exploration = np.zeros(l.shape[0])
 		bij_bool = np.zeros((l.shape[0], temp.shape[2]), dtype = bool)
+		print('top')
 		bij = get_bij(a, l, temp)
+		print('pot')
 		while is_explored(exploration):
 		#	if b:
 		#		bij = get_bij(a, l, temp)
