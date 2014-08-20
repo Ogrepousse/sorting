@@ -13,7 +13,7 @@ from libpy import dot_prod
 from libpy.dot_prod import scal_prod
 from libpy.dot_prod import prep_bij
 
-set = 5000
+set = 4000
 x = 0
 a = get.get_stream(x = x, y = set)
 print(a)
