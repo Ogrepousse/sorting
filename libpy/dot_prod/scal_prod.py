@@ -58,7 +58,7 @@ def get_bij(a, l, temp):
 	for i in range(bij.shape[0]):
 		si = a[:, l[i] - 64 : l[i] + 65]
 		for j in range(bij.shape[1]):
-			bij[i, j] = calc_bij(temp[:, :, j], si)
+			bij[i, j] = calc_bij(si, temp[:, :, j])
 	return (bij)
 
 
@@ -124,8 +124,8 @@ def maj_bij(bij, c, aij, omeg, l):
 	t2 = np.where(np.in1d(l, lsup) == True)[0]
 	om_inf = ome[:, linf - c[0] + 128]
 	om_sup = ome[:, lsup - c[0] + 128]
-	bij[t1, :] -= aij * om_inf.T
-	bij[t2, :] -= aij * om_sup.T
+	bij[t1, :] = bij[t1, :] - aij * om_inf.T
+	bij[t2, :] = bij[t2, :] - aij * om_sup.T
 
 
 def browse_bloc(a, blc, ti):
@@ -136,8 +136,9 @@ def browse_bloc(a, blc, ti):
 	temp2 = temp.copy()
 	norme = normalize_temp(temp)
 	amp_lim = get_amp_lim()
-	omeg = np.loadtxt('omeg').reshape(382, 382, 257)
+	omeg = np.loadtxt('omeg3').reshape(382, 382, 257)
 #	omeg = 0
+#	omeg = np.ones((temp.shape[2], temp.shape[2], 129 * 2 - 1)) * -10
 	for k in range(blc.shape[0]):
 		print('entre block')
 		l = select_ti(ti, blc, k, a)

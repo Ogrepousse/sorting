@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-#import plot
-#import get
+
 import libpy
 from libpy import get_data
 from libpy.get_data import get
@@ -13,7 +12,8 @@ from libpy import dot_prod
 from libpy.dot_prod import scal_prod
 from libpy.dot_prod import prep_bij
 
-set = 200
+
+set = 2000
 x = 0
 a = get.get_stream(x = x, y = set)
 print(a)
@@ -29,7 +29,6 @@ blc = block.get_block(sp)
 #preparation
 print("ca commence")
 
-#om = prep_bij.omeg(tem)
 
 #fitting
 b = a.copy()
@@ -41,6 +40,11 @@ scal_prod.browse_bloc(a, blc, ti)
 #l = scal_prod.select_ti(ti, blc, 0, a)
 #bij = scal_prod.get_bij(a, l, temp)
 #omeg = np.loadtxt('omeg').reshape(382, 382, 257)
+
+#precalcul
+#om = prep_bij.omeg(temp).reshape(382, 382 * 257)
+#np.savetxt('omeg3', om)
+
 
 #si = scal_prod.get_si(a, scal_prod.select_ti(ti, blc, 0, a))
 #tmp = scal_prod.get_temp()
