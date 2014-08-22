@@ -5,36 +5,35 @@ def get_mad(a, med):
 	prend les donnees a en parametre et la mediane"""
 #	mean = a.sum(axis = 1) / a.shape[1]
 #	med = cal_median(a)
-	diff = (a - med[:, np.newaxis])**2
+	diff = (a - med)**2
 #	sq_diff = np.sqrt(diff).astype(np.int64)
 	sq_diff = np.sqrt(diff)
 	#mad = cal_median(sq_diff)
-	mad = np.median(sq_diff, axis = 1)
+	mad = np.median(sq_diff)
 	return (mad)
 
 #pas necessaire il existe deja une fct numpy
 def cal_median(a):
 	"""calcul la mediane"""
-	median = np.sort(a, axis = 1)[:, a.shape[1] / 2]
+	median = np.sort(a, axis = 1)[:, a.shape[0] / 2]
 	return (median)
 
 def ct_bis(a, median, mad):
 	"""verification du depassement de seuil pour un spike
 	et minimum local"""
-	b1 = (a.T < median - 6 * mad).T
-	b2 = a[:, :a.shape[1] - 1] < a[:, 1:]
-	b3 = a[:, 1:] < a[:, :a.shape[1] - 1]
-	b1[:, :a.shape[1] - 1] = b1[:, :a.shape[1] - 1] & b2
-	b1[:, 1:] = b1[:, 1:] & b3
+	b1 = (a < median - 6 * mad)
+	b2 = a[:a.shape[0] - 1] < a[1:]
+	b3 = a[1:] < a[:a.shape[0] - 1]
+	b1[:a.shape[0] - 1] = b1[:a.shape[0] - 1] & b2
+	b1[1:] = b1[1:] & b3
 	return (b1)
 
 def get_spike(a, x = 0, y = 0):
 	"""renvoi un tableau de boolean pour chaque instant s'il y a eu un spike qui satisfait les criteres de selection ou non"""
-	median = cal_median(a)
+	median = np.median(a)
 	mad = get_mad(a, median)
-	spike_list = np.sum(ct_bis(a, median, mad), axis = 0)
-##peut etre ignore
-	spike_list[np.where(spike_list > 0)[0]] = 1
+	spike_list = ct_bis(a, median, mad)
+##peut etre ignore, quoi que ...?
 	return (spike_list)
 
 def seperate_time(sp):

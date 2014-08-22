@@ -11,16 +11,18 @@ from libpy.fitting import block
 from libpy import dot_prod
 from libpy.dot_prod import scal_prod
 from libpy.dot_prod import prep_bij
+import generateur
 
-
-set = 2000
+set = 200
 x = 0
-a = get.get_stream(x = x, y = set)
-print(a)
-median = block.cal_median(a)
+a = generateur.gen()
+#print(a)
+#a = get.get_stream(x = x, y = set)
+#print(a)
+median = np.median(a)
 mad = block.get_mad(a, median)
-print(mad[90])
-print(median[90])
+print(mad)
+print(median)
 #block.check_thresh(a, median, mad, 1000)
 sp = block.get_spike(a)
 ti = block.seperate_time(sp)
@@ -42,7 +44,8 @@ scal_prod.browse_bloc(a, blc, ti)
 #omeg = np.loadtxt('omeg').reshape(382, 382, 257)
 
 #precalcul
-#om = prep_bij.omeg(temp).reshape(382, 382 * 257)
+#om = prep_bij.omeg(temp).reshape(temp.shape[0], temp.shape[0] * 257)
+#print(om)
 #np.savetxt('omeg3', om)
 
 
