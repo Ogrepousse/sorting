@@ -64,7 +64,7 @@ def get_bij(a, l, temp):
 
 def is_explored(exploration):
 	"""return 0 if all the time have been explored, return 1 otherwise"""
-
+##########################RAJOUTER BIJ_BOOL#####################################################
 #	print(exploration)
 	if np.all(exploration == 3):
 		return (0)
