@@ -115,15 +115,15 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 
 #	print('exploitation bij')
 	c = get_max(bij, exploration, bij_bool)
-	print('c = ', c)
+#	print('c = ', c)
 	bij_bool[c] = True
 	aij = bij[c] / norme[c[1]]
-	print('aij = ', aij)
+#	print('aij = ', aij)
 	limit = amp_lim[0]
 	if aij > limit[0] and aij < limit[1]:
 		substract_signal(a, l, aij, temp2, c, predic)
-		print('lol')
-	#	maj_bij(bij, c, aij, omeg, l)
+	#	print('lol')
+		maj_bij(bij, c, aij, omeg, l)
 		my_plot.trace(a, predic, copy, 0, 0, y = 200)
 		plt.show()
 		return (1)
@@ -135,25 +135,33 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 def maj_bij(bij, c, aij, omeg, l):
 	"""update the bij matrix with the precalculate matrix omeg"""
 
-	print('maj bij')
-	print(c)
+#	print('maj bij')
+#	print('c = ', c)
 	ome = omeg[c[1], :, :]
+#	print(ome)
 	n1 = l < l[c[0]] + 129
 	n2 = l > l[c[0]] - 128
-	print(l)
-	print(n1, n2)
+#	print('l = ', l)
+#	print('n1, n2 = ', n1, n2)
 	n = n1 & n2
 	l2 = l[n]
 	linf = l2[l2 <= l[c[0]]]
 	lsup = l2[l2 > l[c[0]]]
+#	print('linf', linf)
+#	print('lsup', lsup)
 	t1 = np.where(np.in1d(l, linf) == True)[0]
 	t2 = np.where(np.in1d(l, lsup) == True)[0]
-	print(t1, t2)
+#	print(t1, t2)
 	om_inf = ome[:, linf - l[c[0]] + 128]
 	om_sup = ome[:, lsup - l[c[0]] + 128]
-	print('###############')
-	print(aij * om_inf.T)
-	print(aij * om_sup.T)
+#	print('ominf', om_inf)
+#	print('omsup', om_sup)
+#	print(ome.shape)
+#	print(linf - l[c[0]] + 128)
+#	print(lsup - l[c[0]] + 128)
+#	print('###############')
+#	print(aij * om_inf.T)
+#	print(aij * om_sup.T)
 	bij[t1, :] = bij[t1, :] - aij * om_inf.T
 	bij[t2, :] = bij[t2, :] - aij * om_sup.T
 
@@ -171,6 +179,7 @@ def browse_bloc(a, blc, ti):
 	print('norme = ', norme)
 	amp_lim = np.array([[0.8, 1.5]])
 	omeg = np.loadtxt('omeg3').reshape(temp.shape[0], temp.shape[0], 257)
+	print(omeg)
 #	omeg = 0
 	for k in range(blc.shape[0]):
 		print('entre block')
@@ -180,13 +189,12 @@ def browse_bloc(a, blc, ti):
 		bij_bool = np.zeros((l.shape[0], temp.shape[0]), dtype = bool)
 		print('top')
 		bij = get_bij(a, l, temp)
-	#	print('bij = ', bij)
+		print('bij = ', bij)
 		print('pot')
 		while is_explored(exploration, bij_bool):
 		#	time.sleep(5)
 			print('expl = ', exploration)
-			if b:
-				bij = get_bij(a, l, temp)
-				print(bij, bij_bool)
-			print(bij)
+		#	if b:
+		#		bij = get_bij(a, l, temp)
+			print(bij, bij_bool)
 			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic, copy)
