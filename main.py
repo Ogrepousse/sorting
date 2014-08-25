@@ -32,7 +32,7 @@ print("ca commence")
 
 #fitting
 b = a.copy()
-scal_prod.browse_bloc(a, blc, ti)
+#scal_prod.browse_bloc(a, blc, ti)
 
 #debug
 #temp = scal_prod.get_temp()

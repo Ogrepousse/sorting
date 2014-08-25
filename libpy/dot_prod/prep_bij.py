@@ -20,6 +20,6 @@ def omeg(temp):
 #					t2[:, :k - 129] = temp[:, :k - 129, i]
 					t2[:, :257 - k] = temp[:, k - 128:, i]
 				else:
-					t2 = temp[:, :, i][:, 0]
+					t2 = temp[:, :, i]
 				om[j, i, k] = scal(t1, t2)
 	return (om)

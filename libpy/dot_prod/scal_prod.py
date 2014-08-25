@@ -2,6 +2,7 @@ import numpy as np
 import scipy.io
 import sys
 import prep_bij
+import matplotlib.pyplot as plt
 
 #all_temp = scipy.io.loadmat('../files/ALL.templates')
 #temp = all_temp['templates']
@@ -62,13 +63,15 @@ def get_bij(a, l, temp):
 	return (bij)
 
 
-def is_explored(exploration):
+def is_explored(exploration, bij_bool):
 	"""return 0 if all the time have been explored, return 1 otherwise"""
 ##########################RAJOUTER BIJ_BOOL#####################################################
 #	print(exploration)
 	if np.all(exploration == 3):
+		print('A')
 		return (0)
 	if np.all(bij_bool == True):
+		print('B')
 		return (0)
 	return (1)
 
@@ -90,22 +93,28 @@ def get_max(bij, exploration, bij_bool):
 	return (c)
 
 
-def substract_signal(a, l, aij, temp, c):
+def substract_signal(a, l, aij, temp, c, predic):
 	"""substract the template to the signal"""
+#	print(temp[:, :, c[1]])
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]]
+	predic[l[c[0]] - 64 : l[c[0]] + 65] += aij * temp[90, :, c[1]]
 
 
-def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2):
+def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic):
 	"""get i and for max value of bij, then check if aij value is correct"""
 
 #	print('exploitation bij')
 	c = get_max(bij, exploration, bij_bool)
 	bij_bool[c] = True
 	aij = bij[c] / norme[c[1]]
+#	print('aij = ', aij)
 	limit = amp_lim[:, c[1]]
 	if aij > limit[0] and aij < limit[1]:
-		substract_signal(a, l, aij, temp2, c)
+		substract_signal(a, l, aij, temp2, c, predic)
 		maj_bij(bij, c, aij, omeg, l)
+		x = np.arange(a.shape[1])
+	#	plt.plot(x, predic)
+	#	plt.show()
 		return (1)
 	else:
 		exploration[c[0]] += 1
@@ -115,6 +124,7 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 def maj_bij(bij, c, aij, omeg, l):
 	"""update the bij matrix with the precalculate matrix omeg"""
 
+#	print('maj bij')
 	ome = omeg[c[1], :, :]
 	n1 = l < l[c[0]] + 129
 	n2 = l > l[c[0]] - 128
@@ -134,6 +144,7 @@ def browse_bloc(a, blc, ti):
 	"""browse all block in order to apply the fitting"""
 
 	b = 1
+	predic = np.zeros(a.shape[1])
 	temp = get_temp()
 	temp2 = temp.copy()
 	norme = normalize_temp(temp)
@@ -149,7 +160,7 @@ def browse_bloc(a, blc, ti):
 		print('top')
 		bij = get_bij(a, l, temp)
 		print('pot')
-		while is_explored(exploration):
+		while is_explored(exploration, bij_bool):
 	#		if b:
 	#			bij = get_bij(a, l, temp)
-			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2)
+			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic)
