@@ -13,7 +13,7 @@ from libpy.dot_prod import scal_prod
 from libpy.dot_prod import prep_bij
 
 
-set = 2000
+set = 200
 x = 0
 a = get.get_stream(x = x, y = set)
 print(a)
@@ -32,7 +32,7 @@ print("ca commence")
 
 #fitting
 b = a.copy()
-#scal_prod.browse_bloc(a, blc, ti)
+scal_prod.browse_bloc(a, blc, ti)
 
 #debug
 #temp = scal_prod.get_temp()
@@ -56,7 +56,8 @@ b = a.copy()
 #plt.plot(x, sp, x, t)
 #plt.show()
 #my_plot.trace(a, b, median, mad, y = set - x, nb = 13)
-my_plot.trace(a, b, median, mad, y = set - x, nb = 90)
-plt.show()
+for i in range(382):
+	my_plot.trace(a, b, median, mad, y = set - x, nb = i)
+	plt.show()
 #print(bij)
 print('fini')
