@@ -68,6 +68,8 @@ def is_explored(exploration):
 #	print(exploration)
 	if np.all(exploration == 3):
 		return (0)
+	if np.all(bij_bool == True):
+		return (0)
 	return (1)
 
 
@@ -114,16 +116,16 @@ def maj_bij(bij, c, aij, omeg, l):
 	"""update the bij matrix with the precalculate matrix omeg"""
 
 	ome = omeg[c[1], :, :]
-	n1 = l < c[0] + 129
-	n2 = l > c[0] - 128
+	n1 = l < l[c[0]] + 129
+	n2 = l > l[c[0]] - 128
 	n = n1 & n2
 	l2 = l[n]
-	linf = l2[l2 <= c[0]]
-	lsup = l2[l2 > c[0]]
+	linf = l2[l2 <= l[c[0]]]
+	lsup = l2[l2 > l[c[0]]]
 	t1 = np.where(np.in1d(l, linf) == True)[0]
 	t2 = np.where(np.in1d(l, lsup) == True)[0]
-	om_inf = ome[:, linf - c[0] + 128]
-	om_sup = ome[:, lsup - c[0] + 128]
+	om_inf = ome[:, linf - l[c[0]] + 128]
+	om_sup = ome[:, lsup - l[c[0]] + 128]
 	bij[t1, :] = bij[t1, :] - aij * om_inf.T
 	bij[t2, :] = bij[t2, :] - aij * om_sup.T
 
