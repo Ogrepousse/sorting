@@ -13,7 +13,7 @@ def get_temp():
 
 	tri = np.array([0, 0, 0.25, 0.75, 1, 0.75, 0.25, 0, 0]) * -1
 	dira = np.array([0, 0, 0, 0, 1, 0, 0, 0, 0]) * -1
-	sqr = np.array([1, 1, 1, 1, 1, 1, 1, 1, 1]) * -1
+	sqr = np.array([0.5, 1, 1, 1, 1.5, 1, 1, 1, 0.5]) * -1
 	s1 = np.zeros(129)
 	s1[64 - 4: 64 + 5] += tri
 	s2 = np.zeros(129)
@@ -26,7 +26,7 @@ def get_temp():
 	tmp2 = np.empty((252, 129))
 	tmp2[b, :] = s2
 	tmp3 = np.empty((252, 129))
-	tmp2[b, :] = s3
+	tmp3[b, :] = s3
 	temp = np.empty((252, 129, 3))
 	temp[:,:,0] = tmp1
 	temp[:,:,1] = tmp2
@@ -41,7 +41,7 @@ def get_amp_lim():
 	"""recupere les limites hautes et basses des templates depuis un fichier matlab"""
 
 #	amp_lim = scipy.io.loadmat('../files/ALL.templates1')['AmpLim'].astype(np.float64)
-	amp_lim = np.array([[0.8, 0.8, 0.8], [1.3, 1.3, 1.3]])
+	amp_lim = np.array([[0.85, 0.85, 0.85], [1.2, 1.2, 1.2]])
 #	amp_lim = (amp_lim / 0.01) + 32767
 	return (amp_lim)
 
@@ -82,7 +82,7 @@ def get_bij(a, l, temp):
 	for i in range(bij.shape[0]):
 		si = a[:, l[i] - 64 : l[i] + 65]
 		for j in range(bij.shape[1]):
-			bij[i, j] = calc_bij(si, temp[:, :, j])
+			bij[i, j] = calc_bij(temp[:, :, j], si)
 	return (bij)
 
 
@@ -128,6 +128,8 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 
 #	print('exploitation bij')
 	c = get_max(bij, exploration, bij_bool)
+	print(bij)
+	print(c)
 	bij_bool[c] = True
 	aij = bij[c] / norme[c[1]]
 	print('aij = ', aij)
@@ -178,6 +180,7 @@ def browse_bloc(a, blc, ti):
 	for k in range(blc.shape[0]):
 		print('entre block')
 		l = select_ti(ti, blc, k, a)
+		print('time',l)
 		exploration = np.zeros(l.shape[0])
 		bij_bool = np.zeros((l.shape[0], temp.shape[2]), dtype = bool)
 		print('top')
