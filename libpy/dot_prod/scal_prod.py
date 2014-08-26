@@ -155,12 +155,19 @@ def maj_bij(bij, c, aij, omeg, l):
 	n2 = l > l[c[0]] - 128
 	n = n1 & n2
 	l2 = l[n]
+#	print('l2', l2)
 	linf = l2[l2 <= l[c[0]]]
 	lsup = l2[l2 > l[c[0]]]
+#	print('linf lsup', linf, lsup)
 	t1 = np.where(np.in1d(l, linf) == True)[0]
 	t2 = np.where(np.in1d(l, lsup) == True)[0]
+#	print('t', t1, t2)
 	om_inf = ome[:, linf - l[c[0]] + 128]
 	om_sup = ome[:, lsup - l[c[0]] + 128]
+#	print(om_inf)
+#	print(om_inf.T)
+#	print(bij[t1,:].shape)
+#	print(bij[t2,:].shape)
 	bij[t1, :] = bij[t1, :] - aij * om_inf.T
 	bij[t2, :] = bij[t2, :] - aij * om_sup.T
 
@@ -188,6 +195,6 @@ def browse_bloc(a, blc, ti):
 		print(bij.shape)
 		print('pot')
 		while is_explored(exploration, bij_bool):
-			if b:
-				bij = get_bij(a, l, temp)
+#			if b:
+#				bij = get_bij(a, l, temp)
 			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic)
