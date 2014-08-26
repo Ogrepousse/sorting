@@ -111,7 +111,7 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 	limit = amp_lim[:, c[1]]
 	if aij > limit[0] and aij < limit[1]:
 		substract_signal(a, l, aij, temp2, c, predic)
-	#	maj_bij(bij, c, aij, omeg, l)
+		maj_bij(bij, c, aij, omeg, l)
 	#	x = np.arange(a.shape[1])
 	#	plt.plot(x, predic)
 	#	plt.show()
@@ -149,8 +149,8 @@ def browse_bloc(a, blc, ti):
 	temp2 = temp.copy()
 	norme = normalize_temp(temp)
 	amp_lim = get_amp_lim()
-#	omeg = np.loadtxt('omeg3').reshape(382, 382, 257)
-	omeg = 0
+	omeg = np.loadtxt('omeg3').reshape(temp.shape[2], temp.shape[2], 257)
+#	omeg = 0
 #	omeg = np.ones((temp.shape[2], temp.shape[2], 129 * 2 - 1)) * -10
 	for k in range(blc.shape[0]):
 		print('entre block')
@@ -161,6 +161,6 @@ def browse_bloc(a, blc, ti):
 		bij = get_bij(a, l, temp)
 		print('pot')
 		while is_explored(exploration, bij_bool):
-			if b:
-				bij = get_bij(a, l, temp)
+		#	if b:
+		#		bij = get_bij(a, l, temp)
 			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic)
