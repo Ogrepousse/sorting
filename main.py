@@ -45,7 +45,7 @@ scal_prod.browse_bloc(a, blc, ti)
 #omeg = np.loadtxt('omeg').reshape(382, 382, 257)
 
 #precalcul
-#om = prep_bij.omeg(temp).reshape(2, 2 * 257)
+#om = prep_bij.omeg(temp).reshape(temp.shape[2], temp.shape[2] * 257)
 #np.savetxt('omeg4', om)
 
 
