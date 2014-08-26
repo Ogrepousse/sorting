@@ -10,15 +10,32 @@ import matplotlib.pyplot as plt
 def get_temp():
 	"""get templates from matlab file"""
 
-	all_temp = scipy.io.loadmat('../files/ALL.templates1')
-	temp = all_temp['templates'].astype(np.float64)
+
+	tri = np.array([0, 0, 0.25, 0.75, 1, 0.75, 0.25, 0, 0]) * -1
+	sqr = np.array([0, 0, 0, 0, 1, 0, 0, 0, 0]) * -1
+	s1 = np.zeros(129)
+	s1[64 - 4: 64 + 5] += tri
+	s2 = np.zeros(129)
+	s2[64 - 4: 64 + 5] += sqr
+	tmp1 = np.empty((252, 129))
+	b = np.ones(252, dtype = bool)
+	tmp1[b, :] = s1
+	tmp2 = np.empty((252, 129))
+	tmp2[b, :] = s2
+	temp = np.empty((252, 129, 2))
+	temp[:,:,0] = tmp1
+	temp[:,:,1] = tmp2
+
+#	all_temp = scipy.io.loadmat('../files/ALL.templates1')
+#	temp = all_temp['templates'].astype(np.float64)
 	return (temp)
 
 
 def get_amp_lim():
 	"""recupere les limites hautes et basses des templates depuis un fichier matlab"""
 
-	amp_lim = scipy.io.loadmat('../files/ALL.templates1')['AmpLim'].astype(np.float64)
+#	amp_lim = scipy.io.loadmat('../files/ALL.templates1')['AmpLim'].astype(np.float64)
+	amp_lim = np.array([[0.8, 0.8], [1.2, 1.2]])
 #	amp_lim = (amp_lim / 0.01) + 32767
 	return (amp_lim)
 
@@ -111,7 +128,7 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 	limit = amp_lim[:, c[1]]
 	if aij > limit[0] and aij < limit[1]:
 		substract_signal(a, l, aij, temp2, c, predic)
-	#	maj_bij(bij, c, aij, omeg, l)
+		maj_bij(bij, c, aij, omeg, l)
 	#	x = np.arange(a.shape[1])
 	#	plt.plot(x, predic)
 	#	plt.show()
@@ -149,8 +166,8 @@ def browse_bloc(a, blc, ti):
 	temp2 = temp.copy()
 	norme = normalize_temp(temp)
 	amp_lim = get_amp_lim()
-#	omeg = np.loadtxt('omeg3').reshape(382, 382, 257)
-	omeg = 0
+	omeg = np.loadtxt('omeg4').reshape(2, 2, 257)
+#	omeg = 0
 #	omeg = np.ones((temp.shape[2], temp.shape[2], 129 * 2 - 1)) * -10
 	for k in range(blc.shape[0]):
 		print('entre block')

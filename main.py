@@ -11,11 +11,14 @@ from libpy.fitting import block
 from libpy import dot_prod
 from libpy.dot_prod import scal_prod
 from libpy.dot_prod import prep_bij
-
+import generateur
 
 set = 200
 x = 0
 a = get.get_stream(x = x, y = set)
+b = np.ones(a.shape[0], dtype = bool)
+a[b] = generateur.gen(set)
+
 print(a)
 median = block.cal_median(a)
 mad = block.get_mad(a, median)
@@ -42,8 +45,8 @@ scal_prod.browse_bloc(a, blc, ti)
 #omeg = np.loadtxt('omeg').reshape(382, 382, 257)
 
 #precalcul
-#om = prep_bij.omeg(temp).reshape(382, 382 * 257)
-#np.savetxt('omeg3', om)
+#om = prep_bij.omeg(temp).reshape(2, 2 * 257)
+#np.savetxt('omeg4', om)
 
 
 #si = scal_prod.get_si(a, scal_prod.select_ti(ti, blc, 0, a))
@@ -55,9 +58,10 @@ scal_prod.browse_bloc(a, blc, ti)
 #t[blc] = 0
 #plt.plot(x, sp, x, t)
 #plt.show()
-#my_plot.trace(a, b, median, mad, y = set - x, nb = 13)
-for i in range(382):
-	my_plot.trace(a, b, median, mad, y = set - x, nb = i)
-	plt.show()
+my_plot.trace(a, b, median, mad, y = set - x, nb = 1)
+plt.show()
+#for i in range(382):
+#	my_plot.trace(a, b, median, mad, y = set - x, nb = i)
+#	plt.show()
 #print(bij)
 print('fini')
