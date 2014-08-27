@@ -39,13 +39,14 @@ scal_prod.browse_bloc(a, blc, ti)
 
 #debug
 #temp = scal_prod.get_temp()
+#temp2 = temp.copy()
 #norme = scal_prod.normalize_temp(temp)
 #l = scal_prod.select_ti(ti, blc, 0, a)
 #bij = scal_prod.get_bij(a, l, temp)
 #omeg = np.loadtxt('omeg4').reshape(3, 3, 257)
 
 #precalcul
-#om = prep_bij.omeg(temp).reshape(temp.shape[2], temp.shape[2] * 257)
+#om = prep_bij.omeg(temp, temp2).reshape(temp.shape[2], temp.shape[2] * 257)
 #np.savetxt('omeg4', om)
 #ome = prep_bij.omeg(temp)
 

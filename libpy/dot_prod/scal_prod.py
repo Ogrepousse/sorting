@@ -71,6 +71,7 @@ def calc_bij(temp, si):
 	"""dot poduct for matrix"""
 
 	res = np.sum(temp * si)
+#	print('res', res)
 	return (res)
 
 
@@ -128,11 +129,11 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 
 #	print('exploitation bij')
 	c = get_max(bij, exploration, bij_bool)
-	print(bij)
-	print(c)
+#	print(bij)
+#	print(c)
 	bij_bool[c] = True
 	aij = bij[c] / norme[c[1]]
-	print('aij = ', aij)
+#	print('aij = ', aij)
 	limit = amp_lim[:, c[1]]
 	if aij > limit[0] and aij < limit[1]:
 		substract_signal(a, l, aij, temp2, c, predic)
@@ -162,10 +163,11 @@ def maj_bij(bij, c, aij, omeg, l):
 	t1 = np.where(np.in1d(l, linf) == True)[0]
 	t2 = np.where(np.in1d(l, lsup) == True)[0]
 #	print('t', t1, t2)
+#	print('index', linf - l[c[0]] + 128)
 	om_inf = ome[:, linf - l[c[0]] + 128]
 	om_sup = ome[:, lsup - l[c[0]] + 128]
-#	print(om_inf)
-#	print(om_inf.T)
+#	print('ominf', om_inf)
+#	print('omsup', om_sup)
 #	print(bij[t1,:].shape)
 #	print(bij[t2,:].shape)
 	bij[t1, :] = bij[t1, :] - aij * om_inf.T
@@ -195,6 +197,6 @@ def browse_bloc(a, blc, ti):
 		print(bij.shape)
 		print('pot')
 		while is_explored(exploration, bij_bool):
-#			if b:
-#				bij = get_bij(a, l, temp)
+	#		if b:
+	#			bij = get_bij(a, l, temp)
 			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic)
