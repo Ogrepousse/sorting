@@ -14,10 +14,8 @@ def omeg(temp, temp2):
 			for k in range(129 * 2 - 1):
 				t2 = np.zeros((temp.shape[0], 129))
 				if k < 129 - 1:
-#					t2[:, 129 - 1 - k:] = temp[:, 129 - 1 - k:, i]
 					t2[:, 129 - 1 - k:] = temp[:, :k + 1, i]
 				elif k > 129 - 1:
-#					t2[:, :k - 129] = temp[:, :k - 129, i]
 					t2[:, :257 - k] = temp[:, k - 128:, i]
 				else:
 					t2 = temp[:, :, i]

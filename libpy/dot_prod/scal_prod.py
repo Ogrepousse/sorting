@@ -68,10 +68,8 @@ def is_explored(exploration, bij_bool):
 
 #	print(exploration)
 	if np.all(exploration == 3):
-		print('A')
 		return (0)
 	if np.all(bij_bool == True):
-		print('B')
 		return (0)
 	return (1)
 
@@ -95,9 +93,8 @@ def get_max(bij, exploration, bij_bool):
 
 def substract_signal(a, l, aij, temp, c, predic):
 	"""substract the template to the signal"""
-#	print(temp[:, :, c[1]])
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]]
-	predic[l[c[0]] - 64 : l[c[0]] + 65] += aij * temp[90, :, c[1]]
+#	predic[l[c[0]] - 64 : l[c[0]] + 65] += aij * temp[90, :, c[1]]
 
 
 def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic):
@@ -107,20 +104,10 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 	c = get_max(bij, exploration, bij_bool)
 	bij_bool[c] = True
 	aij = bij[c] / norme[c[1]]
-	if l[c[0]] == 1336:
-		print('aij = ', aij)
-		t = temp[9,:,c[1]]
-		x = np.arange(129)
-		plt.plot(x, t)
-		plt.show()
-		print(c)
 	limit = amp_lim[:, c[1]]
 	if aij > limit[0] and aij < limit[1]:
 		substract_signal(a, l, aij, temp2, c, predic)
 		maj_bij(bij, c, aij, omeg, l)
-	#	x = np.arange(a.shape[1])
-	#	plt.plot(x, predic)
-	#	plt.show()
 		return (1)
 	else:
 		exploration[c[0]] += 1
@@ -156,8 +143,6 @@ def browse_bloc(a, blc, ti):
 	norme = normalize_temp(temp)
 	amp_lim = get_amp_lim()
 	omeg = np.loadtxt('omeg3').reshape(temp.shape[2], temp.shape[2], 257)
-#	omeg = 0
-#	omeg = np.ones((temp.shape[2], temp.shape[2], 129 * 2 - 1)) * -10
 	for k in range(blc.shape[0]):
 		print('entre block')
 		l = select_ti(ti, blc, k, a)

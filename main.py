@@ -13,7 +13,7 @@ from libpy.dot_prod import scal_prod
 from libpy.dot_prod import prep_bij
 
 
-set = 2000
+set = 2100
 x = 0
 a = get.get_stream(x = x, y = set)
 print(a)
@@ -57,10 +57,11 @@ scal_prod.browse_bloc(a, blc, ti)
 #t[blc] = 0
 #plt.plot(x, sp, x, t)
 #plt.show()
-#my_plot.trace(a, b, median, mad, y = set - x, nb = 13)
-for i in range(12):
-	print(i)
-	my_plot.trace(a, b, median, mad, y = set - x, nb = i)
-	plt.show()
+my_plot.trace(a, b, median, mad, y = set - x, nb = 90)
+plt.show()
+#for i in range(12):
+#	print(i)
+#	my_plot.trace(a, b, median, mad, y = set - x, nb = i)
+#	plt.show()
 #print(bij)
 print('fini')
