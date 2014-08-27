@@ -10,5 +10,5 @@ def gen(set):
 	noise = np.random.ranf(set) / 10
 	noise[95:104] += tri
 	noise[83: 92] += dira
-	noise[113:122] += sqr
+	noise[513:522] += sqr
 	return (noise)

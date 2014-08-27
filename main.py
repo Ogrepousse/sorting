@@ -13,7 +13,7 @@ from libpy.dot_prod import scal_prod
 from libpy.dot_prod import prep_bij
 import generateur
 
-set = 200
+set = 2000
 x = 0
 a = get.get_stream(x = x, y = set)
 b = np.ones(a.shape[0], dtype = bool)
@@ -28,6 +28,9 @@ print(median[90])
 sp = block.get_spike(a)
 ti = block.seperate_time(sp)
 blc = block.get_block(sp)
+
+print(ti)
+print(blc)
 
 #preparation
 print("ca commence")
