@@ -4,12 +4,12 @@ def scal(t1, t2):
 	res = np.sum(t1 * t2)
 	return (res)
 
-def omeg(temp):
+def omeg(temp, temp2):
 	om = np.empty((temp.shape[2], temp.shape[2], 129 * 2 - 1))
 	print(temp.shape[2])
 	for j in range(temp.shape[2]):
 		print(j)
-		t1 = temp[:, :, j]
+		t1 = temp2[:, :, j]
 		for i in range(temp.shape[2]):
 			for k in range(129 * 2 - 1):
 				t2 = np.zeros((temp.shape[0], 129))

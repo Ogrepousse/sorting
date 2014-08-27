@@ -107,7 +107,13 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 	c = get_max(bij, exploration, bij_bool)
 	bij_bool[c] = True
 	aij = bij[c] / norme[c[1]]
-	print('aij = ', aij)
+	if l[c[0]] == 1336:
+		print('aij = ', aij)
+		t = temp[9,:,c[1]]
+		x = np.arange(129)
+		plt.plot(x, t)
+		plt.show()
+		print(c)
 	limit = amp_lim[:, c[1]]
 	if aij > limit[0] and aij < limit[1]:
 		substract_signal(a, l, aij, temp2, c, predic)

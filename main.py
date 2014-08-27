@@ -13,7 +13,7 @@ from libpy.dot_prod import scal_prod
 from libpy.dot_prod import prep_bij
 
 
-set = 200
+set = 2000
 x = 0
 a = get.get_stream(x = x, y = set)
 print(a)
@@ -24,6 +24,7 @@ print(median[90])
 #block.check_thresh(a, median, mad, 1000)
 sp = block.get_spike(a)
 ti = block.seperate_time(sp)
+print(ti)
 blc = block.get_block(sp)
 
 #preparation
@@ -36,13 +37,14 @@ scal_prod.browse_bloc(a, blc, ti)
 
 #debug
 #temp = scal_prod.get_temp()
+#temp2 = temp.copy()
 #norme = scal_prod.normalize_temp(temp)
 #l = scal_prod.select_ti(ti, blc, 0, a)
 #bij = scal_prod.get_bij(a, l, temp)
 #omeg = np.loadtxt('omeg').reshape(382, 382, 257)
 
 #precalcul
-#om = prep_bij.omeg(temp).reshape(382, 382 * 257)
+#om = prep_bij.omeg(temp, temp2).reshape(382, 382 * 257)
 #np.savetxt('omeg3', om)
 
 
@@ -56,7 +58,8 @@ scal_prod.browse_bloc(a, blc, ti)
 #plt.plot(x, sp, x, t)
 #plt.show()
 #my_plot.trace(a, b, median, mad, y = set - x, nb = 13)
-for i in range(382):
+for i in range(12):
+	print(i)
 	my_plot.trace(a, b, median, mad, y = set - x, nb = i)
 	plt.show()
 #print(bij)
