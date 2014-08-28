@@ -108,6 +108,8 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 	bij_bool[c] = True
 	aij = bij[c] / norme[c[1]]
 	limit = amp_lim[:, c[1]]
+	if l[c[0]] == 1743:
+		print('bonjour', c[1], aij)
 	if aij > limit[0] and aij < limit[1]:
 		substract_signal(a, l, aij, temp2, c, predic)
 		maj_bij(bij, c, aij, omeg, l)
