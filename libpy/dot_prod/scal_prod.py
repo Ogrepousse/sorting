@@ -52,8 +52,12 @@ def select_ti(ti, blc, k, a):
 
 	l = ti[np.where(ti <= blc[k])[0]]
 	if k > 0:
-		l = l[np.where(win > blc[k - 1])[0]]
-	l = l[np.where((l > 64) & (l + 65 < a.shape[1]))]
+		l = l[np.where(ti > blc[k - 1])[0]]
+	if k == 0:
+		l = l[np.where(l > 64)]
+	elif k == blc.shape[0] - 1:
+		l = l[np.where(l + 65 < a.shape[1])]
+#		l = l[np.where((l > 64) & (l + 65 < a.shape[1]))]
 	return (l)
 
 
