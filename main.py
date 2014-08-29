@@ -46,6 +46,11 @@ norme = scal_prod.normalize_temp(temp)
 comp = snd_comp.get_comp(temp)
 comp2 = comp.copy()
 scal_prod.normalize_temp(comp)
+print(temp.shape)
+#np.savetxt('temp', temp.reshape(252, 129 * 382))
+#np.savetxt('temp2', temp2.reshape(252, 129 * 382))
+#np.savetxt('comp', comp.reshape(252, 129 * 382))
+#np.savetxt('comp2', comp2.reshape(252, 129 * 382))
 
 #cx = np.arange(temp.shape[1])
 #plt.plot(cx, temp[9, :, 54])
@@ -62,7 +67,7 @@ scal_prod.normalize_temp(comp)
 
 #precalcul
 om = prep_bij.omeg_bis(temp, temp2, comp, comp2).reshape(382, 382 * 257)
-np.savetxt('omeg3', om)
+#np.savetxt('omeg3', om)
 
 
 #si = scal_prod.get_si(a, scal_prod.select_ti(ti, blc, 0, a))
