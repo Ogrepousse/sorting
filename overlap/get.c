@@ -91,17 +91,17 @@ double	***reshape(double **t)
 	double	***new;
 	int		i, j, k;
 
-	new = (double***)malloc(sizeof(*new) * Z);
+	new = (double***)malloc(sizeof(*new) * X);
 	i = 0;
-	while (i < Z)
+	while (i < X)
 	{
-		new[i] = (double**)malloc(sizeof(**new) * X);
+		new[i] = (double**)malloc(sizeof(**new) * Y);
 		j = 0;
-		while (j < X)
+		while (j < Y)
 		{
-			new[i][j] = (double*)malloc(sizeof(***new) * Y);
+			new[i][j] = (double*)malloc(sizeof(***new) * Z);
 			k = 0;
-			while (k < Y)
+			while (k < Z)
 			{
 				new[i][j][k] = t[i][j * k];
 				k++;

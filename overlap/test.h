@@ -1,7 +1,6 @@
 #ifndef TEST_H
 # define TEST_H
 
-# include "libft/libft.h"
 # include <stdio.h>
 
 # define X 252
