@@ -3,6 +3,7 @@ import scipy.io
 import sys
 import prep_bij
 import matplotlib.pyplot as plt
+import snd_comp
 
 #all_temp = scipy.io.loadmat('../files/ALL.templates')
 #temp = all_temp['templates']
@@ -94,29 +95,40 @@ def get_max(bij, exploration, bij_bool):
 	return (c)
 
 
-def substract_signal(a, l, aij, temp, c, predic):
+def substract_signal(a, l, aij, temp, c, predic, alpha, comp2):
 	"""substract the template to the signal"""
-	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]]
+	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]] + alpha * comp2[:, :, c[1]]
 #	predic[l[c[0]] - 64 : l[c[0]] + 65] += aij * temp[90, :, c[1]]
 
 
-def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic):
+def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic, beta_ij, norme2, comp2):
 	"""get i and for max value of bij, then check if aij value is correct"""
 
 #	print('exploitation bij')
 	c = get_max(bij, exploration, bij_bool)
 	bij_bool[c] = True
 	aij = bij[c] / norme[c[1]]
+	alpha = beta_ij[c] / norme2[c[1]]
 	limit = amp_lim[:, c[1]]
-	if l[c[0]] == 1743:
-		print('bonjour', c[1], aij)
 	if aij > limit[0] and aij < limit[1]:
-		substract_signal(a, l, aij, temp2, c, predic)
-		maj_bij(bij, c, aij, omeg, l)
+		substract_signal(a, l, aij, temp2, c, predic, alpha, comp2)
+		maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha)
+	#	maj_bij(bij, c, aij, omeg, l, beta_ij, alpha)
 		return (1)
 	else:
 		exploration[c[0]] += 1
 		return (0)
+
+
+def maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha):
+	omeg_a = omeg[:bij.shape[1], :bij.shape[1], :]
+	omeg_b = omeg[:bij.shape[1], bij.shape[1]:, :]
+	omeg_c = omeg[bij.shape[1]:, :bij.shape[1], :]
+	omeg_d = omeg[bij.shape[1]:, bij.shape[1]:, :]
+	maj_bij(bij, c, aij, omeg_a, l)
+	maj_bij(bij, c, alpha, omeg_b, l)
+	maj_bij(beta_ij, c, aij, omeg_c, l)
+	maj_bij(beta_ij, c, alpha, omeg_d, l)
 
 
 def maj_bij(bij, c, aij, omeg, l):
@@ -145,9 +157,12 @@ def browse_bloc(a, blc, ti):
 	predic = np.zeros(a.shape[1])
 	temp = get_temp()
 	temp2 = temp.copy()
+	comp = snd_comp.get_comp(temp)
+	comp2 = comp.copy()
+	norme2 = normalize_temp(comp)
 	norme = normalize_temp(temp)
 	amp_lim = get_amp_lim()
-	omeg = np.loadtxt('omeg3').reshape(temp.shape[2], temp.shape[2], 257)
+	omeg = np.loadtxt('omeg3').reshape(temp.shape[2] * 2, temp.shape[2] * 2, 257)
 	for k in range(blc.shape[0]):
 		print('entre block')
 		l = select_ti(ti, blc, k, a)
@@ -155,8 +170,9 @@ def browse_bloc(a, blc, ti):
 		bij_bool = np.zeros((l.shape[0], temp.shape[2]), dtype = bool)
 		print('top')
 		bij = get_bij(a, l, temp)
+		beta_ij = get_bij(a, l, comp)
 		print('pot')
 		while is_explored(exploration, bij_bool):
 		#	if b:
 		#		bij = get_bij(a, l, temp)
-			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic)
+			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic, beta_ij, norme2, comp2)
