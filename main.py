@@ -27,9 +27,9 @@ mad = block.get_mad(a, median)
 print('ouai')
 sp = block.get_spike(a)
 ti = block.seperate_time(sp)
-print(ti)
+#print(ti)
 blc = block.get_block(sp)
-print(blc.shape)
+print('nb blc', blc.shape)
 
 #preparation
 print("ca commence")

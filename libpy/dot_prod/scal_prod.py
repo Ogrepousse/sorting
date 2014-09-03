@@ -151,10 +151,21 @@ def maj_bij(bij, c, aij, omeg, l):
 
 
 def get_overlap():
+	tab = np.empty(764*764*257)
+	size = 4096
+	i = 0
+	l = 764 * 764 * 257 * 8
+	n = 0
 	fd = open('omeg4', 'rb')
-	s = fd.read(764 * 764 * 257 * 8)
+	while l - n > size:
+		s = fd.read(size)
+		tab[n / 8 : (n + size) / 8] = np.fromstring(s, dtype = np.float64)
+		i += 1
+		n += size
+	s = fd.read(l - n)
+	print(i)
+	tab[i * size / 8:] = np.fromstring(s, dtype = np.float64)
 	fd.close()
-	tab = np.fromstring(s, dtype = np.float64)
 	tab = tab.reshape(764, 764, 257)
 	return (tab)
 
