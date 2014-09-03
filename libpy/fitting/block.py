@@ -57,3 +57,19 @@ def get_block(sp):
 	ind[ind.shape[0] - 1] = sp.shape[0] - 1
 	ind = ind[np.where(ind != 0)[0]]
 	return (ind)
+
+
+def divide_block(blc):
+	t = 0
+	div = np.zeros(blc[-1] / 100 + 1)
+	index = 0
+	for k in blc:
+		while k - t > 100:
+			t += 100
+			div[index] = t
+			index += 1
+		div[index] = k
+		index += 1
+		t = k
+	div = div[np.where(div)]
+	return (div)

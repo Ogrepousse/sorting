@@ -29,11 +29,17 @@ def select_ti(ti, blc, k, a):
 	recupere les temps de spike ds le block en excluant les spikes extremes n'ayant pas assez de points autour pour les produits scalaires"""
 
 	l = ti[np.where(ti <= blc[k])[0]]
+#	print('ti', ti)
+#	print('blc(k)', blc[k])
 	if k > 0:
-		l = l[np.where(ti > blc[k - 1])[0]]
+	#	print(np.where(ti > blc[k - 1]))
+	#	print(l)
+	#	print(l.shape)
+		l = l[np.where(l > blc[k - 1])[0]]
 	if k == 0:
-		l = l[np.where(l > 64)]
+		l = l[np.where(l > 64)[0]]
 	if k == blc.shape[0] - 1:
+	#	print('kkkkkkkk', k)
 		l = l[np.where(l + 65 < a.shape[1])]
 	return (l)
 
@@ -58,8 +64,9 @@ def calc_bij(temp, si):
 def get_bij(a, l, temp):
 	"""calculate the matrix bij"""
 
-	print('obtention des bij')
+#	print('obtention des bij')
 	bij = np.empty((l.shape[0], temp.shape[2]))
+#	print(l.shape)
 	for i in range(bij.shape[0]):
 		si = a[:, l[i] - 64 : l[i] + 65]
 		for j in range(bij.shape[1]):
@@ -163,7 +170,7 @@ def get_overlap():
 		i += 1
 		n += size
 	s = fd.read(l - n)
-	print(i)
+#	print(i)
 	tab[i * size / 8:] = np.fromstring(s, dtype = np.float64)
 	fd.close()
 	tab = tab.reshape(764, 764, 257)
@@ -184,15 +191,16 @@ def browse_bloc(a, blc, ti):
 	amp_lim = get_amp_lim()
 	omeg = get_overlap()
 #	omeg = np.loadtxt('omeg3').reshape(temp.shape[2] * 2, temp.shape[2] * 2, 257)
+	print('parcours', blc.shape[0])
 	for k in range(blc.shape[0]):
-		print('entre block')
+		print('entre block', k)
 		l = select_ti(ti, blc, k, a)
 		exploration = np.zeros(l.shape[0])
 		bij_bool = np.zeros((l.shape[0], temp.shape[2]), dtype = bool)
-		print('top')
+	#	print('top')
 		bij = get_bij(a, l, temp)
 		beta_ij = get_bij(a, l, comp)
-		print('pot')
+	#	print('pot')
 		while is_explored(exploration, bij_bool):
 		#	if b:
 		#		bij = get_bij(a, l, temp)

@@ -29,7 +29,8 @@ sp = block.get_spike(a)
 ti = block.seperate_time(sp)
 #print(ti)
 blc = block.get_block(sp)
-print('nb blc', blc.shape)
+blc = block.divide_block(blc)
+
 
 #preparation
 print("ca commence")
