@@ -12,11 +12,13 @@ def get_mad(a, med):
 	mad = np.median(sq_diff, axis = 1)
 	return (mad)
 
+
 #pas necessaire il existe deja une fct numpy
 def cal_median(a):
 	"""calcul la mediane"""
 	median = np.sort(a, axis = 1)[:, a.shape[1] / 2]
 	return (median)
+
 
 def ct_bis(a, median, mad):
 	"""verification du depassement de seuil pour un spike
@@ -28,6 +30,7 @@ def ct_bis(a, median, mad):
 	b1[:, 1:] = b1[:, 1:] & b3
 	return (b1)
 
+
 def get_spike(a, x = 0, y = 0):
 	"""renvoi un tableau de boolean pour chaque instant s'il y a eu un spike qui satisfait les criteres de selection ou non"""
 	median = cal_median(a)
@@ -37,10 +40,12 @@ def get_spike(a, x = 0, y = 0):
 	spike_list[np.where(spike_list > 0)[0]] = 1
 	return (spike_list)
 
+
 def seperate_time(sp):
 	"""renvoi les dates ou il y a eu un spike"""
 	ind = np.where(sp > 0)[0]
 	return (ind)
+
 
 def get_block(sp):
 	"""renvoi les dates de spike qui marquent la fin d'un block"""
