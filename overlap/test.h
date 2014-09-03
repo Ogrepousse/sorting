@@ -3,9 +3,9 @@
 
 # include <stdio.h>
 
-# define X 252
-# define Y 129
-# define Z 382
+# define X 764
+# define Y 764
+# define Z 257
 
 void	print_tab(double **t, int l1, int l2);
 void	print_re(double ***t);
@@ -14,5 +14,6 @@ void	fill_row(double ***t, char *s, int r);
 void	del_tab(double ***t);
 double	***reshape(double **t);
 void	ouverture(void);
+void	fill_buf(double ***buf, FILE *fd);
 
 #endif

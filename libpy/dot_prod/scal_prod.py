@@ -150,6 +150,15 @@ def maj_bij(bij, c, aij, omeg, l):
 	bij[t2, :] = bij[t2, :] - aij * om_sup.T
 
 
+def get_overlap():
+	fd = open('omeg4', 'rb')
+	s = fd.read(764 * 764 * 257 * 8)
+	fd.close()
+	tab = np.fromstring(s, dtype = np.float64)
+	tab = tab.reshape(764, 764, 257)
+	return (tab)
+
+
 def browse_bloc(a, blc, ti):
 	"""browse all block in order to apply the fitting"""
 
@@ -162,7 +171,8 @@ def browse_bloc(a, blc, ti):
 	norme2 = normalize_temp(comp)
 	norme = normalize_temp(temp)
 	amp_lim = get_amp_lim()
-	omeg = np.loadtxt('omeg3').reshape(temp.shape[2] * 2, temp.shape[2] * 2, 257)
+	omeg = get_overlap()
+#	omeg = np.loadtxt('omeg3').reshape(temp.shape[2] * 2, temp.shape[2] * 2, 257)
 	for k in range(blc.shape[0]):
 		print('entre block')
 		l = select_ti(ti, blc, k, a)
