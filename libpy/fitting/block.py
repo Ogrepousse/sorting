@@ -61,11 +61,12 @@ def get_block(sp):
 
 def divide_block(blc):
 	t = 0
-	div = np.zeros(blc[-1] / 100 + 1)
+	size = 1000
+	div = np.zeros(blc[-1] / size + 1)
 	index = 0
 	for k in blc:
-		while k - t > 100:
-			t += 100
+		while k - t > size:
+			t += size
 			div[index] = t
 			index += 1
 		div[index] = k

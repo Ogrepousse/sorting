@@ -29,17 +29,11 @@ def select_ti(ti, blc, k, a):
 	recupere les temps de spike ds le block en excluant les spikes extremes n'ayant pas assez de points autour pour les produits scalaires"""
 
 	l = ti[np.where(ti <= blc[k])[0]]
-#	print('ti', ti)
-#	print('blc(k)', blc[k])
 	if k > 0:
-	#	print(np.where(ti > blc[k - 1]))
-	#	print(l)
-	#	print(l.shape)
 		l = l[np.where(l > blc[k - 1])[0]]
 	if k == 0:
 		l = l[np.where(l > 64)[0]]
 	if k == blc.shape[0] - 1:
-	#	print('kkkkkkkk', k)
 		l = l[np.where(l + 65 < a.shape[1])]
 	return (l)
 
