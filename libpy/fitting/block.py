@@ -47,9 +47,12 @@ def seperate_time(sp):
 	return (ind)
 
 
-def get_block(sp):
+def get_block(sp, ti):
 	"""renvoi les dates de spike qui marquent la fin d'un block"""
-	ind = seperate_time(sp)
+
+#attention deja calcule ds le main
+#	ind = seperate_time(sp)
+	ind = ti.copy()
 	blc = np.zeros(ind.shape[0], dtype = np.int64)
 	blc[:blc.shape[0] - 1] = ind[1:] - ind[: ind.shape[0] - 1]
 	x = blc < 130
@@ -61,7 +64,7 @@ def get_block(sp):
 
 def divide_block(blc):
 	t = 0
-	size = 1000
+	size = 500
 	div = np.zeros(blc[-1] / size + 1)
 	index = 0
 	for k in blc:
@@ -74,3 +77,23 @@ def divide_block(blc):
 		t = k
 	div = div[np.where(div)]
 	return (div)
+
+
+def	begin_end(blc):
+	b_e = np.empty((blc.shape[0], 2))
+	inf = 0
+	p = 0
+	win = 129
+	b_e[0, 0] = inf
+	b_e[0, 1] = blc[0] + win
+	for k in range(1, blc.shape[0] - 1):
+		inf = blc[k - 1] - win
+		b_e[k, 0] = inf
+		b_e[k, 1] = blc[k] + win
+	b_e[blc.shape[0] - 1, 0] = blc[-2] - win
+	b_e[blc.shape[0] - 1, 1] = blc[-1]
+	neg = np.where(b_e < 0)[0]
+	if neg.shape[0]:
+		b_e = b_e[neg[-1]:]
+		b_e[0, 0] = 0
+	return (b_e)

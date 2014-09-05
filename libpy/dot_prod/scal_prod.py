@@ -184,7 +184,6 @@ def browse_bloc(a, blc, ti):
 	norme = normalize_temp(temp)
 	amp_lim = get_amp_lim()
 	omeg = get_overlap()
-#	omeg = np.loadtxt('omeg3').reshape(temp.shape[2] * 2, temp.shape[2] * 2, 257)
 	print('parcours', blc.shape[0])
 	for k in range(blc.shape[0]):
 		print('entre block', k)

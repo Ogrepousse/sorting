@@ -12,6 +12,7 @@ from libpy import dot_prod
 from libpy.dot_prod import scal_prod
 from libpy.dot_prod import prep_bij
 from libpy.dot_prod import snd_comp
+from libpy.dot_prod import get_all_bij
 
 
 set = 2000
@@ -28,9 +29,14 @@ print('ouai')
 sp = block.get_spike(a)
 ti = block.seperate_time(sp)
 #print(ti)
-blc = block.get_block(sp)
+blc = block.get_block(sp, ti)
 blc = block.divide_block(blc)
-
+div = block.begin_end(blc)
+al = get_all_bij.get_all_time(ti, div, a)
+#print(ti)
+print(al)
+print(blc)
+print(div)
 
 #preparation
 print("ca commence")
@@ -38,7 +44,7 @@ print("ca commence")
 
 #fitting
 b = a.copy()
-scal_prod.browse_bloc(a, blc, ti)
+#scal_prod.browse_bloc(a, blc, ti)
 
 #debug
 #temp = scal_prod.get_temp()
@@ -88,6 +94,6 @@ scal_prod.browse_bloc(a, blc, ti)
 for i in range(90, 91):
 	print(i)
 	my_plot.trace(a, b, median, mad, y = set - x, nb = i)
-	plt.show()
+#	plt.show()
 #print(bij)
 print('fini')
