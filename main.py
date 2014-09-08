@@ -32,23 +32,29 @@ ti = block.seperate_time(sp)
 blc = block.get_block(sp, ti)
 blc = block.divide_block(blc)
 div = block.begin_end(blc)
-al = get_all_bij.get_all_time(ti, div, a)
-#print(ti)
-print(al)
-print(blc)
 print(div)
+#al = get_all_bij.get_all_time(ti, div, a)
+#print(ti)
+#print(al)
+#print(blc)
+#print(div)
 
 #preparation
 print("ca commence")
 
+div = np.array([[0, 499], [500, 999], [1000, 1499], [1500, 1999]])
 
 #fitting
 b = a.copy()
-#scal_prod.browse_bloc(a, blc, ti)
+scal_prod.browse_bloc(a, blc, ti, div)
 
 #debug
 #temp = scal_prod.get_temp()
 #temp2 = temp.copy()
+
+#bb = get_all_bij.get_all_bij(div, al, a, temp)
+#bij = get_all_bij.small_bij(bb, 0)
+
 #comp = snd_comp.get_comp(temp)
 #comp2 = comp.copy()
 #norme = scal_prod.normalize_temp(temp)
@@ -94,6 +100,6 @@ b = a.copy()
 for i in range(90, 91):
 	print(i)
 	my_plot.trace(a, b, median, mad, y = set - x, nb = i)
-#	plt.show()
+	plt.show()
 #print(bij)
 print('fini')

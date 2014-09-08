@@ -4,6 +4,7 @@ import sys
 import prep_bij
 import matplotlib.pyplot as plt
 import snd_comp
+import get_all_bij
 
 #all_temp = scipy.io.loadmat('../files/ALL.templates')
 #temp = all_temp['templates']
@@ -171,7 +172,7 @@ def get_overlap():
 	return (tab)
 
 
-def browse_bloc(a, blc, ti):
+def browse_bloc(a, blc, ti, div):
 	"""browse all block in order to apply the fitting"""
 
 	b = 0
@@ -184,15 +185,28 @@ def browse_bloc(a, blc, ti):
 	norme = normalize_temp(temp)
 	amp_lim = get_amp_lim()
 	omeg = get_overlap()
+
+	(al, size) = get_all_bij.get_all_time(ti, div, a)
+	print('size', size)
+	print('ola', al.shape)
+	big_bij = get_all_bij.get_all_bij(div, al, a, temp, size)
+	big_beta = get_all_bij.get_all_bij(div, al, a, comp, size)
+
 	print('parcours', blc.shape[0])
 	for k in range(blc.shape[0]):
 		print('entre block', k)
-		l = select_ti(ti, blc, k, a)
+		l = get_all_bij.small_time(al, k, size)
+	#	print('sapristi', l1.dtype)
+	#	l = select_ti(ti, blc, k, a)
+	#	print('diantre', l.dtype)
 		exploration = np.zeros(l.shape[0])
-		bij_bool = np.zeros((l.shape[0], temp.shape[2]), dtype = bool)
+	#	bij_bool = np.zeros((l.shape[0], temp.shape[2]), dtype = bool)
 	#	print('top')
-		bij = get_bij(a, l, temp)
-		beta_ij = get_bij(a, l, comp)
+		bij = get_all_bij.small_bij(big_bij, k, size)
+	#	bij = get_bij(a, l, temp)
+		beta_ij = get_all_bij.small_bij(big_beta, k, size)
+	#	beta_ij = get_bij(a, l, comp)
+		bij_bool = np.zeros(bij.shape, dtype = bool)
 	#	print('pot')
 		while is_explored(exploration, bij_bool):
 		#	if b:
