@@ -103,7 +103,7 @@ def substract_signal(a, l, aij, temp, c, predic, alpha, comp2):
 #	predic[l[c[0]] - 64 : l[c[0]] + 65] += aij * temp[90, :, c[1]]
 
 
-def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic, beta_ij, norme2, comp2):
+def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic, beta_ij, norme2, comp2, div, k):
 	"""get i and for max value of bij, then check if aij value is correct"""
 
 #	print('exploitation bij')
@@ -112,9 +112,11 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 	aij = bij[c] / norme[c[1]]
 	alpha = beta_ij[c] / norme2[c[1]]
 	limit = amp_lim[:, c[1]]
+	win = 129
 	if aij > limit[0] and aij < limit[1]:
-		substract_signal(a, l, aij, temp2, c, predic, alpha, comp2)
-		maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha)
+		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win):
+			substract_signal(a, l, aij, temp2, c, predic, alpha, comp2)
+			maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha)
 	#	maj_bij(bij, c, aij, omeg, l, beta_ij, alpha)
 		return (1)
 	else:
@@ -185,6 +187,7 @@ def browse_bloc(a, blc, ti, div):
 	norme = normalize_temp(temp)
 	amp_lim = get_amp_lim()
 	omeg = get_overlap()
+	print('overlap recupere')
 
 	(al, size) = get_all_bij.get_all_time(ti, div, a)
 	print('size', size)
@@ -211,4 +214,4 @@ def browse_bloc(a, blc, ti, div):
 		while is_explored(exploration, bij_bool):
 		#	if b:
 		#		bij = get_bij(a, l, temp)
-			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic, beta_ij, norme2, comp2)
+			b = part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic, beta_ij, norme2, comp2, div, k)
