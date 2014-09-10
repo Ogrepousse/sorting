@@ -117,7 +117,7 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win):
 			substract_signal(a, l, aij, temp2, c, predic, alpha, comp2)
 			maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha)
-	#	maj_bij(bij, c, aij, omeg, l, beta_ij, alpha)
+		#	maj_bij(bij, c, aij, omeg, l, beta_ij, alpha)
 		return (1)
 	else:
 		exploration[c[0]] += 1

@@ -33,18 +33,46 @@ def small_time(all_l, k, size):
 
 
 def first_part(bij, l1, l2, i):
-	nb = (np.where(l2 < l1[-1])[0].shape[0]).shape[0]
-	b1 = bij[-nb - 1 :, :].copy()
+	l = np.where(l2 <= l1[-1])[0]
+#	print(l)
+	nb = np.where(l2 <= l1[-1])[0].shape[0]
+#	print(l1)
+#	print(l2)
+#	print(nb)
+#	print(l2[l])
+	b1 = bij[-nb :, :].copy()
+#	print('b1', b1.shape)
 	return (b1)
+
+
+#def get_all_bij(div, all_l, a, temp, size):
+#
+#	big_bij = np.zeros((div.shape[0], np.amax(size), temp.shape[2]))
+#	print('voila', big_bij.shape)
+#	lmax = 0
+#	for i in range(big_bij.shape[0]):
+#		l = all_l[i, :size[i]]
+#		bij = scal_prod.get_bij(a, l, temp)
+#		big_bij[i, :size[i], :] = bij
+#		print(bij.shape)
+#	return (big_bij)
+
 
 def get_all_bij(div, all_l, a, temp, size):
 
 	big_bij = np.zeros((div.shape[0], np.amax(size), temp.shape[2]))
 	print('voila', big_bij.shape)
-	lmax = 0
+	bij = np.empty((0, 382))
+	l1 = np.zeros(1)
 	for i in range(big_bij.shape[0]):
 		l = all_l[i, :size[i]]
-		bij = scal_prod.get_bij(a, l, temp)
+		b1 = first_part(bij, l1, l, i)
+		l2 = l[np.where(l > l1[-1])[0]]
+		b2 = scal_prod.get_bij(a, l2, temp)
+		bij = np.empty((size[i], temp.shape[2]))
+		bij[0 : b1.shape[0], :] = b1
+		bij[b1.shape[0] :, :] = b2
+		l1 = l
 		big_bij[i, :size[i], :] = bij
 		print(bij.shape)
 	return (big_bij)

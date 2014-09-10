@@ -46,7 +46,7 @@ print('size', size)
 #preparation
 print("ca commence")
 
-div = np.array([[0, 499], [500, 999], [1000, 1499], [1500, 1999]])
+#div = np.array([[0, 499], [500, 999], [1000, 1499], [1500, 1999]])
 
 #fitting
 b = a.copy()
@@ -56,6 +56,8 @@ scal_prod.browse_bloc(a, blc, ti, div)
 temp = scal_prod.get_temp()
 #temp2 = temp.copy()
 
+
+#bb2 = get_all_bij.get_all_bij_test(div, al, a, temp, size)
 #bb = get_all_bij.get_all_bij(div, al, a, temp, size)
 #bij = get_all_bij.small_bij(bb, 0)
 
