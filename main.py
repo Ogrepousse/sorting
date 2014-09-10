@@ -15,7 +15,7 @@ from libpy.dot_prod import snd_comp
 from libpy.dot_prod import get_all_bij
 
 
-set = 2000
+set = 10000
 x = 0
 sig = get.get_stream(x = x, y = set)
 a = np.reshape(sig, (-1, 252)).T
@@ -28,20 +28,12 @@ mad = block.get_mad(a, median)
 print('ouai')
 sp = block.get_spike(a)
 ti = block.seperate_time(sp)
-print('ti', ti)
-#print(ti)
 blc = block.get_block(sp, ti)
-print(blc)
 blc = block.divide_block(blc)
-print(blc)
 div = block.begin_end(blc)
 print(div)
-(al, size) = get_all_bij.get_all_time(ti, div, a)
-print('size', size)
-#print(ti)
-#print(al)
-#print(blc)
-#print(div)
+#(al, size) = get_all_bij.get_all_time(ti, div, a)
+
 
 #preparation
 print("ca commence")
@@ -53,7 +45,7 @@ b = a.copy()
 scal_prod.browse_bloc(a, blc, ti, div)
 
 #debug
-temp = scal_prod.get_temp()
+#temp = scal_prod.get_temp()
 #temp2 = temp.copy()
 
 
@@ -103,7 +95,7 @@ temp = scal_prod.get_temp()
 #cx = np.arange(a.shape[1])
 #plt.plot(cx, a[90], cx, b[90])
 #plt.show()
-for i in range(90, 110):
+for i in range(0, 382):
 	print(i)
 	my_plot.trace(a, b, median, mad, y = set - x, nb = i)
 	plt.show()

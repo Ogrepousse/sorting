@@ -100,6 +100,14 @@ def get_max(bij, exploration, bij_bool):
 def substract_signal(a, l, aij, temp, c, predic, alpha, comp2):
 	"""substract the template to the signal"""
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]] + alpha * comp2[:, :, c[1]]
+#	if l[c[0]] > 900:
+#		print('temp', c[1], l[c[0]])
+#		x = np.arange(a.shape[1])
+#		plt.plot(x, a[99], x, predic[99])
+#		plt.show()
+#		y = np.arange(129)
+#		plt.plot(y, temp[99, :, c[1]])
+#		plt.show()
 #	predic[l[c[0]] - 64 : l[c[0]] + 65] += aij * temp[90, :, c[1]]
 
 
@@ -178,7 +186,7 @@ def browse_bloc(a, blc, ti, div):
 	"""browse all block in order to apply the fitting"""
 
 	b = 0
-	predic = np.zeros(a.shape[1])
+	predic = a.copy()
 	temp = get_temp()
 	temp2 = temp.copy()
 	comp = snd_comp.get_comp(temp)
@@ -207,6 +215,7 @@ def browse_bloc(a, blc, ti, div):
 	#	print('top')
 		bij = get_all_bij.small_bij(big_bij, k, size)
 	#	bij = get_bij(a, l, temp)
+	#	beta_ij = np.empty(bij.shape)
 		beta_ij = get_all_bij.small_bij(big_beta, k, size)
 	#	beta_ij = get_bij(a, l, comp)
 		bij_bool = np.zeros(bij.shape, dtype = bool)
