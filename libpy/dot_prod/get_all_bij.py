@@ -34,14 +34,8 @@ def small_time(all_l, k, size):
 
 def first_part(bij, l1, l2, i):
 	l = np.where(l2 <= l1[-1])[0]
-#	print(l)
 	nb = np.where(l2 <= l1[-1])[0].shape[0]
-#	print(l1)
-#	print(l2)
-#	print(nb)
-#	print(l2[l])
 	b1 = bij[-nb :, :].copy()
-#	print('b1', b1.shape)
 	return (b1)
 
 
