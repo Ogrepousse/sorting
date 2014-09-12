@@ -85,11 +85,20 @@ def	begin_end(blc):
 	p = 0
 	win = 129
 	b_e[0, 0] = inf
-	b_e[0, 1] = blc[0] + win
+	if blc[0] + win <= blc[-1]:
+		b_e[0, 1] = blc[0] + win
+	else:
+		b_e[0, 1] = blc[-1]
+	if blc.shape[0] == 1:
+		b_e[0, 1] = blc[0]
+		return (b_e)
 	for k in range(1, blc.shape[0] - 1):
 		inf = blc[k - 1] - win
 		b_e[k, 0] = inf
-		b_e[k, 1] = blc[k] + win
+		if blc[k] + win <= blc[-1]:
+			b_e[k, 1] = blc[k] + win
+		else:
+			b_e[k, 1] = blc[-1]
 	b_e[blc.shape[0] - 1, 0] = blc[-2] - win
 	b_e[blc.shape[0] - 1, 1] = blc[-1]
 	neg = np.where(b_e < 0)[0]

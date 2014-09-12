@@ -14,7 +14,8 @@ def get_temp():
 
 	all_temp = scipy.io.loadmat('../files/ALL.templates1')
 	temp = all_temp['templates'].astype(np.float64)
-	return (temp)
+	t = temp.copy()
+	return (t)
 
 
 def get_amp_lim():
@@ -64,8 +65,9 @@ def get_bij(a, l, temp):
 #	print(l.shape)
 	for i in range(bij.shape[0]):
 		si = a[:, l[i] - 64 : l[i] + 65]
-		for j in range(bij.shape[1]):
-			bij[i, j] = calc_bij(si, temp[:, :, j])
+		bij[i, :] = np.tensordot(si, temp, 2)
+	#	for j in range(bij.shape[1]):
+	#		bij[i, j] = calc_bij(si, temp[:, :, j])
 	return (bij)
 
 
@@ -97,13 +99,15 @@ def get_max(bij, exploration, bij_bool):
 	return (c)
 
 
-def substract_signal(a, l, aij, temp, c, predic, alpha, comp2):
+def substract_signal(a, l, aij, temp, c, predic, alpha, comp2, limit):
 	"""substract the template to the signal"""
+#	alpha = 0
+#	b = a.copy()
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]] + alpha * comp2[:, :, c[1]]
-#	if l[c[0]] > 900:
-#		print('temp', c[1], l[c[0]])
+#	if l[c[0]] > 100 and l[c[0]] < 300:
+#		print('temp', c[1], l[c[0]], aij, limit)
 #		x = np.arange(a.shape[1])
-#		plt.plot(x, a[99], x, predic[99])
+#		plt.plot(x, a[99], x, predic[99], x, b[99])
 #		plt.show()
 #		y = np.arange(129)
 #		plt.plot(y, temp[99, :, c[1]])
@@ -123,7 +127,7 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 	win = 129
 	if aij > limit[0] and aij < limit[1]:
 		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win):
-			substract_signal(a, l, aij, temp2, c, predic, alpha, comp2)
+			substract_signal(a, l, aij, temp2, c, predic, alpha, comp2, limit)
 			maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha)
 		#	maj_bij(bij, c, aij, omeg, l, beta_ij, alpha)
 		return (1)
@@ -182,6 +186,25 @@ def get_overlap():
 	return (tab)
 
 
+def get_overlap2():
+	tab = np.empty(382 * 382 * 257)
+	size = 4096
+	i = 0
+	l = 382*382*257*8
+	n = 0
+	fd = open('omeg3', 'rb')
+	while l - n > size:
+		s = fd.read(size)
+		tab[n / 8 : (n + size) / 8] = np.fromstring(s, dtype = np.float64)
+		i += 1
+		n +=size
+	s = fd.read(l - n)
+	tab[i * size / 8:] = np.fromstring(s, dtype = np.float64)
+	fd.close()
+	tab = tab.reshape(382, 382, 257)
+	return (tab)
+
+
 def browse_bloc(a, blc, ti, div):
 	"""browse all block in order to apply the fitting"""
 
@@ -202,6 +225,7 @@ def browse_bloc(a, blc, ti, div):
 	print('ola', al.shape)
 	big_bij = get_all_bij.get_all_bij(div, al, a, temp, size)
 	big_beta = get_all_bij.get_all_bij(div, al, a, comp, size)
+
 
 	print('parcours', blc.shape[0])
 	for k in range(blc.shape[0]):
