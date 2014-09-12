@@ -15,7 +15,7 @@ from libpy.dot_prod import snd_comp
 from libpy.dot_prod import get_all_bij
 
 
-set = 10000
+set = 40000
 x = 0
 sig = get.get_stream(x = x, y = set)
 a = np.reshape(sig, (-1, 252)).T

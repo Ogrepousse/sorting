@@ -63,9 +63,12 @@ def get_bij(a, l, temp):
 #	print('obtention des bij')
 	bij = np.empty((l.shape[0], temp.shape[2]))
 #	print(l.shape)
+	s = np.empty((l.shape[0], 252, 129))
 	for i in range(bij.shape[0]):
 		si = a[:, l[i] - 64 : l[i] + 65]
-		bij[i, :] = np.tensordot(si, temp, 2)
+		s[i, :, :] = si
+	#	bij[i, :] = np.tensordot(si, temp, 2)
+	bij = np.tensordot(s[::], temp, 2)
 	#	for j in range(bij.shape[1]):
 	#		bij[i, j] = calc_bij(si, temp[:, :, j])
 	return (bij)
