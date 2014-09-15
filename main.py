@@ -101,7 +101,7 @@ scal_prod.browse_bloc(a, blc, ti, div)
 #cx = np.arange(a.shape[1])
 #plt.plot(cx, a[90], cx, b[90])
 #plt.show()
-#for i in range(99, 100):
+#for i in range(90, 91):
 #	print(i)
 #	my_plot.trace(a, b, median, mad, y = set - x, nb = i)
 #	plt.show()
