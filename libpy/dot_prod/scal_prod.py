@@ -56,7 +56,7 @@ def calc_bij(temp, si):
 	res = np.sum(temp * si)
 	return (res)
 
-@profile
+
 def get_bij(a, l, temp):
 	"""calculate the matrix bij"""
 
@@ -99,12 +99,12 @@ def is_explored(exploration, bij_bool):
 		return (0)
 	return (1)
 
-
+@profile
 def get_max(bij, exploration, bij_bool):
 	"""return a tuple with the coordinates of the max value of bij, tuples (i, j) already visited and time i explored are ignored"""
 
 	bij[bij_bool] = -sys.maxint - 1
-	bij[exploration >= 3, :] = -sys.maxint - 1
+#	bij[exploration >= 3, :] = -sys.maxint - 1
 	c = np.unravel_index(bij.argmax(), bij.shape)
 
 ############################## A MODIFIER EVENTUELLEMENT #################
@@ -132,7 +132,7 @@ def substract_signal(a, l, aij, temp, c, predic, alpha, comp2, limit):
 #		plt.show()
 #	predic[l[c[0]] - 64 : l[c[0]] + 65] += aij * temp[90, :, c[1]]
 
-
+@profile
 def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic, beta_ij, norme2, comp2, div, k):
 	"""get i and for max value of bij, then check if aij value is correct"""
 
@@ -151,9 +151,11 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 		return (1)
 	else:
 		exploration[c[0]] += 1
+		if exploration[c[0]] >= 3:
+			bij_bool[c[0], :] = True
 		return (0)
 
-
+@profile
 def maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha):
 	omeg_a = omeg[:bij.shape[1], :bij.shape[1], :]
 	omeg_b = omeg[:bij.shape[1], bij.shape[1]:, :]
@@ -164,7 +166,7 @@ def maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha):
 	maj_bij(beta_ij, c, aij, omeg_c, l)
 	maj_bij(beta_ij, c, alpha, omeg_d, l)
 
-
+@profile
 def maj_bij(bij, c, aij, omeg, l):
 	"""update the bij matrix with the precalculate matrix omeg"""
 
