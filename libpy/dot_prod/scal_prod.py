@@ -56,23 +56,23 @@ def calc_bij(temp, si):
 	res = np.sum(temp * si)
 	return (res)
 
-
+@profile
 def get_bij(a, l, temp):
 	"""calculate the matrix bij"""
 
 #	print('obtention des bij')
-	bij = np.empty((l.shape[0], temp.shape[2]))
 #	print(l.shape)
-	r = np.arange(-64, 65).reshape(129, 1)
-	l2 = l.reshape(1, l.shape[0])
-	s = a[:, r + l2]
-	bij = np.tensordot(s[::], temp, ([0, 1], [0, 1]))
+#	r = np.arange(-64, 65).reshape(129, 1)
+#	l2 = l.reshape(1, l.shape[0])
+#	s = a[:, r + l2]
+#	bij = np.tensordot(s[::], temp, ([0, 1], [0, 1]))
 
-#	s = np.empty((l.shape[0], 252, 129))
-#	for i in range(bij.shape[0]):
-#		si = a[:, l[i] - 64 : l[i] + 65]
-#		s[i, :, :] = si
-#	bij = np.tensordot(s[::], temp, 2)
+	bij = np.empty((l.shape[0], temp.shape[2]))
+	s = np.empty((l.shape[0], 252, 129))
+	for i in range(bij.shape[0]):
+		si = a[:, l[i] - 64 : l[i] + 65]
+		s[i, :, :] = si
+	bij = np.tensordot(s[::], temp, 2)
 
 
 

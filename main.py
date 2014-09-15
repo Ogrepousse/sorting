@@ -28,14 +28,18 @@ mad = block.get_mad(a, median)
 print('ouai')
 sp = block.get_spike(a)
 ti = block.seperate_time(sp)
-print(ti)
+#print(ti)
 blc = block.get_block(sp, ti)
 blc = block.divide_block(blc)
-print(blc)
+#print(blc)
 div = block.begin_end(blc)
-print(div)
-#(al, size) = get_all_bij.get_all_time(ti, div, a)
+#print(div)
+(al, size) = get_all_bij.get_all_time(ti, div, a)
 
+l = get_all_bij.small_time(al, 0, size)
+temp = scal_prod.get_temp()
+norme = scal_prod.normalize_temp(temp)
+bij = scal_prod.get_bij(a, l, temp)
 
 #preparation
 print("ca commence")
@@ -44,7 +48,7 @@ print("ca commence")
 
 #fitting
 b = a.copy()
-scal_prod.browse_bloc(a, blc, ti, div)
+#scal_prod.browse_bloc(a, blc, ti, div)
 
 #debug
 #temp = scal_prod.get_temp()
