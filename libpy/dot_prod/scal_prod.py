@@ -17,15 +17,14 @@ def get_temp():
 
 
 def get_amp_lim():
-	"""recupere les limites hautes et basses des templates depuis un fichier matlab"""
+	"""get limit for template from matlab file"""
 
 	amp_lim = scipy.io.loadmat('../files/ALL.templates1')['AmpLim'].astype(np.float64)
 	return (amp_lim)
 
 
 def select_ti(ti, blc, k, a):
-	"""
-	recupere les temps de spike ds le block en excluant les spikes extremes n'ayant pas assez de points autour pour les produits scalaires"""
+	"""get spike time in a block excluding spike which don't have enough point around for scalar product"""
 
 	l = ti[np.where(ti <= blc[k])[0]]
 	if k > 0:
@@ -92,12 +91,12 @@ def get_max(bij, exploration, bij_bool):
 	return (c)
 
 
-def substract_signal(a, l, aij, temp, c, predic, alpha, comp2, limit):
+def substract_signal(a, l, aij, temp, c, alpha, comp2, limit):
 	"""substract the template to the signal"""
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]] + alpha * comp2[:, :, c[1]]
 
 
-def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic, beta_ij, norme2, comp2, div, k):
+def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, beta_ij, norme2, comp2, div, k):
 	"""get i and for max value of bij, then check if aij value is correct"""
 
 	c = get_max(bij, exploration, bij_bool)
@@ -108,7 +107,7 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 	win = 129
 	if aij > limit[0] and aij < limit[1]:
 		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win):
-			substract_signal(a, l, aij, temp2, c, predic, alpha, comp2, limit)
+			substract_signal(a, l, aij, temp2, c, alpha, comp2, limit)
 			maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha)
 		return (1)
 	else:
@@ -119,6 +118,8 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 
 
 def maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha):
+	"""recalculate the value of bij and beta_ij with the precacultate matric overlap"""
+
 	omeg_a = omeg[:bij.shape[1], :bij.shape[1], :]
 	omeg_b = omeg[:bij.shape[1], bij.shape[1]:, :]
 	omeg_c = omeg[bij.shape[1]:, :bij.shape[1], :]
@@ -148,6 +149,8 @@ def maj_bij(bij, c, aij, omeg, l):
 
 
 def get_overlap():
+	"""charge the overlap matrix from an extern file"""
+
 	tab = np.empty(764*764*257)
 	size = 4096
 	i = 0
@@ -166,29 +169,10 @@ def get_overlap():
 	return (tab)
 
 
-def get_overlap2():
-	tab = np.empty(382 * 382 * 257)
-	size = 4096
-	i = 0
-	l = 382*382*257*8
-	n = 0
-	fd = open('omeg3', 'rb')
-	while l - n > size:
-		s = fd.read(size)
-		tab[n / 8 : (n + size) / 8] = np.fromstring(s, dtype = np.float64)
-		i += 1
-		n +=size
-	s = fd.read(l - n)
-	tab[i * size / 8:] = np.fromstring(s, dtype = np.float64)
-	fd.close()
-	tab = tab.reshape(382, 382, 257)
-	return (tab)
-
-
 def browse_bloc(a, blc, ti, div):
 	"""browse all block in order to apply the fitting"""
 
-	predic = a.copy()
+	#recuperation des templates, seconde composante, limite haute et basse, matrice d'overlap
 	temp = get_temp()
 	temp2 = temp.copy()
 	comp = snd_comp.get_comp(temp)
@@ -199,11 +183,13 @@ def browse_bloc(a, blc, ti, div):
 	omeg = get_overlap()
 	print('overlap recupere')
 
+	#precalcul de tout les temps de spike et des bij pour chaque bloc
 	(al, size) = get_all_bij.get_all_time(ti, div, a)
 	big_bij = get_all_bij.get_all_bij(div, al, a, temp, size)
 	big_beta = get_all_bij.get_all_bij(div, al, a, comp, size)
 
 	print('parcours', blc.shape[0])
+	#parcours des blocs
 	for k in range(blc.shape[0]):
 		print('entre block', k)
 		l = get_all_bij.small_time(al, k, size)
@@ -212,4 +198,4 @@ def browse_bloc(a, blc, ti, div):
 		beta_ij = get_all_bij.small_bij(big_beta, k, size)
 		bij_bool = np.zeros(bij.shape, dtype = bool)
 		while is_explored(exploration, bij_bool):
-			part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, predic, beta_ij, norme2, comp2, div, k)
+			part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, beta_ij, norme2, comp2, div, k)

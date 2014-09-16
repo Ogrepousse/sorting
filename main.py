@@ -16,7 +16,7 @@ from libpy.dot_prod import snd_comp
 from libpy.dot_prod import get_all_bij
 
 env = t_env()
-set = 5000
+set = 2000
 x = 0
 sig = get.get_stream(x = x, y = set)
 a = np.reshape(sig, (-1, 252)).T
@@ -35,7 +35,7 @@ print("ca commence")
 
 #fitting
 b = a.copy()
-#scal_prod.browse_bloc(a, blc, ti, div)
+scal_prod.browse_bloc(a, blc, ti, div)
 
 #for i in range(90, 91):
 #	print(i)
