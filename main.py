@@ -10,9 +10,6 @@ from libpy import block_fct
 from libpy.block_fct import block
 from libpy import dot_prod
 from libpy.dot_prod import scal_prod
-from libpy.dot_prod import prep_bij
-from libpy.dot_prod import snd_comp
-from libpy.dot_prod import get_all_bij
 from libpy import environnement
 from libpy.environnement import class_env
 
@@ -37,11 +34,12 @@ print("ca commence")
 
 #fitting
 b = a.copy()
-scal_prod.browse_block(a, blc, ti, div)
+env.setup_env(a, ti, div)
+scal_prod.browse_block(env, a, blc, ti, div)
 
-#for i in range(90, 91):
-#	print(i)
-#	my_plot.trace(a, b, y = set - x, nb = i)
-#	plt.show()
+for i in range(90, 91):
+	print(i)
+	my_plot.trace(a, b, y = set - x, nb = i)
+	plt.show()
 
 print('fini')

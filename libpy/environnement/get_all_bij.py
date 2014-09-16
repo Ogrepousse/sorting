@@ -1,5 +1,5 @@
 import numpy as np
-import scal_prod
+import env_fct
 
 def select_ti_bis(ti, div, k, a):
 	"""get the spike time in a bloc excluding extrem spike"""
@@ -26,20 +26,6 @@ def get_all_time(ti, div, a):
 	return (all_l, size)
 
 
-def small_bij(big_bij, k, size):
-	"""return bij for a given bloc"""
-
-	bij = big_bij[k, :size[k], :]
-	return (bij)
-
-
-def small_time(all_l, k, size):
-	"""return an array of the spike time in a given block"""
-
-	l = all_l[k, :size[k]]
-	return (l)
-
-
 def first_part(bij, l1, l2, i):
 	"""get part of the precedent bij to avoid to calculate the same value twice (bij have an overlap between them)"""
 
@@ -60,7 +46,7 @@ def get_all_bij(div, all_l, a, temp, size):
 		l = all_l[i, :size[i]]
 		b1 = first_part(bij, l1, l, i)
 		l2 = l[np.where(l > l1[-1])[0]]
-		b2 = scal_prod.get_bij(a, l2, temp)
+		b2 = env_fct.get_bij(a, l2, temp)
 		bij = np.empty((size[i], temp.shape[2]))
 		bij[0 : b1.shape[0], :] = b1
 		bij[b1.shape[0] :, :] = b2

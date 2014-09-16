@@ -1,7 +1,6 @@
 import numpy as np
 import scipy.io
 import sys
-import prep_bij
 import matplotlib.pyplot as plt
 import snd_comp
 import get_all_bij

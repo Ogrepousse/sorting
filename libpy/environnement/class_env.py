@@ -1,4 +1,6 @@
-import 
+import env_fct
+import snd_comp
+import get_all_bij as gab
 
 class t_env(object):
 	def __init__(self):
@@ -8,4 +10,35 @@ class t_env(object):
 		print('environnement cree')
 
 	def set_temp(self):
-		
+		self.temp = env_fct.get_temp()
+		self.temp2 = self.temp.copy()
+
+	def set_comp(self):
+		self.comp = snd_comp.get_comp(self.temp)
+		self.comp2 = self.comp.copy()
+
+	def set_norme(self):
+		self.norme = env_fct.normalize_temp(self.temp)
+		self.norme2 = env_fct.normalize_temp(self.comp)
+
+	def set_lim(self):
+		self.amp_lim = env_fct.get_amp_lim()
+
+	def set_overlap(self):
+		self.overlap = env_fct.get_overlap()
+
+	def set_time(self, a, ti, div):
+		self.al, self.size = gab.get_all_time(ti, div, a)
+
+	def set_bij(self, a, div):
+		self.big_bij = gab.get_all_bij(div, self.al, a, self.temp, self.size)
+		self.big_beta = gab.get_all_bij(div, self.al, a, self.comp, self.size)
+
+	def setup_env(self, a, ti, div):
+		self.set_temp()
+		self.set_comp()
+		self.set_norme()
+		self.set_lim()
+		self.set_overlap()
+		self.set_time(a, ti, div)
+		self.set_bij(a, div)

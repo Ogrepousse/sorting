@@ -1,68 +1,21 @@
 import numpy as np
 import scipy.io
 import sys
-import prep_bij
 import matplotlib.pyplot as plt
-import snd_comp
-import get_all_bij
 
 
-def get_temp():
-	"""get templates from matlab file"""
+def small_bij(big_bij, k, size):
+	"""return bij for a given bloc"""
 
-	all_temp = scipy.io.loadmat('../files/ALL.templates1')
-	temp = all_temp['templates'].astype(np.float64)
-	t = temp.copy()
-	return (t)
-
-
-def get_amp_lim():
-	"""get limit for template from matlab file"""
-
-	amp_lim = scipy.io.loadmat('../files/ALL.templates1')['AmpLim'].astype(np.float64)
-	return (amp_lim)
-
-##### attention plus utilisee
-def select_ti(ti, blc, k, a):
-	"""get spike time in a block excluding spike which don't have enough point around for scalar product"""
-
-	l = ti[np.where(ti <= blc[k])[0]]
-	if k > 0:
-		l = l[np.where(l > blc[k - 1])[0]]
-	if k == 0:
-		l = l[np.where(l > 64)[0]]
-	if k == blc.shape[0] - 1:
-		l = l[np.where(l + 65 < a.shape[1])]
-	return (l)
-
-
-def normalize_temp(temp):
-	"""normalize the templates and return an array with the value of all the norme"""
-
-	norme = np.empty(temp.shape[2])
-	for i in range(temp.shape[2]):
-		norme[i] = np.linalg.norm(temp[:, :, i])
-		temp[:, :, i] = temp[:, :, i] / norme[i]
-	return (norme)
-
-
-def calc_bij(temp, si):
-	"""dot poduct for matrix"""
-
-	res = np.sum(temp * si)
-	return (res)
-
-
-def get_bij(a, l, temp):
-	"""calculate the matrix bij"""
-
-	bij = np.empty((l.shape[0], temp.shape[2]))
-	s = np.empty((l.shape[0], 252, 129))
-	for i in range(bij.shape[0]):
-		si = a[:, l[i] - 64 : l[i] + 65]
-		s[i, :, :] = si
-	bij = np.tensordot(s[::], temp, 2)
+	bij = big_bij[k, :size[k], :]
 	return (bij)
+
+
+def small_time(all_l, k, size):
+	"""return an array of the spike time in a given block"""
+
+	l = all_l[k, :size[k]]
+	return (l)
 
 
 def is_explored(exploration, bij_bool):
@@ -148,54 +101,36 @@ def maj_bij(bij, c, aij, omeg, l):
 	bij[t2, :] = bij[t2, :] - aij * om_sup.T
 
 
-def get_overlap():
-	"""charge the overlap matrix from an extern file"""
 
-	tab = np.empty(764*764*257)
-	size = 4096
-	i = 0
-	l = 764 * 764 * 257 * 8
-	n = 0
-	fd = open('omeg4', 'rb')
-	while l - n > size:
-		s = fd.read(size)
-		tab[n / 8 : (n + size) / 8] = np.fromstring(s, dtype = np.float64)
-		i += 1
-		n += size
-	s = fd.read(l - n)
-	tab[i * size / 8:] = np.fromstring(s, dtype = np.float64)
-	fd.close()
-	tab = tab.reshape(764, 764, 257)
-	return (tab)
-
-
-def browse_block(a, blc, ti, div):
+def browse_block(env, a, blc, ti, div):
 	"""browse all block in order to apply the fitting"""
 
 	#recuperation des templates, seconde composante, limite haute et basse, matrice d'overlap
-	temp = get_temp()
-	temp2 = temp.copy()
-	comp = snd_comp.get_comp(temp)
-	comp2 = comp.copy()
-	norme2 = normalize_temp(comp)
-	norme = normalize_temp(temp)
-	amp_lim = get_amp_lim()
-	omeg = get_overlap()
+	temp = env.temp
+	temp2 = env.temp2
+	comp = env.comp
+	comp2 = env.comp2
+	norme = env.norme
+	norme2 = env.norme2
+	amp_lim = env.amp_lim
+	omeg = env.overlap
 	print('overlap recupere')
 
 	#precalcul de tout les temps de spike et des bij pour chaque bloc
-	(al, size) = get_all_bij.get_all_time(ti, div, a)
-	big_bij = get_all_bij.get_all_bij(div, al, a, temp, size)
-	big_beta = get_all_bij.get_all_bij(div, al, a, comp, size)
+	al = env.al
+	size = env.size
+	big_bij = env.big_bij
+	big_beta = env.big_beta
+
 
 	print('parcours', blc.shape[0])
 	#parcours des blocs
 	for k in range(blc.shape[0]):
 		print('entre block', k)
-		l = get_all_bij.small_time(al, k, size)
+		l = small_time(al, k, size)
 		exploration = np.zeros(l.shape[0])
-		bij = get_all_bij.small_bij(big_bij, k, size)
-		beta_ij = get_all_bij.small_bij(big_beta, k, size)
+		bij = small_bij(big_bij, k, size)
+		beta_ij = small_bij(big_beta, k, size)
 		bij_bool = np.zeros(bij.shape, dtype = bool)
 		while is_explored(exploration, bij_bool):
 			part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, beta_ij, norme2, comp2, div, k)
