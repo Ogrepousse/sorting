@@ -48,7 +48,7 @@ def seperate_time(sp):
 	return (ind)
 
 
-def get_block(sp, ti, env):
+def get_block(env, sp, ti):
 	"""renvoi les dates de spike qui marquent la fin d'un block"""
 
 	ind = ti.copy()
@@ -61,11 +61,11 @@ def get_block(sp, ti, env):
 	return (ind)
 
 
-def divide_block(blc):
+def divide_block(env, blc):
 	"""divise les bloc si leur taille est trop grande"""
 
 	t = 0
-	size = 500
+	size = env.size_block
 	div = np.zeros(blc[-1] / size + 1)
 	index = 0
 	for k in blc:

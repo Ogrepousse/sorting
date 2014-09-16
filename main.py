@@ -26,10 +26,10 @@ sp = block.get_spike(a)
 ti = block.seperate_time(sp)
 
 #creation des blocs de spike pour le fitting
-blc = block.get_block(sp, ti, env)
-print(blc)
+blc = block.get_block(env, sp, ti)
 del(sp)
-blc = block.divide_block(blc)
+blc = block.divide_block(env, blc)
+print(blc)
 div = block.begin_end(blc)
 
 print("ca commence")
