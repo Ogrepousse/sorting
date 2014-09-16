@@ -2,6 +2,8 @@ import numpy as np
 import scal_prod
 
 def select_ti_bis(ti, div, k, a):
+	"""get the spike time in a bloc excluding extrem spike"""
+
 	l = ti[np.where(ti <= div[k, 1])[0]]
 	if k > 0:
 		l = l[np.where(l > div[k, 0])[0]]
@@ -13,6 +15,8 @@ def select_ti_bis(ti, div, k, a):
 
 
 def get_all_time(ti, div, a):
+	"""return a two dimensionnal array with all the spike for each bloc"""
+
 	all_l = np.zeros((div.shape[0], ti.shape[0]), dtype = np.int64)
 	size = np.empty(div.shape[0])
 	for i in range(all_l.shape[0]):
@@ -23,36 +27,30 @@ def get_all_time(ti, div, a):
 
 
 def small_bij(big_bij, k, size):
+	"""return bij for a given bloc"""
+
 	bij = big_bij[k, :size[k], :]
 	return (bij)
 
 
 def small_time(all_l, k, size):
+	"""return an array of the spike time in a given block"""
+
 	l = all_l[k, :size[k]]
 	return (l)
 
 
 def first_part(bij, l1, l2, i):
+	"""get part of the precedent bij to avoid to calculate the same value twice (bij have an overlap between them)"""
+
 	l = np.where(l2 <= l1[-1])[0]
 	nb = np.where(l2 <= l1[-1])[0].shape[0]
 	b1 = bij[-nb :, :].copy()
 	return (b1)
 
 
-#def get_all_bij(div, all_l, a, temp, size):
-#
-#	big_bij = np.zeros((div.shape[0], np.amax(size), temp.shape[2]))
-#	print('voila', big_bij.shape)
-#	lmax = 0
-#	for i in range(big_bij.shape[0]):
-#		l = all_l[i, :size[i]]
-#		bij = scal_prod.get_bij(a, l, temp)
-#		big_bij[i, :size[i], :] = bij
-#		print(bij.shape)
-#	return (big_bij)
-
-
 def get_all_bij(div, all_l, a, temp, size):
+	"""return an array with all the bij calculate for eache bloc"""
 
 	big_bij = np.zeros((div.shape[0], np.amax(size), temp.shape[2]))
 	print('voila', big_bij.shape)

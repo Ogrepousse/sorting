@@ -22,7 +22,7 @@ def get_amp_lim():
 	amp_lim = scipy.io.loadmat('../files/ALL.templates1')['AmpLim'].astype(np.float64)
 	return (amp_lim)
 
-
+##### attention plus utilisee
 def select_ti(ti, blc, k, a):
 	"""get spike time in a block excluding spike which don't have enough point around for scalar product"""
 
