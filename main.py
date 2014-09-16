@@ -1,7 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from environnement import t_env
 import libpy
 from libpy import get_data
 from libpy.get_data import get
@@ -14,8 +13,10 @@ from libpy.dot_prod import scal_prod
 from libpy.dot_prod import prep_bij
 from libpy.dot_prod import snd_comp
 from libpy.dot_prod import get_all_bij
+from libpy import environnement
+from libpy.environnement import class_env
 
-env = t_env()
+env = class_env.t_env()
 set = 2000
 x = 0
 sig = get.get_stream(x = x, y = set)
@@ -30,13 +31,13 @@ blc = block.get_block(env, sp, ti)
 del(sp)
 blc = block.divide_block(env, blc)
 print(blc)
-div = block.begin_end(blc)
+div = block.begin_end(env, blc)
 
 print("ca commence")
 
 #fitting
 b = a.copy()
-#scal_prod.browse_block(a, blc, ti, div)
+scal_prod.browse_block(a, blc, ti, div)
 
 #for i in range(90, 91):
 #	print(i)
