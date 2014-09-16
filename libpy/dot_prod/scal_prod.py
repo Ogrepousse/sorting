@@ -169,7 +169,7 @@ def get_overlap():
 	return (tab)
 
 
-def browse_bloc(a, blc, ti, div):
+def browse_block(a, blc, ti, div):
 	"""browse all block in order to apply the fitting"""
 
 	#recuperation des templates, seconde composante, limite haute et basse, matrice d'overlap

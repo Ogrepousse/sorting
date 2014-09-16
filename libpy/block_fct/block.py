@@ -48,13 +48,13 @@ def seperate_time(sp):
 	return (ind)
 
 
-def get_block(sp, ti):
+def get_block(sp, ti, env):
 	"""renvoi les dates de spike qui marquent la fin d'un block"""
 
 	ind = ti.copy()
 	blc = np.zeros(ind.shape[0], dtype = np.int64)
 	blc[:blc.shape[0] - 1] = ind[1:] - ind[: ind.shape[0] - 1]
-	x = blc < 130
+	x = blc < env.space_block
 	ind[x] = 0
 	ind[ind.shape[0] - 1] = sp.shape[0] - 1
 	ind = ind[np.where(ind != 0)[0]]

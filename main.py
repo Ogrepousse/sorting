@@ -26,7 +26,8 @@ sp = block.get_spike(a)
 ti = block.seperate_time(sp)
 
 #creation des blocs de spike pour le fitting
-blc = block.get_block(sp, ti)
+blc = block.get_block(sp, ti, env)
+print(blc)
 del(sp)
 blc = block.divide_block(blc)
 div = block.begin_end(blc)
@@ -35,7 +36,7 @@ print("ca commence")
 
 #fitting
 b = a.copy()
-scal_prod.browse_bloc(a, blc, ti, div)
+#scal_prod.browse_block(a, blc, ti, div)
 
 #for i in range(90, 91):
 #	print(i)
