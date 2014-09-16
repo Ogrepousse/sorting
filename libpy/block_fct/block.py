@@ -3,12 +3,9 @@ import numpy as np
 def get_mad(a, med):
 	"""fonction qui calcul le seuil de tolerance
 	prend les donnees a en parametre et la mediane"""
-#	mean = a.sum(axis = 1) / a.shape[1]
-#	med = cal_median(a)
+
 	diff = (a - med[:, np.newaxis])**2
-#	sq_diff = np.sqrt(diff).astype(np.int64)
 	sq_diff = np.sqrt(diff)
-	#mad = cal_median(sq_diff)
 	mad = np.median(sq_diff, axis = 1)
 	return (mad)
 
@@ -16,6 +13,7 @@ def get_mad(a, med):
 #pas necessaire il existe deja une fct numpy
 def cal_median(a):
 	"""calcul la mediane"""
+
 	median = np.sort(a, axis = 1)[:, a.shape[1] / 2]
 	return (median)
 
@@ -23,6 +21,7 @@ def cal_median(a):
 def ct_bis(a, median, mad):
 	"""verification du depassement de seuil pour un spike
 	et minimum local"""
+
 	b1 = (a.T < median - 6 * mad).T
 	b2 = a[:, :a.shape[1] - 1] < a[:, 1:]
 	b3 = a[:, 1:] < a[:, :a.shape[1] - 1]
@@ -33,6 +32,7 @@ def ct_bis(a, median, mad):
 
 def get_spike(a, x = 0, y = 0):
 	"""renvoi un tableau de boolean pour chaque instant s'il y a eu un spike qui satisfait les criteres de selection ou non"""
+
 	median = cal_median(a)
 	mad = get_mad(a, median)
 	spike_list = np.sum(ct_bis(a, median, mad), axis = 0)
@@ -43,6 +43,7 @@ def get_spike(a, x = 0, y = 0):
 
 def seperate_time(sp):
 	"""renvoi les dates ou il y a eu un spike"""
+
 	ind = np.where(sp > 0)[0]
 	return (ind)
 
@@ -61,6 +62,8 @@ def get_block(sp, ti):
 
 
 def divide_block(blc):
+	"""divise les bloc si leur taille est trop grande"""
+
 	t = 0
 	size = 500
 	div = np.zeros(blc[-1] / size + 1)
@@ -78,6 +81,8 @@ def divide_block(blc):
 
 
 def	begin_end(blc):
+	"""renvoi un array a deux dimmensio contenant les dates de debut et de fin de chaque bloc"""
+
 	b_e = np.empty((blc.shape[0], 2))
 	inf = 0
 	p = 0

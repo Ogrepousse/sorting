@@ -27,8 +27,10 @@ ti = block.seperate_time(sp)
 
 #creation des blocs de spike pour le fitting
 blc = block.get_block(sp, ti)
+print(blc)
 del(sp)
 blc = block.divide_block(blc)
+print(blc)
 div = block.begin_end(blc)
 
 print("ca commence")
@@ -37,9 +39,9 @@ print("ca commence")
 b = a.copy()
 #scal_prod.browse_bloc(a, blc, ti, div)
 
-for i in range(90, 91):
-	print(i)
-	my_plot.trace(a, b, y = set - x, nb = i)
-	plt.show()
+#for i in range(90, 91):
+#	print(i)
+#	my_plot.trace(a, b, y = set - x, nb = i)
+#	plt.show()
 
 print('fini')
