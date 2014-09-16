@@ -80,13 +80,13 @@ def divide_block(env, blc):
 	return (div)
 
 
-def	begin_end(blc):
+def	begin_end(env, blc):
 	"""renvoi un array a deux dimmensio contenant les dates de debut et de fin de chaque bloc"""
 
 	b_e = np.empty((blc.shape[0], 2))
 	inf = 0
 	p = 0
-	win = 129
+	win = env.win_over
 	b_e[0, 0] = inf
 	if blc[0] + win <= blc[-1]:
 		b_e[0, 1] = blc[0] + win
