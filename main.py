@@ -7,8 +7,8 @@ from libpy import get_data
 from libpy.get_data import get
 from libpy import plot
 from libpy.plot import my_plot
-from libpy import fitting
-from libpy.fitting import block
+from libpy import block_fct
+from libpy.block_fct import block
 from libpy import dot_prod
 from libpy.dot_prod import scal_prod
 from libpy.dot_prod import prep_bij
@@ -24,10 +24,10 @@ a = np.reshape(sig, (-1, 252)).T
 #recherche des temps de spike
 sp = block.get_spike(a)
 ti = block.seperate_time(sp)
-del(sp)
 
 #creation des blocs de spike pour le fitting
 blc = block.get_block(sp, ti)
+del(sp)
 blc = block.divide_block(blc)
 div = block.begin_end(blc)
 
@@ -37,9 +37,9 @@ print("ca commence")
 b = a.copy()
 #scal_prod.browse_bloc(a, blc, ti, div)
 
-#for i in range(90, 91):
-#	print(i)
-#	my_plot.trace(a, b, median, mad, y = set - x, nb = i)
-#	plt.show()
+for i in range(90, 91):
+	print(i)
+	my_plot.trace(a, b, y = set - x, nb = i)
+	plt.show()
 
 print('fini')

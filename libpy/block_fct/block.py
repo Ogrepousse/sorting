@@ -50,8 +50,6 @@ def seperate_time(sp):
 def get_block(sp, ti):
 	"""renvoi les dates de spike qui marquent la fin d'un block"""
 
-#attention deja calcule ds le main
-#	ind = seperate_time(sp)
 	ind = ti.copy()
 	blc = np.zeros(ind.shape[0], dtype = np.int64)
 	blc[:blc.shape[0] - 1] = ind[1:] - ind[: ind.shape[0] - 1]
