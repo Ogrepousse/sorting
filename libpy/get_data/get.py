@@ -1,13 +1,17 @@
 import numpy as np
 
 def get_stream(x = 0, y = 20000):
+	"""recupere les signaux des electrodes depuis un fichier externe"""
+
 	with open('../files/ALL.filtered', 'rb') as fd:
+		#suppression du header
 		ret = -1
 		while ret == -1:
 			ret = fd.readline().find('EOH')
 		fd.read(5)
 
 		#debut des stream
+		#on ignore le debut des signaux si x non null
 		fd.read(252 * 2 * x)
 		size = 4096
 		i = 0
