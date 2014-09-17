@@ -14,7 +14,8 @@ class t_env(object):
 	def set_temp(self):
 		self.temp = env_fct.get_temp()
 		self.temp2 = self.temp.copy()
-		self.temp_size = self.temp.shape[1]
+		self.temp_size = self.temp.shape[1] #template width
+		self.nb_temp = self.temp.shape[2] #number of templates
 
 	def set_comp(self):
 		self.comp = snd_comp.get_comp(self.temp)
@@ -28,7 +29,7 @@ class t_env(object):
 		self.amp_lim = env_fct.get_amp_lim()
 
 	def set_overlap(self):
-		self.overlap = env_fct.get_overlap()
+		self.overlap = env_fct.get_overlap(self)
 
 	def set_time(self, a, ti, div):
 		self.al, self.size = gab.get_all_time(self, a, ti, div)

@@ -51,22 +51,26 @@ def get_bij(a, l, temp):
 	return (bij)
 
 
-def get_overlap():
+def get_overlap(env):
 	"""charge the overlap matrix from an extern file"""
 
-	tab = np.empty(764*764*257)
+	x = env.nb_temp * 2
+	y = x
+	z = env.temp_size * 2 - 1
+	type_size = 8
+	tab = np.empty(x * y * z)
 	size = 4096
 	i = 0
-	l = 764 * 764 * 257 * 8
+	l = x * y * z * type_size
 	n = 0
 	fd = open('omeg4', 'rb')
 	while l - n > size:
 		s = fd.read(size)
-		tab[n / 8 : (n + size) / 8] = np.fromstring(s, dtype = np.float64)
+		tab[n / type_size : (n + size) / type_size] = np.fromstring(s, dtype = np.float64)
 		i += 1
 		n += size
 	s = fd.read(l - n)
-	tab[i * size / 8:] = np.fromstring(s, dtype = np.float64)
+	tab[i * size / type_size:] = np.fromstring(s, dtype = np.float64)
 	fd.close()
-	tab = tab.reshape(764, 764, 257)
+	tab = tab.reshape(x, y, z)
 	return (tab)
