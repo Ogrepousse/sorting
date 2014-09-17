@@ -14,13 +14,13 @@ from libpy import environment
 from libpy.environment import class_env
 
 env = class_env.t_env()
-set = 2000
+sample = 2000
 x = 0
-sig = get.get_stream(x = x, y = set)
-a = np.reshape(sig, (-1, 252)).T
+sig = get.get_stream(x = x, y = sample)
+a = np.reshape(sig, (-1, env.nb_elec)).T
 
 #recherche des temps de spike
-sp = block.get_spike(a)
+sp = block.get_spike(env, a)
 ti = block.seperate_time(sp)
 
 #creation des blocs de spike pour le fitting
@@ -39,7 +39,7 @@ scal_prod.browse_block(env, a, blc, ti, div)
 
 for i in range(90, 91):
 	print(i)
-	my_plot.trace(a, b, y = set - x, nb = i)
+	my_plot.trace(a, b, y = sample - x, nb = i)
 	plt.show()
 
 print('fini')

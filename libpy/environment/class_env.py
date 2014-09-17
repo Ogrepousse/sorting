@@ -4,6 +4,7 @@ import get_all_bij as gab
 
 class t_env(object):
 	def __init__(self):
+		self.nb_elec = 252 #number of electrodes
 		self.space_block = 130 #maximum time between two spike in a same block
 		self.size_block = 500 #maximum length for a block
 		self.win_over = 129 #size of the overlap window between each block
@@ -13,6 +14,7 @@ class t_env(object):
 	def set_temp(self):
 		self.temp = env_fct.get_temp()
 		self.temp2 = self.temp.copy()
+		self.temp_size = self.temp.shape[1]
 
 	def set_comp(self):
 		self.comp = snd_comp.get_comp(self.temp)
@@ -29,11 +31,11 @@ class t_env(object):
 		self.overlap = env_fct.get_overlap()
 
 	def set_time(self, a, ti, div):
-		self.al, self.size = gab.get_all_time(ti, div, a)
+		self.al, self.size = gab.get_all_time(self, a, ti, div)
 
 	def set_bij(self, a, div):
-		self.big_bij = gab.get_all_bij(div, self.al, a, self.temp, self.size)
-		self.big_beta = gab.get_all_bij(div, self.al, a, self.comp, self.size)
+		self.big_bij = gab.get_all_bij(a, div, self.al, self.temp, self.size)
+		self.big_beta = gab.get_all_bij(a, div, self.al, self.comp, self.size)
 
 	def setup_env(self, a, ti, div):
 		self.set_temp()

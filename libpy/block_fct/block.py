@@ -30,12 +30,12 @@ def ct_bis(env, a, median, mad):
 	return (b1)
 
 
-def get_spike(a, x = 0, y = 0):
+def get_spike(env, a, x = 0, y = 0):
 	"""renvoi un tableau de boolean pour chaque instant s'il y a eu un spike qui satisfait les criteres de selection ou non"""
 
 	median = cal_median(a)
 	mad = get_mad(a, median)
-	spike_list = np.sum(ct_bis(a, median, mad), axis = 0)
+	spike_list = np.sum(ct_bis(env, a, median, mad), axis = 0)
 ##peut etre ignore
 	spike_list[np.where(spike_list > 0)[0]] = 1
 	return (spike_list)
