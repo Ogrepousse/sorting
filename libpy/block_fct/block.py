@@ -18,11 +18,11 @@ def cal_median(a):
 	return (median)
 
 
-def ct_bis(a, median, mad):
+def ct_bis(env, a, median, mad):
 	"""verification du depassement de seuil pour un spike
 	et minimum local"""
 
-	b1 = (a.T < median - 6 * mad).T
+	b1 = (a.T < median -  env.threshold * mad).T
 	b2 = a[:, :a.shape[1] - 1] < a[:, 1:]
 	b3 = a[:, 1:] < a[:, :a.shape[1] - 1]
 	b1[:, :a.shape[1] - 1] = b1[:, :a.shape[1] - 1] & b2
