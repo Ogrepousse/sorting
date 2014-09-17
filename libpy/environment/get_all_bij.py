@@ -35,7 +35,7 @@ def first_part(bij, l1, l2, i):
 	return (b1)
 
 
-def get_all_bij(a, div, all_l, temp, size):
+def get_all_bij(env, a, div, all_l, temp, size):
 	"""return an array with all the bij calculate for eache bloc"""
 
 	big_bij = np.zeros((div.shape[0], np.amax(size), temp.shape[2]))
@@ -46,7 +46,7 @@ def get_all_bij(a, div, all_l, temp, size):
 		l = all_l[i, :size[i]]
 		b1 = first_part(bij, l1, l, i)
 		l2 = l[np.where(l > l1[-1])[0]]
-		b2 = env_fct.get_bij(a, l2, temp)
+		b2 = env_fct.get_bij(env, a, l2, temp)
 		bij = np.empty((size[i], temp.shape[2]))
 		bij[0 : b1.shape[0], :] = b1
 		bij[b1.shape[0] :, :] = b2

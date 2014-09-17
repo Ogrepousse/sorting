@@ -39,13 +39,13 @@ def calc_bij(temp, si):
 	return (res)
 
 
-def get_bij(a, l, temp):
+def get_bij(env, a, l, temp):
 	"""calculate the matrix bij"""
 
 	bij = np.empty((l.shape[0], temp.shape[2]))
-	s = np.empty((l.shape[0], 252, 129))
+	s = np.empty((l.shape[0], env.nb_elec, env.temp_size))
 	for i in range(bij.shape[0]):
-		si = a[:, l[i] - 64 : l[i] + 65]
+		si = a[:, l[i] - env.temp_size / 2 : l[i] + env.temp_size / 2 + 1]
 		s[i, :, :] = si
 	bij = np.tensordot(s[::], temp, 2)
 	return (bij)

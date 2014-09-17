@@ -14,7 +14,7 @@ from libpy import environment
 from libpy.environment import class_env
 
 env = class_env.t_env()
-sample = 2000
+sample = 5000
 x = 0
 sig = get.get_stream(x = x, y = sample)
 a = np.reshape(sig, (-1, env.nb_elec)).T

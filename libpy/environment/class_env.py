@@ -35,8 +35,8 @@ class t_env(object):
 		self.al, self.size = gab.get_all_time(self, a, ti, div)
 
 	def set_bij(self, a, div):
-		self.big_bij = gab.get_all_bij(a, div, self.al, self.temp, self.size)
-		self.big_beta = gab.get_all_bij(a, div, self.al, self.comp, self.size)
+		self.big_bij = gab.get_all_bij(self, a, div, self.al, self.temp, self.size)
+		self.big_beta = gab.get_all_bij(self, a, div, self.al, self.comp, self.size)
 
 	def setup_env(self, a, ti, div):
 		self.set_temp()
