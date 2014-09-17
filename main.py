@@ -10,8 +10,8 @@ from libpy import block_fct
 from libpy.block_fct import block
 from libpy import dot_prod
 from libpy.dot_prod import scal_prod
-from libpy import environnement
-from libpy.environnement import class_env
+from libpy import environment
+from libpy.environment import class_env
 
 env = class_env.t_env()
 set = 2000
