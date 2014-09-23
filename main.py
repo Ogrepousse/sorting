@@ -25,6 +25,12 @@ x = 0
 sig = get.get_stream(x = x, y = sample)
 a = np.reshape(sig, (-1, t_env.nb_elec)).T
 
+#### for plotting #####
+median = block.cal_median(a)
+mad = block.get_mad(a, median)
+#######################
+
+
 #recherche des temps de spike
 sp = block.get_spike(t_env, a)
 ti = block.seperate_time(sp)
@@ -49,7 +55,7 @@ def core():
 core()
 for i in range(99, 100):
 	print(i)
-	my_plot.trace(a, b, y = sample - x, nb = i)
+	my_plot.trace(a, b, median, mad, y = sample - x, nb = i)
 	plt.show()
 
 print('fini')
