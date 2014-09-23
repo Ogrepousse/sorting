@@ -44,12 +44,18 @@ def get_max(bij, exploration, bij_bool):
 	return (c)
 
 
-def substract_signal(a, l, aij, temp, c, alpha, comp2, limit):
+def substract_signal(a, l, aij, temp, c, alpha, comp2, limit, b):
 	"""substract the template to the signal"""
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]] + alpha * comp2[:, :, c[1]]
+#	print(a.shape)
+#	x = np.arange(a.shape[1])
+#	plt.plot(x, a[99], x, b[99])
+#
+#	plt.show()
 
 
-def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, beta_ij, norme2, comp2, div, k):
+
+def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, beta_ij, norme2, comp2, div, k, b):
 	"""get i and for max value of bij, then check if aij value is correct"""
 
 	c = get_max(bij, exploration, bij_bool)
@@ -60,7 +66,7 @@ def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2
 	win = 129
 	if aij > limit[0] and aij < limit[1]:
 		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win):
-			substract_signal(a, l, aij, temp2, c, alpha, comp2, limit)
+			substract_signal(a, l, aij, temp2, c, alpha, comp2, limit, b)
 			maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha)
 		return (1)
 	else:
@@ -86,7 +92,7 @@ def maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha):
 def maj_bij(bij, c, aij, omeg, l):
 	"""update the bij matrix with the precalculate matrix omeg"""
 
-	ome = omeg[c[1], :, :]
+	ome = omeg[:, c[1], :]
 	n1 = l < l[c[0]] + 129
 	n2 = l > l[c[0]] - 128
 	n = n1 & n2
@@ -121,7 +127,7 @@ def browse_block(env, a, blc, ti, div):
 	size = env.size
 	big_bij = env.big_bij
 	big_beta = env.big_beta
-
+	b = a.copy()
 
 	print('parcours', blc.shape[0])
 	#parcours des blocs
@@ -133,4 +139,4 @@ def browse_block(env, a, blc, ti, div):
 		beta_ij = small_bij(big_beta, k, size)
 		bij_bool = np.zeros(bij.shape, dtype = bool)
 		while is_explored(exploration, bij_bool):
-			part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, beta_ij, norme2, comp2, div, k)
+			part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, beta_ij, norme2, comp2, div, k, b)

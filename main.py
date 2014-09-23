@@ -17,35 +17,39 @@ from libpy.environment import class_env
 if __name__ != "__main__" or len(sys.argv) != 2:
 	print(__name__)
 	print(len(sys.argv))
-	exit(-1)
+	sys.exit(-1)
 
-env = class_env.t_env()
+t_env = class_env.t_env()
 sample = int(sys.argv[1])
 x = 0
 sig = get.get_stream(x = x, y = sample)
-a = np.reshape(sig, (-1, env.nb_elec)).T
+a = np.reshape(sig, (-1, t_env.nb_elec)).T
 
 #recherche des temps de spike
-sp = block.get_spike(env, a)
+sp = block.get_spike(t_env, a)
 ti = block.seperate_time(sp)
 
 #creation des blocs de spike pour le fitting
-blc = block.get_block(env, sp, ti)
+blc = block.get_block(t_env, sp, ti)
 del(sp)
-blc = block.divide_block(env, blc)
+blc = block.divide_block(t_env, blc)
 print(blc)
-div = block.begin_end(env, blc)
+div = block.begin_end(t_env, blc)
 
 print("ca commence")
 
 #fitting
 b = a.copy()
-env.setup_env(a, ti, div)
-scal_prod.browse_block(env, a, blc, ti, div)
 
-#for i in range(90, 91):
-#	print(i)
-#	my_plot.trace(a, b, y = sample - x, nb = i)
-#	plt.show()
+
+def core():
+	t_env.setup_env(a, ti, div)
+	scal_prod.browse_block(t_env, a, blc, ti, div)
+
+core()
+for i in range(99, 100):
+	print(i)
+	my_plot.trace(a, b, y = sample - x, nb = i)
+	plt.show()
 
 print('fini')
