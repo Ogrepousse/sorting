@@ -67,7 +67,7 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b):
 	if aij > limit[0] and aij < limit[1]:
 		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win):
 			substract_signal(a, l, aij, t_env.temp2, c, alpha, t_env.comp2, limit, b)
-			maj_scalar(c, bij, beta_ij, t_env.overlap, l, aij, alpha)
+			maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
 		return (1)
 	else:
 		exploration[c[0]] += 1
@@ -76,33 +76,34 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b):
 		return (0)
 
 
-def maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha):
+def maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha):
 	"""recalculate the value of bij and beta_ij with the precacultate matric overlap"""
 
-	omeg_a = omeg[:bij.shape[1], :bij.shape[1], :]
-	omeg_b = omeg[:bij.shape[1], bij.shape[1]:, :]
-	omeg_c = omeg[bij.shape[1]:, :bij.shape[1], :]
-	omeg_d = omeg[bij.shape[1]:, bij.shape[1]:, :]
-	maj_bij(bij, c, aij, omeg_a, l)
-	maj_bij(bij, c, alpha, omeg_b, l)
-	maj_bij(beta_ij, c, aij, omeg_c, l)
-	maj_bij(beta_ij, c, alpha, omeg_d, l)
+	omeg_a = t_env.overlap[:bij.shape[1], :bij.shape[1], :]
+	omeg_b = t_env.overlap[:bij.shape[1], bij.shape[1]:, :]
+	omeg_c = t_env.overlap[bij.shape[1]:, :bij.shape[1], :]
+	omeg_d = t_env.overlap[bij.shape[1]:, bij.shape[1]:, :]
+	maj_bij(t_env, bij, c, aij, omeg_a, l)
+	maj_bij(t_env, bij, c, alpha, omeg_b, l)
+	maj_bij(t_env, beta_ij, c, aij, omeg_c, l)
+	maj_bij(t_env, beta_ij, c, alpha, omeg_d, l)
 
 
-def maj_bij(bij, c, aij, omeg, l):
+def maj_bij(t_env, bij, c, aij, omeg, l):
 	"""update the bij matrix with the precalculate matrix omeg"""
 
+	len = t_env.temp_size
 	ome = omeg[:, c[1], :]
-	n1 = l < l[c[0]] + 129
-	n2 = l > l[c[0]] - 128
+	n1 = l < l[c[0]] + len
+	n2 = l > l[c[0]] - (len - 1)
 	n = n1 & n2
 	l2 = l[n]
 	linf = l2[l2 <= l[c[0]]]
 	lsup = l2[l2 > l[c[0]]]
 	t1 = np.where(np.in1d(l, linf) == True)[0]
 	t2 = np.where(np.in1d(l, lsup) == True)[0]
-	om_inf = ome[:, linf - l[c[0]] + 128]
-	om_sup = ome[:, lsup - l[c[0]] + 128]
+	om_inf = ome[:, linf - l[c[0]] + (len - 1)]
+	om_sup = ome[:, lsup - l[c[0]] + (len - 1)]
 	bij[t1, :] = bij[t1, :] - aij * om_inf.T
 	bij[t2, :] = bij[t2, :] - aij * om_sup.T
 

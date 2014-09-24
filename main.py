@@ -51,6 +51,7 @@ b = a.copy()
 def core():
 	t_env.setup_env(a, ti, div)
 	scal_prod.browse_block(t_env, a, blc, ti, div)
+	del(t_env.overlap)
 
 core()
 for i in range(99, 100):
