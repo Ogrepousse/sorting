@@ -111,33 +111,18 @@ def maj_bij(t_env, bij, c, aij, omeg, l):
 
 def browse_block(t_env, a, blc, ti, div):
 	"""browse all block in order to apply the fitting"""
-
-	#recuperation des templates, seconde composante, limite haute et basse, matrice d'overlap
-	temp = t_env.temp
-	temp2 = t_env.temp2
-	comp = t_env.comp
-	comp2 = t_env.comp2
-	norme = t_env.norme
-	norme2 = t_env.norme2
-	amp_lim = t_env.amp_lim
-	omeg = t_env.overlap
-	print('overlap recupere')
-
-	#precalcul de tout les temps de spike et des bij pour chaque bloc
-	al = t_env.al
-	size = t_env.size
-	big_bij = t_env.big_bij
-	big_beta = t_env.big_beta
+	### a supprimer ###
 	b = a.copy()
+	###################
 
 	print('parcours', blc.shape[0])
 	#parcours des blocs
 	for k in range(blc.shape[0]):
 		print('entre block', k)
-		l = small_time(al, k, size)
+		l = small_time(t_env.al, k, t_env.size)
 		exploration = np.zeros(l.shape[0])
-		bij = small_bij(big_bij, k, size)
-		beta_ij = small_bij(big_beta, k, size)
+		bij = small_bij(t_env.big_bij, k, t_env.size)
+		beta_ij = small_bij(t_env.big_beta, k, t_env.size)
 		bij_bool = np.zeros(bij.shape, dtype = bool)
 		while is_explored(exploration, bij_bool):
 			part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b)
