@@ -55,19 +55,19 @@ def substract_signal(a, l, aij, temp, c, alpha, comp2, limit, b):
 
 
 
-def part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, beta_ij, norme2, comp2, div, k, b):
+def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b):
 	"""get i and for max value of bij, then check if aij value is correct"""
 
 	c = get_max(bij, exploration, bij_bool)
 	bij_bool[c] = True
-	aij = bij[c] / norme[c[1]]
-	alpha = beta_ij[c] / norme2[c[1]]
-	limit = amp_lim[:, c[1]]
-	win = 129
+	aij = bij[c] / t_env.norme[c[1]]
+	alpha = beta_ij[c] / t_env.norme2[c[1]]
+	limit = t_env.amp_lim[:, c[1]]
+	win = t_env.win_over
 	if aij > limit[0] and aij < limit[1]:
 		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win):
-			substract_signal(a, l, aij, temp2, c, alpha, comp2, limit, b)
-			maj_scalar(c, bij, beta_ij, omeg, l, aij, alpha)
+			substract_signal(a, l, aij, t_env.temp2, c, alpha, t_env.comp2, limit, b)
+			maj_scalar(c, bij, beta_ij, t_env.overlap, l, aij, alpha)
 		return (1)
 	else:
 		exploration[c[0]] += 1
@@ -108,25 +108,25 @@ def maj_bij(bij, c, aij, omeg, l):
 
 
 
-def browse_block(env, a, blc, ti, div):
+def browse_block(t_env, a, blc, ti, div):
 	"""browse all block in order to apply the fitting"""
 
 	#recuperation des templates, seconde composante, limite haute et basse, matrice d'overlap
-	temp = env.temp
-	temp2 = env.temp2
-	comp = env.comp
-	comp2 = env.comp2
-	norme = env.norme
-	norme2 = env.norme2
-	amp_lim = env.amp_lim
-	omeg = env.overlap
+	temp = t_env.temp
+	temp2 = t_env.temp2
+	comp = t_env.comp
+	comp2 = t_env.comp2
+	norme = t_env.norme
+	norme2 = t_env.norme2
+	amp_lim = t_env.amp_lim
+	omeg = t_env.overlap
 	print('overlap recupere')
 
 	#precalcul de tout les temps de spike et des bij pour chaque bloc
-	al = env.al
-	size = env.size
-	big_bij = env.big_bij
-	big_beta = env.big_beta
+	al = t_env.al
+	size = t_env.size
+	big_bij = t_env.big_bij
+	big_beta = t_env.big_beta
 	b = a.copy()
 
 	print('parcours', blc.shape[0])
@@ -139,4 +139,4 @@ def browse_block(env, a, blc, ti, div):
 		beta_ij = small_bij(big_beta, k, size)
 		bij_bool = np.zeros(bij.shape, dtype = bool)
 		while is_explored(exploration, bij_bool):
-			part_aij(bij, norme, a, amp_lim, exploration, bij_bool, temp, l, omeg, temp2, beta_ij, norme2, comp2, div, k, b)
+			part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b)

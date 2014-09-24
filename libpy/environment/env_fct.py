@@ -63,7 +63,7 @@ def get_overlap(env):
 	i = 0
 	l = x * y * z * type_size
 	n = 0
-	fd = open('omeg4', 'rb')
+	fd = open('omeg5', 'rb')
 	while l - n > size:
 		s = fd.read(size)
 		tab[n / type_size : (n + size) / type_size] = np.fromstring(s, dtype = np.float64)
