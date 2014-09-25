@@ -10,6 +10,7 @@ class t_env(object):
 		self.size_block = 500 #maximum length for a block
 		self.win_over = 129 #size of the overlap window between each block
 		self.threshold = 6 #threshold factor for spike discrimination
+		self.nb_octet = 2 #number of octet for the data
 		print('environnement cree')
 
 	def data_form(self, head):
