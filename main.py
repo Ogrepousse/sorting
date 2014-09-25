@@ -24,6 +24,7 @@ sample = int(sys.argv[1])
 x = 0
 sig = get.get_stream(x = x, y = sample)
 a = np.reshape(sig, (-1, t_env.nb_elec)).T
+sample = a.shape[1]
 
 #### for plotting #####
 median = block.cal_median(a)
@@ -54,6 +55,7 @@ def core():
 	del(t_env.overlap)
 
 core()
+print('shape', a.shape)
 for i in range(99, 100):
 	print(i)
 	my_plot.trace(a, b, median, mad, y = sample - x, nb = i)
