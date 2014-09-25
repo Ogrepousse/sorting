@@ -22,7 +22,10 @@ if __name__ != "__main__" or len(sys.argv) != 2:
 t_env = class_env.t_env()
 sample = int(sys.argv[1])
 x = 0
-sig = get.get_stream(x = x, y = sample)
+fd, head = get.read_header(t_env)
+t_env.data_form(head)
+del(head)
+sig = get.get_stream2(t_env, fd, x = x, y = sample)
 a = np.reshape(sig, (-1, t_env.nb_elec)).T
 sample = a.shape[1]
 

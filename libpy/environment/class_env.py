@@ -1,15 +1,28 @@
+import re
+
 import env_fct
 import snd_comp
 import get_all_bij as gab
 
 class t_env(object):
 	def __init__(self):
-		self.nb_elec = 252 #number of electrodes
 		self.space_block = 130 #maximum time between two spike in a same block
 		self.size_block = 500 #maximum length for a block
 		self.win_over = 129 #size of the overlap window between each block
 		self.threshold = 6 #threshold factor for spike discrimination
 		print('environnement cree')
+
+	def data_form(self, head):
+		"""get information from the header of the data"""
+	
+		adc = int(re.findall('\d+', head[4])[0])
+		el = float(re.findall('\d+.\d+', head[5])[0])
+		nb = len(re.findall('\d+', head[6]))
+
+		self.adc = adc #ADC zero
+		self.el = el #El
+		#El and ADC are used for data conversion
+		self.nb_elec = nb #number of electrode
 
 	def set_temp(self):
 		"""get the templates and make a copy for normalization"""
