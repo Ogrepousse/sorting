@@ -11,6 +11,7 @@ class t_env(object):
 		self.win_over = 129 #size of the overlap window between each block
 		self.threshold = 6 #threshold factor for spike discrimination
 		self.nb_octet = 2 #number of octet for the data
+		self.mega_block = 1000 #number of units of time to divide the signal
 		print('environnement cree')
 
 	def data_form(self, head):
@@ -66,13 +67,16 @@ class t_env(object):
 		self.big_bij = gab.get_all_bij(self, a, div, self.al, self.temp, self.size)
 		self.big_beta = gab.get_all_bij(self, a, div, self.al, self.comp, self.size)
 
-	def setup_env(self, a, ti, div):
+	def setup_two(self, a, ti, div):
 		"""use to load all the data needed for the fitting"""
 
+		self.set_time(a, ti, div)
+		self.set_bij(a, div)
+
+	def setup_one(self):
 		self.set_temp()
 		self.set_comp()
 		self.set_norme()
 		self.set_lim()
 		self.set_overlap()
-		self.set_time(a, ti, div)
-		self.set_bij(a, div)
+

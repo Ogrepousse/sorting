@@ -9,7 +9,7 @@ def read_header(t_env, file_name = '../files/ALL_cut.filtered'):
 		s = fd.readline()
 		head.append(s)
 		ret = s.find('EOH')
-	fd.read(5)	
+	fd.read(5)
 	return (fd, head)
 
 
@@ -46,7 +46,7 @@ def get_stream2(t_env, fd, x = 0, y = 20000):
 		a = a[: i / octet]
 	a = a.astype(np.int64)
 	a = (a - t_env.adc) * t_env.el
-	return (a)
+	return (a, b)
 
 
 def get_stream(t_env, x = 0, y = 20000):
