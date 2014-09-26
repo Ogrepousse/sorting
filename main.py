@@ -35,7 +35,11 @@ def loop_file(t_env, sample):
 		y = int(sys.argv[1]) - total
 		if y > t_env.mega_block:
 			y = t_env.mega_block
-		sig, end = get.get_stream2(t_env, fd, x = x, y = y)
+		y += t_env.win_over
+	#	sig, end = get.get_stream2(t_env, fd, x = x, y = y)
+		sig, end = get.get_stream3(t_env, fd, total, sig, y = y)
+		if sig.shape[0] == 0:
+			break
 		a = np.reshape(sig, (-1, t_env.nb_elec)).T
 		sample = a.shape[1]
 		total += sample
