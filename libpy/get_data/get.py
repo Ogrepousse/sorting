@@ -48,6 +48,49 @@ def get_stream2(t_env, fd, x = 0, y = 20000):
 	a = (a - t_env.adc) * t_env.el
 	return (a, b)
 
+def get_stream3(t_env, fd, total, sig, y = 20000):
+	"""recupere les signaux des electrodes depuis un fichier externe"""
+
+	#debut des stream
+	#on ignore le debut des signaux si x non null
+	octet = t_env.nb_octet
+	size = 4096
+	i = 0
+	l = y * t_env.nb_elec * octet
+	n = 0
+	if total:
+		full = np.empty((y + t_env.win_over) * t_env.nb_elec)
+		full[: t_env.win_over * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * t_env.nb_elec)]
+		a = full[t_env.win_over * t_env.nb_elec :]
+		print('b', a.shape)
+	else:
+		a = np.empty(y * t_env.nb_elec)
+		print('a', a.shape)
+		full = a
+	b = 0
+	print('lol')
+	while l - n > size:
+		s = fd.read(size)
+		if (len(s) == size):
+			a[n / octet : (n + size) / octet] = np.fromstring(s, dtype = np.uint16)
+		else:
+			a[n / octet : (n + len(s)) / octet] = np.fromstring(s, dtype = np.uint16)
+			b = 1
+		i += len(s)
+		n += size
+	s = fd.read(l - n)
+	if len(s) > 0 and len(s) == l - n:
+		a[i / octet:] = np.fromstring(s, dtype = np.uint16)
+	elif len(s) > 0:
+		b = 1
+		a[i / octet : (i + len(s)) / octet] = np.fromstring(s, dtype = np.uint16)
+		i += len(s)
+	if b:
+		a = a[: i / octet]
+	a = a.astype(np.int64)
+	a = (a - t_env.adc) * t_env.el
+	return (full, b)
+
 
 def get_stream(t_env, x = 0, y = 20000):
 	"""recupere les signaux des electrodes depuis un fichier externe"""

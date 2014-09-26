@@ -30,8 +30,12 @@ def loop_file(t_env, sample):
 	end = 0
 	t_env.setup_one()
 	total = 0
+	sig = 0
 	while end == 0 and total < int(sys.argv[1]):
-		sig, end = get.get_stream2(t_env, fd, x = x, y = t_env.mega_block)
+		y = int(sys.argv[1]) - total
+		if y > t_env.mega_block:
+			y = t_env.mega_block
+		sig, end = get.get_stream2(t_env, fd, x = x, y = y)
 		a = np.reshape(sig, (-1, t_env.nb_elec)).T
 		sample = a.shape[1]
 		total += sample
@@ -55,7 +59,7 @@ def loop_file(t_env, sample):
 
 		print("ca commence")
 		b = a.copy()
-		core(t_env, a, ti, blc, div)
+	#	core(t_env, a, ti, blc, div)
 		#fitting
 
 		display(a, b, sample, x, median, mad)
