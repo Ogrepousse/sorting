@@ -52,19 +52,16 @@ def get_stream3(t_env, fd, bol, sig, y = 20000):
 	"""recupere les signaux des electrodes depuis un fichier externe"""
 
 	#debut des stream
-	#on ignore le debut des signaux si x non null
 	octet = t_env.nb_octet
 	size = 4096
 	i = 0
 	l = y * t_env.nb_elec * octet
 	n = 0
+#simplifier le if avec bol 1 et 2
 	if bol == 1:
 		full = np.empty((y + 2 * t_env.win_over) * t_env.nb_elec)
 		full[: t_env.win_over * 2 * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * 2 * t_env.nb_elec):]
 		a = full[t_env.win_over * 2 * t_env.nb_elec :]
-	#	y -= t_env.win_over
-	#	l = y * t_env.nb_elec * octet
-		print('b', a.shape)
 	elif bol == 2:
 		full = np.empty((y + t_env.win_over) * t_env.nb_elec)
 		full[: t_env.win_over  * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * t_env.nb_elec):]
@@ -73,13 +70,11 @@ def get_stream3(t_env, fd, bol, sig, y = 20000):
 		y += t_env.win_over
 		l = y * t_env.nb_elec * octet
 		a = np.empty(y * t_env.nb_elec)
-		print('a', a.shape)
 		full = a
-	print('FULL', full.reshape(-1, t_env.nb_elec).shape)
 	b = 0
-	print('lol')
 	while l - n > size:
 		s = fd.read(size)
+#simplifier le if avec size et len(s)
 		if (len(s) == size):
 			a[n / octet : (n + size) / octet] = np.fromstring(s, dtype = np.uint16)
 		else:
@@ -96,6 +91,7 @@ def get_stream3(t_env, fd, bol, sig, y = 20000):
 		i += len(s)
 	if b:
 		a = a[: i / octet]
+		full = a
 	a = a.astype(np.int64)
 	a = (a - t_env.adc) * t_env.el
 	return (full, b)
