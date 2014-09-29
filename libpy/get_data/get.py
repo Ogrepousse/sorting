@@ -48,7 +48,7 @@ def get_stream2(t_env, fd, x = 0, y = 20000):
 	a = (a - t_env.adc) * t_env.el
 	return (a, b)
 
-def get_stream3(t_env, fd, total, sig, y = 20000):
+def get_stream3(t_env, fd, bol, sig, y = 20000):
 	"""recupere les signaux des electrodes depuis un fichier externe"""
 
 	#debut des stream
@@ -58,15 +58,24 @@ def get_stream3(t_env, fd, total, sig, y = 20000):
 	i = 0
 	l = y * t_env.nb_elec * octet
 	n = 0
-	if total:
-		full = np.empty((y + t_env.win_over) * t_env.nb_elec)
-		full[: t_env.win_over * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * t_env.nb_elec):]
-		a = full[t_env.win_over * t_env.nb_elec :]
+	if bol == 1:
+		full = np.empty((y + 2 * t_env.win_over) * t_env.nb_elec)
+		full[: t_env.win_over * 2 * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * 2 * t_env.nb_elec):]
+		a = full[t_env.win_over * 2 * t_env.nb_elec :]
+	#	y -= t_env.win_over
+	#	l = y * t_env.nb_elec * octet
 		print('b', a.shape)
+	elif bol == 2:
+		full = np.empty((y + t_env.win_over) * t_env.nb_elec)
+		full[: t_env.win_over  * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * t_env.nb_elec):]
+		a = full[t_env.win_over * t_env.nb_elec :]
 	else:
+		y += t_env.win_over
+		l = y * t_env.nb_elec * octet
 		a = np.empty(y * t_env.nb_elec)
 		print('a', a.shape)
 		full = a
+	print('FULL', full.reshape(-1, t_env.nb_elec).shape)
 	b = 0
 	print('lol')
 	while l - n > size:

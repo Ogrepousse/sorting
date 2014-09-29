@@ -31,17 +31,19 @@ def loop_file(t_env, sample):
 	t_env.setup_one()
 	total = 0
 	sig = 0
+	bol = 0
 	while end == 0 and total < int(sys.argv[1]):
 		y = int(sys.argv[1]) - total
 		if y > t_env.mega_block:
 			y = t_env.mega_block
-		if y + t_env.win_over + total < int(sys.argv[1]):
-			y += t_env.win_over
 		else:
-			y = int(sys.argv[1]) - total
-		sig, end = get.get_stream2(t_env, fd, x = x, y = y)
-	#	sig, end = get.get_stream3(t_env, fd, total, sig, y = y)
+			bol = 2
+		if type(sig) is int:
+			bol = 0
+		sig, end = get.get_stream3(t_env, fd, bol, sig, y = y)
+		bol = 1
 		if sig.shape[0] == 0:
+			print('A PLUS')
 			break
 		a = np.reshape(sig, (-1, t_env.nb_elec)).T.copy()
 		sample = a.shape[1]
@@ -50,7 +52,7 @@ def loop_file(t_env, sample):
 		print('total', total)
 
 		(median, mad, ti, blc, div) = first_part(a)
-		print("ca commence")
+	#	print("ca commence")
 		b = a.copy()
 	#	core(t_env, a, ti, blc, div)
 		#fitting
@@ -73,7 +75,7 @@ def first_part(a):
 		blc = block.get_block(t_env, sp, ti)
 		del(sp)
 		blc = block.divide_block(t_env, blc)
-		print(blc)
+	#	print(blc)
 		div = block.begin_end(t_env, blc)
 		return (median, mad, ti, blc, div)
 
@@ -84,9 +86,9 @@ def core(t_env, a, ti, blc, div):
 
 #core()
 def display(a, b, sample, x, median, mad):
-	print('shape', a.shape)
+#	print('shape', a.shape)
 	for i in range(99, 100):
-		print(i)
+#		print(i)
 		my_plot.trace(a, b, median, mad, y = sample - x, nb = i)
 		plt.show()
 
