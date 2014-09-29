@@ -11,7 +11,7 @@ class t_env(object):
 		self.win_over = 129 #size of the overlap window between each block
 		self.threshold = 6 #threshold factor for spike discrimination
 		self.nb_octet = 2 #number of octet for the data
-		self.mega_block = 1000 #number of units of time to divide the signal
+		self.mega_block = 900 #number of units of time to divide the signal
 		print('environnement cree')
 
 	def data_form(self, head):
@@ -78,5 +78,5 @@ class t_env(object):
 		self.set_comp()
 		self.set_norme()
 		self.set_lim()
-		self.set_overlap()
+	#	self.set_overlap()
 

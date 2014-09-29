@@ -60,7 +60,7 @@ def get_stream3(t_env, fd, total, sig, y = 20000):
 	n = 0
 	if total:
 		full = np.empty((y + t_env.win_over) * t_env.nb_elec)
-		full[: t_env.win_over * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * t_env.nb_elec)]
+		full[: t_env.win_over * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * t_env.nb_elec):]
 		a = full[t_env.win_over * t_env.nb_elec :]
 		print('b', a.shape)
 	else:

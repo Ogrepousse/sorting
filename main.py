@@ -35,16 +35,31 @@ def loop_file(t_env, sample):
 		y = int(sys.argv[1]) - total
 		if y > t_env.mega_block:
 			y = t_env.mega_block
-		y += t_env.win_over
-	#	sig, end = get.get_stream2(t_env, fd, x = x, y = y)
-		sig, end = get.get_stream3(t_env, fd, total, sig, y = y)
+		if y + t_env.win_over + total < int(sys.argv[1]):
+			y += t_env.win_over
+		else:
+			y = int(sys.argv[1]) - total
+		sig, end = get.get_stream2(t_env, fd, x = x, y = y)
+	#	sig, end = get.get_stream3(t_env, fd, total, sig, y = y)
 		if sig.shape[0] == 0:
 			break
-		a = np.reshape(sig, (-1, t_env.nb_elec)).T
+		a = np.reshape(sig, (-1, t_env.nb_elec)).T.copy()
 		sample = a.shape[1]
-		total += sample
+		total += y
+		print('y =', y, 'shape =', a.shape[1])
 		print('total', total)
 
+		(median, mad, ti, blc, div) = first_part(a)
+		print("ca commence")
+		b = a.copy()
+	#	core(t_env, a, ti, blc, div)
+		#fitting
+
+		display(a, b, sample, x, median, mad)
+#	del(t_env.overlap)
+
+
+def first_part(a):
 		#### for plotting #####
 		median = block.cal_median(a)
 		mad = block.get_mad(a, median)
@@ -60,14 +75,7 @@ def loop_file(t_env, sample):
 		blc = block.divide_block(t_env, blc)
 		print(blc)
 		div = block.begin_end(t_env, blc)
-
-		print("ca commence")
-		b = a.copy()
-	#	core(t_env, a, ti, blc, div)
-		#fitting
-
-		display(a, b, sample, x, median, mad)
-	del(t_env.overlap)
+		return (median, mad, ti, blc, div)
 
 
 def core(t_env, a, ti, blc, div):
