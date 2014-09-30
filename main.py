@@ -33,7 +33,6 @@ def loop_file(t_env, sample):
 	sig = 0
 	bol = 0
 	while end == 0 and total < int(sys.argv[1]):
-		print('a')
 		y = int(sys.argv[1]) - total
 		if y > t_env.mega_block:
 			y = t_env.mega_block
@@ -41,9 +40,9 @@ def loop_file(t_env, sample):
 			bol = 2
 		if type(sig) is int:
 			bol = 0
-		print('bol =', bol)
+#		sig = get.get_stream(t_env, x = 0, y = int(sys.argv[1]))
+#		end = 1
 		sig, end = get.get_stream3(t_env, fd, bol, sig, y = y)
-		print('b')
 		bol = 1
 		if sig.shape[0] == 0:
 			print('A PLUS')
@@ -51,20 +50,14 @@ def loop_file(t_env, sample):
 		a = np.reshape(sig, (-1, t_env.nb_elec)).T.copy()
 		sample = a.shape[1]
 		total += y
-		print('y =', y, 'shape =', a.shape[1])
-		print('total', total)
 
-		print('c')
 		(median, mad, ti, blc, div) = first_part(a)
-	#	print("ca commence")
+		print("ca commence")
 		b = a.copy()
-	#	core(t_env, a, ti, blc, div)
-		#fitting
+		core(t_env, a, ti, blc, div)
 
-		print('d')
 		display(a, b, sample, x, median, mad)
-		print('e')
-#	del(t_env.overlap)
+	del(t_env.overlap)
 
 
 def first_part(a):

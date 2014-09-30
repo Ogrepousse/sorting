@@ -108,7 +108,6 @@ def maj_bij(t_env, bij, c, aij, omeg, l):
 	bij[t2, :] = bij[t2, :] - aij * om_sup.T
 
 
-
 def browse_block(t_env, a, blc, ti, div):
 	"""browse all block in order to apply the fitting"""
 	### a supprimer ###

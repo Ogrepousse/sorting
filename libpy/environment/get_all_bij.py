@@ -9,8 +9,8 @@ def select_ti_bis(env, a, ti, div, k):
 		l = l[np.where(l > div[k, 0])[0]]
 	if k == 0:
 		l = l[np.where(l > env.temp_size / 2)[0]]
-	if k == div.shape[0] - 1:
-		l = l[np.where(l + env.temp_size / 2 + 1 < a.shape[1])]
+#	if k == div.shape[0] - 1:
+	l = l[np.where(l + env.temp_size / 2 + 1 < a.shape[1])]
 	return (l)
 
 
