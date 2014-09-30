@@ -42,6 +42,7 @@ def loop_file(t_env, sample):
 			bol = 0
 #		sig = get.get_stream(t_env, x = 0, y = int(sys.argv[1]))
 #		end = 1
+		print('y =', y)
 		sig, end = get.get_stream3(t_env, fd, bol, sig, y = y)
 		bol = 1
 		if sig.shape[0] == 0:
@@ -54,7 +55,7 @@ def loop_file(t_env, sample):
 		(median, mad, ti, blc, div) = first_part(a)
 		print("ca commence")
 		b = a.copy()
-		core(t_env, a, ti, blc, div)
+	#	core(t_env, a, ti, blc, div)
 
 		display(a, b, sample, x, median, mad)
 	del(t_env.overlap)

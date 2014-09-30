@@ -48,6 +48,7 @@ def get_stream2(t_env, fd, x = 0, y = 20000):
 	a = (a - t_env.adc) * t_env.el
 	return (a, b)
 
+
 def get_stream3(t_env, fd, bol, sig, y = 20000):
 	"""recupere les signaux des electrodes depuis un fichier externe"""
 
@@ -55,22 +56,28 @@ def get_stream3(t_env, fd, bol, sig, y = 20000):
 	octet = t_env.nb_octet
 	size = 4096
 	i = 0
-	l = y * t_env.nb_elec * octet
+#	l = y * t_env.nb_elec * octet
 	n = 0
 #simplifier le if avec bol 1 et 2
-	if bol == 1:
-		full = np.empty((y + 2 * t_env.win_over) * t_env.nb_elec)
-		full[: t_env.win_over * 2 * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * 2 * t_env.nb_elec):]
-		a = full[t_env.win_over * 2 * t_env.nb_elec :]
-	elif bol == 2:
-		full = np.empty((y + t_env.win_over) * t_env.nb_elec)
-		full[: t_env.win_over  * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * t_env.nb_elec):]
-		a = full[t_env.win_over * t_env.nb_elec :]
-	else:
+#	if bol == 1:
+#		full = np.empty((y + 2 * t_env.win_over) * t_env.nb_elec)
+#		full[: t_env.win_over * 2 * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * 2 * t_env.nb_elec):]
+#		a = full[t_env.win_over * 2 * t_env.nb_elec :]
+#	elif bol == 2:
+#		full = np.empty((y + t_env.win_over) * t_env.nb_elec)
+#		full[: t_env.win_over  * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * t_env.nb_elec):]
+#		a = full[t_env.win_over * t_env.nb_elec :]
+#	else:
+#		y += t_env.win_over
+#		l = y * t_env.nb_elec * octet
+#		a = np.empty(y * t_env.nb_elec)
+#		full = a
+
+	if bol == 0:
 		y += t_env.win_over
-		l = y * t_env.nb_elec * octet
-		a = np.empty(y * t_env.nb_elec)
-		full = a
+	l = y * t_env.nb_elec * octet
+	a = np.empty(y * t_env.nb_elec)
+
 	b = 0
 	while l - n > size:
 		s = fd.read(size)
@@ -91,9 +98,20 @@ def get_stream3(t_env, fd, bol, sig, y = 20000):
 		i += len(s)
 	if b:
 		a = a[: i / octet]
-		full = a
 	a = a.astype(np.int64)
 	a = (a - t_env.adc) * t_env.el
+	if bol == 1 and b != 1:
+		y += 2 * t_env.win_over
+		full = np.empty(y * t_env.nb_elec)
+		full[: t_env.win_over * 2 * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * 2 * t_env.nb_elec):]
+		full[t_env.win_over * 2 * t_env.nb_elec :] = a
+	elif bol == 2 or b == 1:
+		y += t_env.win_over
+		full = np.empty(t_env.win_over * 2 * t_env.nb_elec + a.shape[0])
+		full[: t_env.win_over * 2 * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * 2 * t_env.nb_elec):]
+		full[t_env.win_over * 2 * t_env.nb_elec :] = a
+	else:
+		full = a
 	return (full, b)
 
 
