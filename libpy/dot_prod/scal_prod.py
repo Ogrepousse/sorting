@@ -126,3 +126,6 @@ def browse_block(t_env, a, blc, ti, div):
 		bij_bool = np.zeros(bij.shape, dtype = bool)
 		while is_explored(exploration, bij_bool):
 			part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b)
+	#	x = np.arange(a.shape[1])
+	#	plt.plot(x, a[99, :], x, b[99, :])
+	#	plt.show()
