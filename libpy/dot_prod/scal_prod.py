@@ -46,13 +46,13 @@ def get_max(bij, exploration, bij_bool):
 
 def substract_signal(a, l, aij, temp, c, alpha, comp2, limit, b):
 	"""substract the template to the signal"""
+	alpha = 0
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]] + alpha * comp2[:, :, c[1]]
 #	print(a.shape)
 #	x = np.arange(a.shape[1])
 #	plt.plot(x, a[99], x, b[99])
 #
 #	plt.show()
-
 
 
 def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b):
@@ -66,6 +66,7 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b):
 	win = t_env.win_over
 	if aij > limit[0] and aij < limit[1]:
 		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win):
+			t_env.fdout.write(str(aij) + ' ' + str(c[1]) + ' ' + str(l[c[0]] + t_env.index) + '\n')
 			substract_signal(a, l, aij, t_env.temp2, c, alpha, t_env.comp2, limit, b)
 			maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
 		return (1)

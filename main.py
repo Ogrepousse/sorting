@@ -55,9 +55,10 @@ def loop_file(t_env, sample):
 		(median, mad, ti, blc, div) = first_part(a)
 		print("ca commence")
 		b = a.copy()
-	#	core(t_env, a, ti, blc, div)
+		core(t_env, a, ti, blc, div)
 
 		display(a, b, sample, x, median, mad)
+	t_env.fdout.close()
 	del(t_env.overlap)
 
 

@@ -1,6 +1,6 @@
 import numpy as np
 
-def read_header(t_env, file_name = '../files/ALL_cut.filtered'):
+def read_header(t_env, file_name = '../files/ALL.filtered'):
 
 	fd = open(file_name, 'rb')
 	ret = -1
@@ -105,7 +105,7 @@ def get_stream3(t_env, fd, bol, sig, y = 20000):
 		full = np.empty(y * t_env.nb_elec)
 		full[: t_env.win_over * 2 * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * 2 * t_env.nb_elec):]
 		full[t_env.win_over * 2 * t_env.nb_elec :] = a
-	elif bol == 2 or b == 1:
+	elif bol == 2 or (b == 1 and bol != 0):
 		y += t_env.win_over
 		full = np.empty(t_env.win_over * 2 * t_env.nb_elec + a.shape[0])
 		full[: t_env.win_over * 2 * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * 2 * t_env.nb_elec):]
