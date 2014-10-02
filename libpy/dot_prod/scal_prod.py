@@ -51,11 +51,10 @@ def substract_signal(a, l, aij, temp, c, alpha, comp2, limit, b):
 #	print(a.shape)
 #	x = np.arange(a.shape[1])
 #	plt.plot(x, a[99], x, b[99])
-#
 #	plt.show()
 
 
-def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b):
+def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save):
 	"""get i and for max value of bij, then check if aij value is correct"""
 
 	c = get_max(bij, exploration, bij_bool)
@@ -65,10 +64,27 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b):
 	limit = t_env.amp_lim[:, c[1]]
 	win = t_env.win_over
 	if aij > limit[0] and aij < limit[1]:
+	#	if l[c[0]] == 476:
+	#		print('hee')
+	#		print(c)
+	#		print(l)
+	#		print(l[25], l[29], l[31], l[27])
 		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win):
+	#		if c[1] == 136 or c[1] == 137:
+	#			print('bouh', (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win))
+	#			print('l', l[c[0]])
+	#			print('div', div[k, 0], div[k, 1])
+	#			print('diff', div[k, 0] + win, div[k, 1] - win)
+	#			print('arggh', c)
 			t_env.fdout.write(str(aij) + ' ' + str(c[1]) + ' ' + str(l[c[0]] + t_env.index) + '\n')
 			substract_signal(a, l, aij, t_env.temp2, c, alpha, t_env.comp2, limit, b)
 			maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
+			maj_scalar(t_env, c, b_save, beta_ij, l, aij, alpha)
+	#		if (l[c[0]] < 476 + 129) and (l[c[0]] > 476 - 129):
+	#			print('c', c)
+	#			x = np.arange(a.shape[1])
+	#			plt.plot(x, a[99], x, b[99])
+	#			plt.show()
 		return (1)
 	else:
 		exploration[c[0]] += 1
@@ -117,15 +133,19 @@ def browse_block(t_env, a, blc, ti, div):
 
 	print('parcours', blc.shape[0])
 	#parcours des blocs
+	b_save = 0
 	for k in range(blc.shape[0]):
 		print('entre block', k)
 		l = small_time(t_env.al, k, t_env.size)
 		exploration = np.zeros(l.shape[0])
+		t_env.maj_bij(k, b_save)
+		print('maaaaaaaaaj')
 		bij = small_bij(t_env.big_bij, k, t_env.size)
+		b_save = bij.copy()
 		beta_ij = small_bij(t_env.big_beta, k, t_env.size)
 		bij_bool = np.zeros(bij.shape, dtype = bool)
 		while is_explored(exploration, bij_bool):
-			part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b)
+			part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save)
 	#	x = np.arange(a.shape[1])
 	#	plt.plot(x, a[99, :], x, b[99, :])
 	#	plt.show()

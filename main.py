@@ -32,6 +32,7 @@ def loop_file(t_env, sample):
 	total = 0
 	sig = 0
 	bol = 0
+	i = 0
 	while end == 0 and total < int(sys.argv[1]):
 		y = int(sys.argv[1]) - total
 		if y > t_env.mega_block:
@@ -56,9 +57,12 @@ def loop_file(t_env, sample):
 		print("ca commence")
 		print('div', div)
 		b = a.copy()
-		core(t_env, a, ti, blc, div)
+		if i == 4:
+			core(t_env, a, ti, blc, div)
 		t_env.index = y - t_env.win_over
-		display(a, b, sample, x, median, mad)
+		if i == 4:
+			display(a, b, sample, x, median, mad)
+		i += 1
 	t_env.fdout.close()
 	del(t_env.overlap)
 

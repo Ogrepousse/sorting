@@ -82,3 +82,13 @@ class t_env(object):
 		self.set_lim()
 		self.set_overlap()
 
+	def maj_bij(self, k, b_past):
+		if k > 0:
+			l = self.al[k, :self.size[k]]
+			l1 = self.al[k - 1, :self.size[k - 1]]
+#			b_past = self.big_bij[k - 1, :self.size[k - 1], :]
+			b1 = gab.first_part(b_past, l1, l, k)
+			print(b1)
+			bij = self.big_bij[k, :self.size[k], :]
+			bij[0 : b1.shape[0], :] = b1
+			self.big_bij[k, :self.size[k], :] = bij

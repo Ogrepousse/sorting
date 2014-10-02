@@ -27,6 +27,7 @@ def get_all_time(env, a, ti, div):
 
 
 def first_part(bij, l1, l2, i):
+	#variable i useless
 	"""get part of the precedent bij to avoid to calculate the same value twice (bij have an overlap between them)"""
 
 	l = np.where(l2 <= l1[-1])[0]
