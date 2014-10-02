@@ -7,11 +7,11 @@ import get_all_bij as gab
 class t_env(object):
 	def __init__(self):
 		self.space_block = 130 #maximum time between two spike in a same block
-		self.size_block = 500 #maximum length for a block
+		self.size_block = 50000 #maximum length for a block
 		self.win_over = 129 #size of the overlap window between each block
 		self.threshold = 6 #threshold factor for spike discrimination
 		self.nb_octet = 2 #number of octet for the data
-		self.mega_block = 900 #number of units of time to divide the signal
+		self.mega_block = 900000 #number of units of time to divide the signal
 		self.fdout = open('output', 'w')
 		self.index = 0
 		print('environnement cree')
@@ -80,7 +80,7 @@ class t_env(object):
 		self.set_comp()
 		self.set_norme()
 		self.set_lim()
-		self.set_overlap()
+#		self.set_overlap()
 
 	def maj_bij(self, k, b_past):
 		if k > 0:
@@ -88,7 +88,6 @@ class t_env(object):
 			l1 = self.al[k - 1, :self.size[k - 1]]
 #			b_past = self.big_bij[k - 1, :self.size[k - 1], :]
 			b1 = gab.first_part(b_past, l1, l, k)
-			print(b1)
 			bij = self.big_bij[k, :self.size[k], :]
 			bij[0 : b1.shape[0], :] = b1
 			self.big_bij[k, :self.size[k], :] = bij

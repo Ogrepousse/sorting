@@ -21,9 +21,13 @@ if __name__ != "__main__" or len(sys.argv) != 2:
 
 t_env = class_env.t_env()
 sample = int(sys.argv[1])
-x = 0
+x = 14000
 fd, head = get.read_header(t_env)
 t_env.data_form(head)
+z = 0
+while z < x:
+	fd.read(t_env.nb_elec * t_env.nb_octet * 500)
+	z += 500
 del(head)
 
 def loop_file(t_env, sample):
@@ -57,14 +61,15 @@ def loop_file(t_env, sample):
 		print("ca commence")
 		print('div', div)
 		b = a.copy()
-		if i == 4:
-			core(t_env, a, ti, blc, div)
+	#	if i == 4:
+		core(t_env, a, ti, blc, div)
 		t_env.index = y - t_env.win_over
-		if i == 4:
-			display(a, b, sample, x, median, mad)
+	#	if i == 4:
+	#		display(a, b, sample, median, mad)
 		i += 1
 	t_env.fdout.close()
-	del(t_env.overlap)
+#	del(t_env.overlap)
+	display(a, b, sample, median, mad)
 
 
 def first_part(a):
@@ -91,11 +96,11 @@ def core(t_env, a, ti, blc, div):
 	scal_prod.browse_block(t_env, a, blc, ti, div)
 
 #core()
-def display(a, b, sample, x, median, mad):
+def display(a, b, sample, median, mad):
 #	print('shape', a.shape)
-	for i in range(99, 100):
-#		print(i)
-		my_plot.trace(a, b, median, mad, y = sample - x, nb = i)
+	for i in range(0, 100):
+		print(i)
+		my_plot.trace(a, b, median, mad, y = sample, nb = i)
 		plt.show()
 
 loop_file(t_env, sample)
