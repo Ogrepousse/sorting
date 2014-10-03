@@ -11,6 +11,6 @@ def trace(a, copy, med, mad, x = 0, y = 15000, nb = 0):
 	mp = np.ones(y - x) * (med[nb] - 6 * mad[nb])
 	mm = np.ones(y - x) * (med[nb] + 6 * mad[nb])
 	plt.plot(c, cop, c, b, c, m, c, mp, c, mm)
-	plt.axvline(x = 1389)
+#	plt.axvline(x = 1389)
 #	plt.axvline(x = 500 + 129)
 #	plt.axvline(x = 500 - 129)

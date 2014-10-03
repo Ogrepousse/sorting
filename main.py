@@ -21,14 +21,20 @@ if __name__ != "__main__" or len(sys.argv) != 2:
 
 t_env = class_env.t_env()
 sample = int(sys.argv[1])
-x = 14000
-fd, head = get.read_header(t_env)
-t_env.data_form(head)
+x = 0
+#fd, head = get.read_header(t_env)
+#t_env.data_form(head)
+t_env.adc = 32767
+t_env.el = 0.01
+t_env.nb_elec = 252
+#fd = open('../files/ALL_cut.filtered')
+fd = open('sim.filtered')
+
 z = 0
 while z < x:
 	fd.read(t_env.nb_elec * t_env.nb_octet * 500)
 	z += 500
-del(head)
+#del(head)
 
 def loop_file(t_env, sample):
 	end = 0
@@ -45,8 +51,8 @@ def loop_file(t_env, sample):
 			bol = 2
 		if type(sig) is int:
 			bol = 0
-#		sig = get.get_stream(t_env, x = 0, y = int(sys.argv[1]))
-#		end = 1
+	#	sig, nd = get.get_stream2(t_env, fd, x = 0, y = int(sys.argv[1]))
+	#	end = 1
 		print('y =', y)
 		sig, end = get.get_stream3(t_env, fd, bol, sig, y = y)
 		bol = 1
@@ -59,7 +65,7 @@ def loop_file(t_env, sample):
 
 		(median, mad, ti, blc, div) = first_part(a)
 		print("ca commence")
-		print('div', div)
+	#	print('div', div)
 		b = a.copy()
 	#	if i == 4:
 		core(t_env, a, ti, blc, div)
@@ -68,7 +74,9 @@ def loop_file(t_env, sample):
 	#		display(a, b, sample, median, mad)
 		i += 1
 	t_env.fdout.close()
-#	del(t_env.overlap)
+	del(t_env.overlap)
+	median = block.cal_median(a)
+	mad = block.get_mad(a, median)
 	display(a, b, sample, median, mad)
 
 
@@ -82,8 +90,11 @@ def first_part(a):
 		sp = block.get_spike(t_env, a)
 		ti = block.seperate_time(sp)
 
+		print(ti)
 		#creation des blocs de spike pour le fitting
 		blc = block.get_block(t_env, sp, ti)
+		print(blc)
+		blc = np.array([4999])
 		del(sp)
 		blc = block.divide_block(t_env, blc)
 	#	print(blc)

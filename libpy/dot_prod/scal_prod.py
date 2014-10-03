@@ -78,8 +78,8 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save
 	#			print('arggh', c)
 			t_env.fdout.write(str(aij) + ' ' + str(c[1]) + ' ' + str(l[c[0]] + t_env.index) + '\n')
 			substract_signal(a, l, aij, t_env.temp2, c, alpha, t_env.comp2, limit, b)
-		#	maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
-		#	maj_scalar(t_env, c, b_save, beta_ij, l, aij, alpha)
+			maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
+			maj_scalar(t_env, c, b_save, beta_ij, l, aij, alpha)
 	#		if (l[c[0]] < 1389 + 129) and (l[c[0]] > 1389 - 129):
 	#			print('c', c)
 	#			print('l[c]', l[c[0]])
@@ -161,15 +161,15 @@ def browse_block(t_env, a, blc, ti, div):
 		l = small_time(t_env.al, k, t_env.size)
 		exploration = np.zeros(l.shape[0])
 #		t_env.maj_bij(k, b_save)
-	#	bij = small_bij(t_env.big_bij, k, t_env.size)
-#		b_save = bij.copy()
-		bij = get_bij(a, l, t_env.temp)
+		bij = small_bij(t_env.big_bij, k, t_env.size)
+		b_save = bij.copy()
+		#bij = get_bij(a, l, t_env.temp)
 		beta_ij = small_bij(t_env.big_beta, k, t_env.size)
 		bij_bool = np.zeros(bij.shape, dtype = bool)
 		bol = 0
 		while is_explored(exploration, bij_bool):
-			if bol:
-				bij = get_bij(a, l, t_env.temp)
+	#		if bol:
+	#			bij = get_bij(a, l, t_env.temp)
 			bol = part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save)
 	#	x = np.arange(a.shape[1])
 	#	plt.plot(x, a[99, :], x, b[99, :])

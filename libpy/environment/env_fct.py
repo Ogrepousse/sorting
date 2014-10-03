@@ -73,4 +73,8 @@ def get_overlap(env):
 	tab[i * size / type_size:] = np.fromstring(s, dtype = np.float64)
 	fd.close()
 	tab = tab.reshape(x, y, z)
+	
+	o = scipy.io.loadmat('../files/ALL_norm.overlap1')
+	over = o['c_overlap'].copy()
+	tab[:382, :382, :] = over
 	return (tab)

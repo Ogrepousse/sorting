@@ -80,7 +80,7 @@ class t_env(object):
 		self.set_comp()
 		self.set_norme()
 		self.set_lim()
-#		self.set_overlap()
+		self.set_overlap()
 
 	def maj_bij(self, k, b_past):
 		if k > 0:
