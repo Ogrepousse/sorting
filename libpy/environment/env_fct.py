@@ -51,10 +51,10 @@ def get_bij(env, a, l, temp):
 	return (bij)
 
 
-def get_overlap(env):
+def get_overlap(env, width = 2, file_name = 'omeg5'):
 	"""charge the overlap matrix from an extern file"""
 
-	x = env.nb_temp * 2
+	x = env.nb_temp * width
 	y = x
 	z = env.temp_size * 2 - 1
 	type_size = 8
@@ -63,7 +63,7 @@ def get_overlap(env):
 	i = 0
 	l = x * y * z * type_size
 	n = 0
-	fd = open('omeg5', 'rb')
+	fd = open(file_name, 'rb')
 	while l - n > size:
 		s = fd.read(size)
 		tab[n / type_size : (n + size) / type_size] = np.fromstring(s, dtype = np.float64)
@@ -73,8 +73,11 @@ def get_overlap(env):
 	tab[i * size / type_size:] = np.fromstring(s, dtype = np.float64)
 	fd.close()
 	tab = tab.reshape(x, y, z)
-	
-	o = scipy.io.loadmat('../files/ALL_norm.overlap1')
-	over = o['c_overlap'].copy()
-	tab[:382, :382, :] = over
+
+#### second overlap	
+#	o = scipy.io.loadmat('../files/ALL_norm.overlap1')
+#	over = o['c_overlap'].astype(np.float64)
+#	over = over[:, :, ::-1]
+#	tab[:382, :382, :] = over.copy()
+#	tab = tab / np.sqrt(252 * 129)
 	return (tab)

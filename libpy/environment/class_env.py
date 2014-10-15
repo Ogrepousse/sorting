@@ -52,11 +52,15 @@ class t_env(object):
 		"""get limit for templates"""
 
 		self.amp_lim = env_fct.get_amp_lim()
+		for i in range(self.amp_lim.shape[1]):
+			self.amp_lim[:, i] *= self.norme[i]
+		self.norme = env_fct.normalize_temp(self.temp)	
 
 	def set_overlap(self):
 		"""get the overlap matrix"""
 
-		self.overlap = env_fct.get_overlap(self)
+		self.overlap = env_fct.get_overlap(self, 1, 'omeg6')
+#		self.overlap = env_fct.get_overlap(self)
 
 	def set_time(self, a, ti, div):
 		"""get all the spike time for all the blocks"""
@@ -91,3 +95,17 @@ class t_env(object):
 			bij = self.big_bij[k, :self.size[k], :]
 			bij[0 : b1.shape[0], :] = b1
 			self.big_bij[k, :self.size[k], :] = bij
+
+	
+	def loli(self, sub, bijnew, bprec, c, l, aij, norme):
+		"""pour debug"""
+		self.sub = sub
+		self.bijnew = bijnew
+		self.bprec = bprec
+		self.c = c
+		self.l = l
+		self.aij = aij
+		self.norme = norme
+	
+	def loli2(self):
+		return (self.sub, self.bijnew, self.bprec, self.c, self.l, self.aij, self.norme)

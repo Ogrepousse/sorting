@@ -5,12 +5,12 @@ def scal(t1, t2):
 	return (res)
 
 def omeg(temp, temp2):
-	om = np.empty((temp.shape[2], temp.shape[2], 129 * 2 - 1))
-	print(temp.shape[2])
-	for j in range(temp.shape[2]):
+	n = 2
+	om = np.empty((n, n, 129 * 2 - 1))
+	for j in range(n):
 		print(j)
 		t1 = temp2[:, :, j]
-		for i in range(temp.shape[2]):
+		for i in range(n):
 			for k in range(129 * 2 - 1):
 				t2 = np.zeros((temp.shape[0], 129))
 				if k < 129 - 1:
@@ -21,6 +21,9 @@ def omeg(temp, temp2):
 					t2 = temp[:, :, i]
 				om[j, i, k] = scal(t1, t2)
 	return (om)
+
+
+	
 
 
 def omeg_bis(temp, temp2, comp, comp2):

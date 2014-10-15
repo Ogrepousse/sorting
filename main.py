@@ -39,6 +39,7 @@ while z < x:
 def loop_file(t_env, sample):
 	end = 0
 	t_env.setup_one()
+#	sys.exit(0)
 	total = 0
 	sig = 0
 	bol = 0
@@ -109,7 +110,11 @@ def core(t_env, a, ti, blc, div):
 #core()
 def display(a, b, sample, median, mad):
 #	print('shape', a.shape)
-	for i in range(0, 100):
+	ra = [105, 110, 123, 139, 143, 155, 158]
+#	ra = [105]
+#	ra = [17, 23, 55, 59]
+#	ra = [93, 122, 143, 144]
+	for i in ra:
 		print(i)
 		my_plot.trace(a, b, median, mad, y = sample, nb = i)
 		plt.show()

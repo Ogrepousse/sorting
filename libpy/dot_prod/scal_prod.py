@@ -54,7 +54,7 @@ def substract_signal(a, l, aij, temp, c, alpha, comp2, limit, b):
 #	plt.show()
 
 
-def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save):
+def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save, b_prec):
 	"""get i and for max value of bij, then check if aij value is correct"""
 
 	c = get_max(bij, exploration, bij_bool)
@@ -63,10 +63,12 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save
 	alpha = beta_ij[c] / t_env.norme2[c[1]]
 	limit = t_env.amp_lim[:, c[1]]
 	win = t_env.win_over
+#	print(aij, limit)
+#	sys.stdin.read(1)
 	if aij > limit[0] and aij < limit[1]:
-#		if l[c[0]] == 1389:
-#			print('hee')
-#			print(c)
+		if l[c[0]] > 995 and l[c[0]] < 1015:
+			print('hee')
+			print(c)
 #			print(l)
 #			print(l[25], l[29], l[31], l[27])
 		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win):
@@ -76,16 +78,52 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save
 	#			print('div', div[k, 0], div[k, 1])
 	#			print('diff', div[k, 0] + win, div[k, 1] - win)
 	#			print('arggh', c)
+			aij = bij[c]
 			t_env.fdout.write(str(aij) + ' ' + str(c[1]) + ' ' + str(l[c[0]] + t_env.index) + '\n')
-			substract_signal(a, l, aij, t_env.temp2, c, alpha, t_env.comp2, limit, b)
+#			substract_signal(a, l, aij, t_env.temp2, c, alpha, t_env.comp2, limit, b)
+			substract_signal(a, l, aij, t_env.temp, c, alpha, t_env.comp2, limit, b)
+			#DEBUG
 			maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
-			maj_scalar(t_env, c, b_save, beta_ij, l, aij, alpha)
-	#		if (l[c[0]] < 1389 + 129) and (l[c[0]] > 1389 - 129):
+		#	sub = maj_scalar(t_env, c, b_save, beta_ij, l, aij, alpha)
+		#	bijnew = get_bij(a, l, t_env.temp)
+		#	print('waiting')
+		#	s = sys.stdin.read(1)
+		#	if s == 'l':
+		#		t_env.loli(sub, bijnew, b_prec, c, l, aij, t_env.norme)
+		#		sys.exit(2)
+	
+		#	if c[1] == 341:
+		#		var = c[1]
+		#		bij_new = get_bij(a, l, t_env.temp)
+		#		b_diff = b_prec - bij_new
+		#		print('template = ', c[1])
+		#		b1 = b_diff[:, c[1]]
+		#		b2 = sub[:, c[1]]
+			#	print(sub.shape, b_diff.shape)i
+		#		lol = b1 - b2
+		#		mdr = lol.argmax()
+		#		print(mdr)
+		#		print(b1)
+		#		print(b2)
+		#		print(lol)
+		#		len = t_env.temp_size
+		#		n1 = l < l[c[0]] + len
+		#		n2 = l > l[c[0]] - (len - 1)
+		#		n = n1 & n2
+		#		l2 = l[n]
+
+		#		print('test', l - l[c[0]], (l - l[c[0]])[36])
+		#		plt.plot(b1, b2, 'o')
+		#		plt.show()
+
+	#		if (l[c[0]] < 834 + 129) and (l[c[0]] > 834 - 129):
 	#			print('c', c)
 	#			print('l[c]', l[c[0]])
 	#			print(aij, limit)
 	#			x = np.arange(a.shape[1])
-	#			plt.plot(x, a[99], x, b[99])
+	#			y = np.zeros(a.shape[1])
+	#			y[l[c[0]] - t_env.temp.shape[1] / 2 : l[c[0]] + t_env.temp.shape[1] / 2 + 1] = aij * t_env.temp[105, :, c[1]]
+	#			plt.plot(x, a[105], x, b[105], x, y)
 	#			plt.show()
 		return (1)
 	else:
@@ -99,32 +137,52 @@ def maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha):
 	"""recalculate the value of bij and beta_ij with the precacultate matric overlap"""
 
 	omeg_a = t_env.overlap[:bij.shape[1], :bij.shape[1], :]
-	omeg_b = t_env.overlap[:bij.shape[1], bij.shape[1]:, :]
-	omeg_c = t_env.overlap[bij.shape[1]:, :bij.shape[1], :]
-	omeg_d = t_env.overlap[bij.shape[1]:, bij.shape[1]:, :]
-	maj_bij(t_env, bij, c, aij, omeg_a, l)
-	maj_bij(t_env, bij, c, alpha, omeg_b, l)
-	maj_bij(t_env, beta_ij, c, aij, omeg_c, l)
-	maj_bij(t_env, beta_ij, c, alpha, omeg_d, l)
+#	omeg_b = t_env.overlap[:bij.shape[1], bij.shape[1]:, :]
+##	omeg_c = t_env.overlap[bij.shape[1]:, :bij.shape[1], :]
+#	omeg_d = t_env.overlap[bij.shape[1]:, bij.shape[1]:, :]
+	sub = maj_bij(t_env, bij, c, aij, omeg_a, l)
+	return(sub)
+#	maj_bij(t_env, bij, c, alpha, omeg_b, l)
+#	maj_bij(t_env, beta_ij, c, aij, omeg_c, l)
+#	maj_bij(t_env, beta_ij, c, alpha, omeg_d, l)
 
 
 def maj_bij(t_env, bij, c, aij, omeg, l):
 	"""update the bij matrix with the precalculate matrix omeg"""
 
+
 	len = t_env.temp_size
 	ome = omeg[:, c[1], :]
 	n1 = l < l[c[0]] + len
-	n2 = l > l[c[0]] - (len - 1)
+	n2 = l > l[c[0]] - (len)
 	n = n1 & n2
 	l2 = l[n]
 	linf = l2[l2 <= l[c[0]]]
 	lsup = l2[l2 > l[c[0]]]
 	t1 = np.where(np.in1d(l, linf) == True)[0]
 	t2 = np.where(np.in1d(l, lsup) == True)[0]
+#	print('c =', c)
+#	print('l[c[0]] =', l[c[0]])
+#	print('l =', l)
+#	print('l2 =', l2)
+#	print('linf =', linf)
+#	print('lsup =', lsup)
+#	print('t1 =', t1)
+#	print('t2 =', t2)
 	om_inf = ome[:, linf - l[c[0]] + (len - 1)]
 	om_sup = ome[:, lsup - l[c[0]] + (len - 1)]
+#	print('om_inf', om_inf.shape)
+#	print('om_sup', om_sup.shape)
+#	print('bt1', bij[t1, :].shape)
+#	print('bt2', bij[t2, :].shape)
 	bij[t1, :] = bij[t1, :] - aij * om_inf.T
 	bij[t2, :] = bij[t2, :] - aij * om_sup.T
+	sub = np.zeros((l.shape[0], 382))
+	sub[t1, :] = om_inf.T.copy()
+	sub[t2, :] = om_sup.T.copy()
+#	print('waiting')
+#	sys.stdin.read(1)
+	return (sub)
 
 
 def get_bij(a, l, temp):
@@ -167,10 +225,12 @@ def browse_block(t_env, a, blc, ti, div):
 		beta_ij = small_bij(t_env.big_beta, k, t_env.size)
 		bij_bool = np.zeros(bij.shape, dtype = bool)
 		bol = 0
+		bij2 = bij
 		while is_explored(exploration, bij_bool):
 	#		if bol:
 	#			bij = get_bij(a, l, t_env.temp)
-			bol = part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save)
+			b_prec = bij2.copy()
+			bol = part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save, b_prec)
 	#	x = np.arange(a.shape[1])
 	#	plt.plot(x, a[99, :], x, b[99, :])
 	#	plt.show()
