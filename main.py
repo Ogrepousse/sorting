@@ -22,9 +22,13 @@ if __name__ != "__main__" or len(sys.argv) != 2:
 t_env = class_env.t_env()
 sample = int(sys.argv[1])
 x = 0
-fd, head = get.read_header(t_env)
-t_env.data_form(head)
-del(head)
+#fd, head = get.read_header(t_env)
+#t_env.data_form(head)
+t_env.adc = 32767
+t_env.el = 0.01
+t_env.nb_elec = 252
+fd = open('sim.filtered')
+#del(head)
 
 def loop_file(t_env, sample):
 	end = 0
@@ -53,10 +57,11 @@ def loop_file(t_env, sample):
 		sample = a.shape[1]
 		total += y
 
+
 		(median, mad, ti, blc, div) = first_part(a)
 		print("ca commence")
 		b = a.copy()
-		core(t_env, a, ti, blc, div)
+	#	core(t_env, a, ti, blc, div)
 		t_env.index = y - t_env.win_over
 		i += 1
 	t_env.fdout.close()
@@ -80,11 +85,15 @@ def first_part(a):
 		blc = block.get_block(t_env, sp, ti)
 
 		#delete this line
-		blc = np.array([4999])
+#		blc = np.array([4999])
 
 		del(sp)
+		print('ti', ti)
+		print('blc1', blc)
 		blc = block.divide_block(t_env, blc)
+		print('blc2', blc)
 		div = block.begin_end(t_env, blc)
+		print('div', div)
 		return (median, mad, ti, blc, div)
 
 
@@ -97,7 +106,7 @@ def display(a, b, sample, median, mad):
 #	ra = [105]
 #	ra = [17, 23, 55, 59]
 #	ra = [93, 122, 143, 144]
-	for i in [99]:
+	for i in [105]:
 		print(i)
 		my_plot.trace(a, b, median, mad, y = sample, nb = i)
 		plt.show()

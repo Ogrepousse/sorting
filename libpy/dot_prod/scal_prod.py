@@ -46,7 +46,7 @@ def get_max(bij, exploration, bij_bool):
 
 def substract_signal(a, l, aij, temp, c, alpha, comp2, limit, b):
 	"""substract the template to the signal"""
-#	alpha = 0
+	alpha = 0
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]] + alpha * comp2[:, :, c[1]]
 
 
@@ -78,13 +78,13 @@ def maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha):
 	"""recalculate the value of bij and beta_ij with the precacultate matric overlap"""
 
 	omeg_a = t_env.overlap_a
-	omeg_b = t_env.overlap_b
-	omeg_c = t_env.overlap_c
-	omeg_d = t_env.overlap_d
+#	omeg_b = t_env.overlap_b
+#	omeg_c = t_env.overlap_c
+#	omeg_d = t_env.overlap_d
 	maj_bij(t_env, bij, c, aij, omeg_a, l)
-	maj_bij(t_env, bij, c, alpha, omeg_b, l)
-	maj_bij(t_env, beta_ij, c, aij, omeg_c, l)
-	maj_bij(t_env, beta_ij, c, alpha, omeg_d, l)
+#	maj_bij(t_env, bij, c, alpha, omeg_b, l)
+#	maj_bij(t_env, beta_ij, c, aij, omeg_c, l)
+#	maj_bij(t_env, beta_ij, c, alpha, omeg_d, l)
 
 
 def maj_bij(t_env, bij, c, aij, omeg, l):

@@ -7,7 +7,7 @@ import get_all_bij as gab
 class t_env(object):
 	def __init__(self):
 		self.space_block = 130 #maximum time between two spike in a same block
-		self.size_block = 50000 #maximum length for a block
+		self.size_block = 500 #maximum length for a block
 		self.win_over = 129 #size of the overlap window between each block
 		self.threshold = 6 #threshold factor for spike discrimination
 		self.nb_octet = 2 #number of octet for the data
@@ -61,16 +61,19 @@ class t_env(object):
 		"""get the overlap matrix"""
 
 		self.overlap_a = env_fct.get_overlap(self, 1, 'omeg6')
-		self.overlap_b = env_fct.get_overlap(self, 1, 'omeg8')
-		self.overlap_c = env_fct.get_overlap(self, 1, 'omeg7')
-		self.overlap_d = env_fct.get_overlap(self, 1, 'omeg9')
+	#	self.overlap_b = env_fct.get_overlap(self, 1, 'omeg8')
+	#	self.overlap_c = env_fct.get_overlap(self, 1, 'omeg7')
+	#	self.overlap_d = env_fct.get_overlap(self, 1, 'omeg9')
 #		self.overlap = env_fct.get_overlap(self)
 
 	def del_overlap(self):
-		del(self.overlap_a)
-		del(self.overlap_b)
-		del(self.overlap_c)
-		del(self.overlap_d)
+		try:
+			del(self.overlap_a)
+		except AttributeError:
+			print('i')
+#		del(self.overlap_b)
+#		del(self.overlap_c)
+#		del(self.overlap_d)
 
 	def set_time(self, a, ti, div):
 		"""get all the spike time for all the blocks"""
@@ -94,7 +97,7 @@ class t_env(object):
 		self.set_comp()
 		self.set_norme()
 		self.set_lim()
-		self.set_overlap()
+#		self.set_overlap()
 
 	def maj_bij(self, k, b_past):
 		if k > 0:

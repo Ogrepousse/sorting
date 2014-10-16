@@ -66,12 +66,14 @@ def divide_block(env, blc):
 
 	t = 0
 	size = env.size_block
-	div = np.zeros(blc[-1] / size + 1)
+	div = np.zeros(blc[-1] / size + blc.shape[0])
+	print(div.shape)
 	index = 0
 	for k in blc:
 		while k - t > size:
 			t += size
-			div[index] = t
+			if k - t > size:
+				div[index] = t
 			index += 1
 		div[index] = k
 		index += 1
@@ -81,7 +83,7 @@ def divide_block(env, blc):
 
 
 def	begin_end(env, blc):
-	"""renvoi un array a deux dimmensio contenant les dates de debut et de fin de chaque bloc"""
+	"""renvoi un array a deux dimmension contenant les dates de debut et de fin de chaque bloc"""
 
 	b_e = np.empty((blc.shape[0], 2))
 	inf = 0
