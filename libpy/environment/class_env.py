@@ -32,6 +32,7 @@ class t_env(object):
 		"""get the templates and make a copy for normalization"""
 
 		self.temp = env_fct.get_temp()
+#temp2 plus vraiment necessaire
 		self.temp2 = self.temp.copy()
 		self.temp_size = self.temp.shape[1] #template width
 		self.nb_temp = self.temp.shape[2] #number of templates
@@ -59,8 +60,17 @@ class t_env(object):
 	def set_overlap(self):
 		"""get the overlap matrix"""
 
-		self.overlap = env_fct.get_overlap(self, 1, 'omeg6')
+		self.overlap_a = env_fct.get_overlap(self, 1, 'omeg6')
+		self.overlap_b = env_fct.get_overlap(self, 1, 'omeg8')
+		self.overlap_c = env_fct.get_overlap(self, 1, 'omeg7')
+		self.overlap_d = env_fct.get_overlap(self, 1, 'omeg9')
 #		self.overlap = env_fct.get_overlap(self)
+
+	def del_overlap(self):
+		del(self.overlap_a)
+		del(self.overlap_b)
+		del(self.overlap_c)
+		del(self.overlap_d)
 
 	def set_time(self, a, ti, div):
 		"""get all the spike time for all the blocks"""
@@ -95,17 +105,3 @@ class t_env(object):
 			bij = self.big_bij[k, :self.size[k], :]
 			bij[0 : b1.shape[0], :] = b1
 			self.big_bij[k, :self.size[k], :] = bij
-
-	
-	def loli(self, sub, bijnew, bprec, c, l, aij, norme):
-		"""pour debug"""
-		self.sub = sub
-		self.bijnew = bijnew
-		self.bprec = bprec
-		self.c = c
-		self.l = l
-		self.aij = aij
-		self.norme = norme
-	
-	def loli2(self):
-		return (self.sub, self.bijnew, self.bprec, self.c, self.l, self.aij, self.norme)

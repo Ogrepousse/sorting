@@ -167,13 +167,32 @@ def coef(o, over):
 			c[k] = (a / b)[val[0][0], val[0][0]]
 	return (c)
 
+
+def get_comp(temp):
+	"""calcul the seconde component of the template"""
+
+	comp = np.empty(temp.shape)
+	for i in range(temp.shape[2]):
+		t = temp[:, :, i]
+		t1 = t[:, 1:]
+		t2 = t[:, :temp.shape[1] - 1]
+		comp[:, :temp.shape[1] - 1, i] = (t1 - t2).copy()
+		comp[:, temp.shape[1] - 1, i] = 0
+	return (comp)
+
+def omeg_out(t1, t2, file_name):
+	om = omeg(t1, t2)
+	ome = om.reshape(382 * 382 * 257)
+	fd = open(file_name, 'wb')
+	fd.write(ome)
+	fd.close()
+
 temp = get_temp()
-temp2 = temp.copy()
 norme = normalize_temp(temp)
-om = omeg(temp, temp)
-ome = om.reshape(382 * 382 * 257)
-fd =  open('omeg6', 'wb')
-fd.write(ome)
+comp = get_comp(temp)
+omeg_out(temp, comp, 'omeg7')
+omeg_out(comp, temp, 'omeg8')
+omeg_out(comp, comp, 'omeg9')
 #temp3 = temp[:, :, :]
 #om = new_omeg(temp3, temp3)
 #over = omeg(temp, temp2)
