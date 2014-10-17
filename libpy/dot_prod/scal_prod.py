@@ -61,7 +61,7 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save
 	win = t_env.win_over
 	if aij > limit[0] and aij < limit[1]:
 		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win):
-			aij = bij[c]
+		#	aij = bij[c]
 			t_env.fdout.write(str(aij) + ' ' + str(c[1]) + ' ' + str(l[c[0]] + t_env.index) + '\n')
 			substract_signal(a, l, aij, t_env.temp, c, alpha, t_env.comp2, limit, b)
 			maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)

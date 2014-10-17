@@ -61,7 +61,7 @@ def loop_file(t_env, sample):
 		(median, mad, ti, blc, div) = first_part(a)
 		print("ca commence")
 		b = a.copy()
-	#	core(t_env, a, ti, blc, div)
+		core(t_env, a, ti, blc, div)
 		t_env.index = y - t_env.win_over
 		i += 1
 	t_env.fdout.close()
@@ -85,7 +85,7 @@ def first_part(a):
 		blc = block.get_block(t_env, sp, ti)
 
 		#delete this line
-#		blc = np.array([4999])
+	#	blc = np.array([blc[-1]])
 
 		del(sp)
 		print('ti', ti)
