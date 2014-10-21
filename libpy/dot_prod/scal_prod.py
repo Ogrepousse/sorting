@@ -64,8 +64,9 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save
 		#	aij = bij[c]
 			t_env.fdout.write(str(aij) + ' ' + str(c[1]) + ' ' + str(l[c[0]] + t_env.index) + '\n')
 			substract_signal(a, l, aij, t_env.temp, c, alpha, t_env.comp2, limit, b)
-			maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
-		#	maj_scalar(t_env, c, b_save, beta_ij, l, aij, alpha)
+#			maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
+	#		maj_scalar(t_env, c, b_save, beta_ij, l, aij, alpha)
+		maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
 		return (1)
 	else:
 		exploration[c[0]] += 1
@@ -136,11 +137,15 @@ def browse_block(t_env, a, blc, ti, div):
 	print('parcours', blc.shape[0])
 	#parcours des blocs
 	b_save = 0
+#	print('hehe', t_env.al)
 	for k in range(blc.shape[0]):
 		print('entre block', k)
+		t_env.fdout.write("bloque " + str(k) + "\n")
 		l = small_time(t_env.al, k, t_env.size)
+	#	print('haha', l)
 		exploration = np.zeros(l.shape[0])
 		bij = small_bij(t_env.big_bij, k, t_env.size)
+		
 		b_save = bij.copy()
 		beta_ij = small_bij(t_env.big_beta, k, t_env.size)
 		bij_bool = np.zeros(bij.shape, dtype = bool)
@@ -151,4 +156,3 @@ def browse_block(t_env, a, blc, ti, div):
 	#			bij = get_bij(a, l, t_env.temp)
 			b_prec = bij2.copy()
 			bol = part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save, b_prec)
-

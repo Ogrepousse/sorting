@@ -55,7 +55,7 @@ class t_env(object):
 		self.amp_lim = env_fct.get_amp_lim()
 		for i in range(self.amp_lim.shape[1]):
 			self.amp_lim[:, i] *= self.norme[i]
-		self.norme = env_fct.normalize_temp(self.temp)	
+		self.norme = env_fct.normalize_temp(self.temp)
 
 	def set_overlap(self):
 		"""get the overlap matrix"""
