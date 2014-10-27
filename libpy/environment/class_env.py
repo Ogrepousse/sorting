@@ -11,14 +11,14 @@ class t_env(object):
 		self.win_over = 129 #size of the overlap window between each block
 		self.threshold = 6 #threshold factor for spike discrimination
 		self.nb_octet = 2 #number of octet for the data
-		self.mega_block = 900000 #number of units of time to divide the signal
+		self.mega_block = 2000 #number of units of time to divide the signal
 		self.fdout = open('output', 'w')
 		self.index = 0
 		print('environnement cree')
 
 	def data_form(self, head):
 		"""get information from the header of the data"""
-	
+
 		adc = int(re.findall('\d+', head[4])[0])
 		el = float(re.findall('\d+.\d+', head[5])[0])
 		nb = len(re.findall('\d+', head[6]))

@@ -64,11 +64,12 @@ def loop_file(t_env, sample):
 		core(t_env, a, ti, blc, div)
 		t_env.index = y - t_env.win_over
 		i += 1
+		display(a, b, sample, median, mad)
 	t_env.fdout.close()
 	t_env.del_overlap()
 	median = block.cal_median(a)
 	mad = block.get_mad(a, median)
-	display(a, b, sample, median, mad)
+#	display(a, b, sample, median, mad)
 
 
 def first_part(a):

@@ -7,8 +7,8 @@ def select_ti_bis(env, a, ti, div, k):
 	l = ti[np.where(ti <= div[k, 1])[0]]
 	if k > 0:
 		l = l[np.where(l > div[k, 0])[0]]
-	if k == 0:
-		l = l[np.where(l > env.temp_size / 2)[0]]
+#	if k == 0:
+	l = l[np.where(l > env.temp_size / 2)[0]]
 #	if k == div.shape[0] - 1:
 	l = l[np.where(l + env.temp_size / 2 + 1 < a.shape[1])]
 	return (l)
@@ -21,6 +21,7 @@ def get_all_time(env, a, ti, div):
 	size = np.empty(div.shape[0])
 	for i in range(all_l.shape[0]):
 		l = select_ti_bis(env, a, ti, div, i)
+		print('fill', l)
 		all_l[i, :l.shape[0]] = l
 		size[i] = l.shape[0]
 	return (all_l, size)
@@ -45,13 +46,17 @@ def get_all_bij(env, a, div, all_l, temp, size):
 	l1 = np.zeros(1)
 	for i in range(big_bij.shape[0]):
 		l = all_l[i, :size[i]]
+#		print('l', l.shape)
+#		print(l)
 		b1 = first_part(bij, l1, l, i)
 		l2 = l[np.where(l > l1[-1])[0]]
 		b2 = env_fct.get_bij(env, a, l2, temp)
 		bij = np.empty((size[i], temp.shape[2]))
+#		print('a', bij.shape)
+#		print('b', b1.shape)
+#		print('c', b2.shape)
 		bij[0 : b1.shape[0], :] = b1
 		bij[b1.shape[0] :, :] = b2
 		l1 = l
 		big_bij[i, :size[i], :] = bij
-		print(bij.shape)
 	return (big_bij)
