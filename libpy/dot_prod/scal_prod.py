@@ -59,8 +59,9 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save
 	alpha = beta_ij[c] / t_env.norme2[c[1]]
 	limit = t_env.amp_lim[:, c[1]]
 	win = t_env.win_over
+	win2 = t_env.win_mega
 	if aij > limit[0] and aij < limit[1]:
-		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win):
+		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win) and (l[c[0]] < div[-1, 1] - win2) and (l[c[0]] > div[0, 0] + win2):
 		#	aij = bij[c]
 			t_env.fdout.write(str(aij) + ' ' + str(c[1]) + ' ' + str(l[c[0]] + t_env.index) + '\n')
 			substract_signal(a, l, aij, t_env.temp, c, alpha, t_env.comp2, limit, b)
@@ -140,7 +141,7 @@ def browse_block(t_env, a, blc, ti, div):
 #	print('hehe', t_env.al)
 	for k in range(blc.shape[0]):
 		print('entre block', k)
-		t_env.fdout.write("bloque " + str(k) + "\n")
+	#	t_env.fdout.write("bloque " + str(k) + "\n")
 		l = small_time(t_env.al, k, t_env.size)
 	#	print('haha', l)
 		exploration = np.zeros(l.shape[0])

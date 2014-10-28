@@ -56,6 +56,7 @@ def get_stream3(t_env, fd, bol, sig, y = 20000):
 	octet = t_env.nb_octet
 	size = 4096
 	i = 0
+	win = t_env.win_mega
 #	l = y * t_env.nb_elec * octet
 	n = 0
 #simplifier le if avec bol 1 et 2
@@ -74,7 +75,7 @@ def get_stream3(t_env, fd, bol, sig, y = 20000):
 #		full = a
 
 	if bol == 0:
-		y += t_env.win_over
+		y += win
 	l = y * t_env.nb_elec * octet
 	a = np.empty(y * t_env.nb_elec)
 
@@ -101,15 +102,15 @@ def get_stream3(t_env, fd, bol, sig, y = 20000):
 	a = a.astype(np.int64)
 	a = (a - t_env.adc) * t_env.el
 	if bol == 1 and b != 1:
-		y += 2 * t_env.win_over
+		y += 2 * win
 		full = np.empty(y * t_env.nb_elec)
-		full[: t_env.win_over * 2 * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * 2 * t_env.nb_elec):]
-		full[t_env.win_over * 2 * t_env.nb_elec :] = a
+		full[: win * 2 * t_env.nb_elec] = sig[sig.shape[0] - (win * 2 * t_env.nb_elec):]
+		full[win * 2 * t_env.nb_elec :] = a
 	elif bol == 2 or (b == 1 and bol != 0):
-		y += t_env.win_over
-		full = np.empty(t_env.win_over * 2 * t_env.nb_elec + a.shape[0])
-		full[: t_env.win_over * 2 * t_env.nb_elec] = sig[sig.shape[0] - (t_env.win_over * 2 * t_env.nb_elec):]
-		full[t_env.win_over * 2 * t_env.nb_elec :] = a
+		y += win
+		full = np.empty(win * 2 * t_env.nb_elec + a.shape[0])
+		full[: win * 2 * t_env.nb_elec] = sig[sig.shape[0] - (win * 2 * t_env.nb_elec):]
+		full[win * 2 * t_env.nb_elec :] = a
 	else:
 		full = a
 	return (full, b)

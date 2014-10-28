@@ -7,8 +7,9 @@ import get_all_bij as gab
 class t_env(object):
 	def __init__(self):
 		self.space_block = 130 #maximum time between two spike in a same block
-		self.size_block = 500 #maximum length for a block
+		self.size_block = 50000 #maximum length for a block
 		self.win_over = 129 #size of the overlap window between each block
+		self.win_mega = 129 * 2
 		self.threshold = 6 #threshold factor for spike discrimination
 		self.nb_octet = 2 #number of octet for the data
 		self.mega_block = 2000 #number of units of time to divide the signal

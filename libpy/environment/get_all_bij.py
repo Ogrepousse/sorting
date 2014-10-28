@@ -21,7 +21,7 @@ def get_all_time(env, a, ti, div):
 	size = np.empty(div.shape[0])
 	for i in range(all_l.shape[0]):
 		l = select_ti_bis(env, a, ti, div, i)
-		print('fill', l)
+#		print('fill', l)
 		all_l[i, :l.shape[0]] = l
 		size[i] = l.shape[0]
 	return (all_l, size)
