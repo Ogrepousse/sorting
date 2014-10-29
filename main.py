@@ -27,7 +27,7 @@ x = 0
 t_env.adc = 32767
 t_env.el = 0.01
 t_env.nb_elec = 252
-fd = open('sim4.filtered')
+fd = open('sim2.filtered')
 #del(head)
 
 def loop_file(t_env, sample):
@@ -108,7 +108,7 @@ def display(a, b, sample, median, mad):
 #	ra = [105]
 #	ra = [17, 23, 55, 59]
 #	ra = [93, 122, 143, 144]
-	for i in [28]:
+	for i in [0, 138, 139]:
 		print(i)
 		my_plot.trace(a, b, median, mad, y = sample, nb = i)
 		plt.show()
@@ -123,7 +123,7 @@ def display2(a, b, sample, median, mad):
 	plt.show()
 
 
-t_env.mega_block = 5000
+t_env.mega_block = 50000
 t_env.size_block = 500
 loop_file(t_env, sample)
 

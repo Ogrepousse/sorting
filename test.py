@@ -187,12 +187,35 @@ def omeg_out(t1, t2, file_name):
 	fd.write(ome)
 	fd.close()
 
+def trace(temp, t, elec):
+	"""trace le signal pour une electrode donnee"""
+
+	b = temp[elec, :, t]
+	c = np.arange(129)
+	plt.plot(c, b)
+
+def display(temp, t, ra = [0]):
+	for i in ra:
+		print(i)
+		trace(temp, t, i)
+		plt.show()
+
+def display2(temp, t):
+	for i in range(16):
+		for j in range(16):
+			if i * 16 + j >= 252:
+				break
+			plt.subplot(16, 16, (i) * 16 + j + 1)
+			trace(temp, t, i * 16 + j)
+	plt.show()
+
+
 temp = get_temp()
 norme = normalize_temp(temp)
 comp = get_comp(temp)
-omeg_out(temp, comp, 'omeg7')
-omeg_out(comp, temp, 'omeg8')
-omeg_out(comp, comp, 'omeg9')
+#omeg_out(temp, comp, 'omeg7')
+#omeg_out(comp, temp, 'omeg8')
+#omeg_out(comp, comp, 'omeg9')
 #temp3 = temp[:, :, :]
 #om = new_omeg(temp3, temp3)
 #over = omeg(temp, temp2)
