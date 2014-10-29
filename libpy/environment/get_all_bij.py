@@ -51,23 +51,24 @@ def get_all_bij(env, a, div, all_l, temp, size):
 	bij = np.empty((0, temp.shape[2]))
 	l1 = np.zeros(1)
 	for i in range(big_bij.shape[0]):
-		l = all_l[i, :size[i]]
-		print('l', l.shape)
-		print(l)
-		print(' ')
-		print(l1)
-		b1, bol = first_part(bij, l1, l, i)
-		l2 = l[np.where(l > l1[-1])[0]]
-		b2 = env_fct.get_bij(env, a, l2, temp)
-		bij = np.empty((size[i], temp.shape[2]))
-	#	print('a', bij.shape)
-	#	print('b', b1.shape)
-	#	print('c', b2.shape)
-		if bol:
-			bij[0 : b1.shape[0], :] = b1
-			bij[b1.shape[0] :, :] = b2
-		else:
-			bij = b2
-		l1 = l
-		big_bij[i, :size[i], :] = bij
+		if size[i]:
+			l = all_l[i, :size[i]]
+		#	print('l', l.shape)
+		#	print(l)
+		#	print(' ')
+		#	print(l1)
+			b1, bol = first_part(bij, l1, l, i)
+			l2 = l[np.where(l > l1[-1])[0]]
+			b2 = env_fct.get_bij(env, a, l2, temp)
+			bij = np.empty((size[i], temp.shape[2]))
+		#	print('a', bij.shape)
+		#	print('b', b1.shape)
+		#	print('c', b2.shape)
+			if bol:
+				bij[0 : b1.shape[0], :] = b1
+				bij[b1.shape[0] :, :] = b2
+			else:
+				bij = b2
+			l1 = l
+			big_bij[i, :size[i], :] = bij
 	return (big_bij)
