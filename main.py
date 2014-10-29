@@ -29,7 +29,6 @@ t_env.el = 0.01
 t_env.nb_elec = 252
 fd = open('sim4.filtered')
 #del(head)
-lol = []
 
 def loop_file(t_env, sample):
 	end = 0
@@ -48,8 +47,6 @@ def loop_file(t_env, sample):
 			bol = 2
 		if type(sig) is int:
 			bol = 0
-	#	sig, nd = get.get_stream2(t_env, fd, x = 0, y = int(sys.argv[1]))
-	#	end = 1
 		print('y =', y)
 		sig, end = get.get_stream3(t_env, fd, bol, sig, y = y)
 		bol = 1
@@ -57,13 +54,8 @@ def loop_file(t_env, sample):
 			print('A PLUS')
 			break
 		a = np.reshape(sig, (-1, t_env.nb_elec)).T.copy()
-	#################################################
-		lol.append(a.copy())
-######################################################
 		sample = a.shape[1]
 		total += y
-
-
 		(median, mad, ti, blc, div) = first_part(a)
 		print("ca commence")
 		b = a.copy()
@@ -78,7 +70,6 @@ def loop_file(t_env, sample):
 	t_env.del_overlap()
 	median = block.cal_median(a)
 	mad = block.get_mad(a, median)
-#	display(a, b, sample, median, mad)
 
 
 def first_part(a):
@@ -123,33 +114,17 @@ def display(a, b, sample, median, mad):
 		plt.show()
 
 def display2(a, b, sample, median, mad):
-	ra = [105, 110, 123, 139, 143, 155, 158]
-#	ra = [105]
-#	ra = [17, 23, 55, 59]
-#	ra = [93, 122, 143, 144]
 	for i in range(16):
 		for j in range(16):
-		#	print(i)
 			if i * 16 + j >= 252:
 				break
 			plt.subplot(16, 16, (i) * 16 + j + 1) 
 			my_plot.trace(a, b, median, mad, y = sample, nb = i * 16 + j)
 	plt.show()
 
+
 t_env.mega_block = 5000
 t_env.size_block = 500
 loop_file(t_env, sample)
-
-#mdr = lol
-#t_env2 = class_env.t_env()
-#sample = int(sys.argv[1])
-#x = 0
-#t_env2.adc = 32767
-#t_env2.el = 0.01
-#t_env2.nb_elec = 252
-#t_env2.mega_block = 20000
-#fd = open('sim2.filtered')
-#lol = []
-#loop_file(t_env2, sample)
 
 print('fini')
