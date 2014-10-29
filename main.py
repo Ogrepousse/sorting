@@ -136,7 +136,7 @@ def display2(a, b, sample, median, mad):
 			my_plot.trace(a, b, median, mad, y = sample, nb = i * 16 + j)
 	plt.show()
 
-t_env.mega_block = 50000
+t_env.mega_block = 5000
 t_env.size_block = 500
 loop_file(t_env, sample)
 

@@ -52,10 +52,10 @@ def get_all_bij(env, a, div, all_l, temp, size):
 	l1 = np.zeros(1)
 	for i in range(big_bij.shape[0]):
 		l = all_l[i, :size[i]]
-		print('l', l.shape)
-		print(l)
-		print(' ')
-		print(l1)
+#		print('l', l.shape)
+#		print(l)
+#		print(' ')
+#		print(l1)
 		b1, bol = first_part(bij, l1, l, i)
 		l2 = l[np.where(l > l1[-1])[0]]
 		b2 = env_fct.get_bij(env, a, l2, temp)
