@@ -27,11 +27,11 @@ def is_explored(exploration, bij_bool):
 		return (0)
 	return (1)
 
-
+@profile
 def get_max(bij, exploration, bij_bool):
 	"""return a tuple with the coordinates of the max value of bij, tuples (i, j) already visited and time i explored are ignored"""
 
-	bij[bij_bool] = -sys.maxint - 1
+#	bij[bij_bool] = -sys.maxint - 1
 	c = np.unravel_index(bij.argmax(), bij.shape)
 
 ############################## A MODIFIER EVENTUELLEMENT #################
@@ -49,11 +49,12 @@ def substract_signal(a, l, aij, temp, c, alpha, comp2, limit, b):
 	alpha = 0
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]] + alpha * comp2[:, :, c[1]]
 
-
+@profile
 def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save, b_prec):
 	"""get i and for max value of bij, then check if aij value is correct"""
 
 	c = get_max(bij, exploration, bij_bool)
+#	bij[c] = -sys.maxint +10000
 	bij_bool[c] = True
 	aij = bij[c] / t_env.norme[c[1]]
 	alpha = beta_ij[c] / t_env.norme2[c[1]]
@@ -68,10 +69,12 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save
 #			maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
 	#		maj_scalar(t_env, c, b_save, beta_ij, l, aij, alpha)
 		maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
+		bij[c] = -sys.maxint / 2
 		return (1)
 	else:
 		exploration[c[0]] += 1
 		if exploration[c[0]] >= 3:
+			bij[c[0], :] = -sys.maxint / 2
 			bij_bool[c[0], :] = True
 		return (0)
 
@@ -128,7 +131,7 @@ def get_bij(a, l, temp):
 	return (bij)
 
 
-
+@profile
 def browse_block(t_env, a, blc, ti, div):
 	"""browse all block in order to apply the fitting"""
 	### a supprimer ###

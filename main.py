@@ -22,13 +22,13 @@ if __name__ != "__main__" or len(sys.argv) != 2:
 t_env = class_env.t_env()
 sample = int(sys.argv[1])
 x = 0
-#fd, head = get.read_header(t_env)
-#t_env.data_form(head)
-t_env.adc = 32767
-t_env.el = 0.01
-t_env.nb_elec = 252
-fd = open('sim4.filtered')
-#del(head)
+fd, head = get.read_header(t_env)
+t_env.data_form(head)
+#t_env.adc = 32767
+#t_env.el = 0.01
+#t_env.nb_elec = 252
+#fd = open('sim4.filtered')
+del(head)
 lol = []
 
 def loop_file(t_env, sample):
@@ -106,7 +106,7 @@ def first_part(a):
 		print('div', div)
 		return (median, mad, ti, blc, div)
 
-
+@profile
 def core(t_env, a, ti, blc, div):
 	t_env.setup_two(a, ti, div)
 	scal_prod.browse_block(t_env, a, blc, ti, div)
@@ -117,7 +117,7 @@ def display(a, b, sample, median, mad):
 #	ra = [105]
 #	ra = [17, 23, 55, 59]
 #	ra = [93, 122, 143, 144]
-	for i in [28]:
+	for i in [99]:
 		print(i)
 		my_plot.trace(a, b, median, mad, y = sample, nb = i)
 		plt.show()
