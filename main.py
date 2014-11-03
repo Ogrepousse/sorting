@@ -22,13 +22,13 @@ if __name__ != "__main__" or len(sys.argv) != 2:
 t_env = class_env.t_env()
 sample = int(sys.argv[1])
 x = 0
-#fd, head = get.read_header(t_env)
-#t_env.data_form(head)
-t_env.adc = 32767
-t_env.el = 0.01
-t_env.nb_elec = 252
-fd = open('sim2.filtered')
-#del(head)
+fd, head = get.read_header(t_env)
+t_env.data_form(head)
+#t_env.adc = 32767
+#t_env.el = 0.01
+#t_env.nb_elec = 252
+#fd = open('sim2.filtered')
+del(head)
 
 def loop_file(t_env, sample):
 	end = 0
@@ -65,7 +65,7 @@ def loop_file(t_env, sample):
 		else:
 			t_env.index += y
 		i += 1
-		display(a, b, sample, median, mad)
+	#	display(a, b, sample, median, mad)
 	t_env.fdout.close()
 	t_env.del_overlap()
 	median = block.cal_median(a)
@@ -108,7 +108,7 @@ def display(a, b, sample, median, mad):
 #	ra = [105]
 #	ra = [17, 23, 55, 59]
 #	ra = [93, 122, 143, 144]
-	for i in [0, 138, 139]:
+	for i in [99]:
 		print(i)
 		my_plot.trace(a, b, median, mad, y = sample, nb = i)
 		plt.show()
@@ -118,7 +118,7 @@ def display2(a, b, sample, median, mad):
 		for j in range(16):
 			if i * 16 + j >= 252:
 				break
-			plt.subplot(16, 16, (i) * 16 + j + 1) 
+			plt.subplot(16, 16, (i) * 16 + j + 1)
 			my_plot.trace(a, b, median, mad, y = sample, nb = i * 16 + j)
 	plt.show()
 
