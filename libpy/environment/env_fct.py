@@ -38,7 +38,7 @@ def calc_bij(temp, si):
 	res = np.sum(temp * si)
 	return (res)
 
-@profile
+#@profile
 def get_bij(env, a, l, temp):
 	"""calculate the matrix bij"""
 

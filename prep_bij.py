@@ -23,7 +23,6 @@ def omeg(temp, temp2):
 	return (om)
 
 
-	
 
 
 def omeg_bis(temp, temp2, comp, comp2):

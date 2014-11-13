@@ -1,4 +1,6 @@
 import re
+import pyopencl as cl
+from pyopencl import array as cl_array
 
 import env_fct
 import snd_comp
@@ -87,6 +89,10 @@ class t_env(object):
 		self.big_bij = gab.get_all_bij(self, a, div, self.al, self.temp, self.size)
 		self.big_beta = gab.get_all_bij(self, a, div, self.al, self.comp, self.size)
 
+	def set_cl(self):
+		self.ctx = cl.create_some_context()
+		self.queue = cl.CommandQueue()
+
 	def setup_two(self, a, ti, div):
 		"""use to load all the data needed for the fitting"""
 
@@ -99,6 +105,7 @@ class t_env(object):
 		self.set_norme()
 		self.set_lim()
 		self.set_overlap()
+		self.set_cl()
 
 	def maj_bij(self, k, b_past):
 		if k > 0:

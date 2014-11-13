@@ -32,7 +32,10 @@ def get_max(bij, exploration, bij_bool):
 	"""return a tuple with the coordinates of the max value of bij, tuples (i, j) already visited and time i explored are ignored"""
 
 #	bij[bij_bool] = -sys.maxint - 1
-	c = np.unravel_index(bij.argmax(), bij.shape)
+
+	m = bij.argmax()
+	c = np.unravel_index(m, bij.shape)
+	#c = np.unravel_index(bij.argmax(), bij.shape)
 
 ############################## A MODIFIER EVENTUELLEMENT #################
 #	b = bij[bij_bool]
@@ -78,7 +81,7 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save
 			bij_bool[c[0], :] = True
 		return (0)
 
-
+@profile
 def maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha):
 	"""recalculate the value of bij and beta_ij with the precacultate matric overlap"""
 
@@ -91,7 +94,7 @@ def maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha):
 #	maj_bij(t_env, beta_ij, c, aij, omeg_c, l)
 #	maj_bij(t_env, beta_ij, c, alpha, omeg_d, l)
 
-
+@profile
 def maj_bij(t_env, bij, c, aij, omeg, l):
 	"""update the bij matrix with the precalculate matrix omeg"""
 
@@ -131,7 +134,7 @@ def get_bij(a, l, temp):
 	return (bij)
 
 
-@profile
+#@profile
 def browse_block(t_env, a, blc, ti, div):
 	"""browse all block in order to apply the fitting"""
 	### a supprimer ###
