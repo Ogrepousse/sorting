@@ -75,6 +75,7 @@ mf = cl.mem_flags
 #t2 = temp[:, :, 1].reshape(252 * 129).astype(np.float32)
 
 n = int(sys.argv[1])
+s = 4
 
 t1 = np.arange(n, dtype = np.float32)
 t2 = np.arange(n, dtype = np.float32)
@@ -86,22 +87,22 @@ e_buf = cl.LocalMemory(t1.nbytes)
 
 
 res = np.empty_like(t1, dtype = np.float32)
-res2 = np.empty(1, dtype = np.float32)
+res2 = np.empty(n / 4, dtype = np.float32)
 
 d_buf = cl.Buffer(ctx, mf.WRITE_ONLY, res2.nbytes)
 
-def lol():
-#	prog.mat_dot_and_sum(queue, t1.shape, None, inte[0], inte[0], a_buf, b_buf, c_buf, d_buf)
-	prog.mat_dot(queue, t1.shape, None, a_buf, b_buf, c_buf)
-	cl.enqueue_copy(queue, res, c_buf)
-	prog.init(queue, res2.shape, None, d_buf)
-	prog.mat_sum(queue, t1.shape, None, c_buf, d_buf)
+def lol(n):
+	prog.mat_reduce(queue, t1.shape, (s,), np.int32(n), a_buf, b_buf, e_buf, d_buf)
+	cl.enqueue_copy(queue, res2, d_buf)
+	arf = np.sum(res2)
+	return (arf)
 
-print('b')
-prog.mat_reduce(queue, t1.shape, (n,), a_buf, b_buf, e_buf, d_buf)
-cl.enqueue_copy(queue, res2, d_buf)
-print('a')
+#print('b')
+#prog.mat_reduce(queue, t1.shape, (4,), np.int32(n), a_buf, b_buf, e_buf, d_buf)
+#cl.enqueue_copy(queue, res2, d_buf)
+#print('a')
 
-print(res2[0])
+lol(n)
+print(res2)
 print(np.sum(t1 * t2))
 

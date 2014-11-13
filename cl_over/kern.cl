@@ -51,25 +51,50 @@ __kernel void	mat_dot_and_sum(const int X, const int Y, __global float* t1, __gl
 	mat_sum2(dot, res);
 }
 
-__kernel void	mat_reduce(__global float* dA, __global float* dB, __local float* prods, __global float *dC)
+__kernel void	mat_reduce(__const int len, __global float* dA, __global float* dB, __local float* prods, __global float *dC)
 {
 
-	int	gid = get_global_id(0);
-	int	tnum = get_local_id(0);
-	int	wgNum = get_group_id(0);
-	int	numItems = get_local_size(0);
+	int		gid = get_global_id(0);
+	int		tnum = get_local_id(0);
+	int		wgNum = get_group_id(0);
+	int		numItems = get_local_size(0);
+	float	elem;
+	float	accu = 0;
 
-	prods[tnum] = dA[gid] * dB[gid];
-	for (int offset = 1; offset <= numItems; offset *= 2)
+//	if (gid < len)
+//		prods[tnum] = dA[gid] * dB[gid];
+//	else
+//		prods[tnum] = 0;
+
+
+	while (gid < len)
 	{
-		int	mask = 2 * offset - 1;
+		elem = dA[gid] * dB[gid];
+		accu += elem;
+		gid += get_global_size(0);
+	}
+	prods[tnum] = accu;
+	barrier(CLK_LOCAL_MEM_FENCE);
+
+//	for (int offset = 1; offset < numItems; offset *= 2)
+//	{
+//		int	mask = 2 * offset - 1;
+//		barrier(CLK_LOCAL_MEM_FENCE);
+//		if ((tnum & mask) == 0)
+//		{
+//			prods[tnum] += prods[tnum + offset];
+//		}
+//	}
+
+	for (int offset = numItems / 2; offset > 0; offset /= 2)
+	{
 		barrier(CLK_LOCAL_MEM_FENCE);
-		if ((tnum & mask) == 0)
+		if (tnum < offset)
 		{
 			prods[tnum] += prods[tnum + offset];
 		}
 	}
-	barrier(CLK_LOCAL_MEM_FENCE);
+//	barrier(CLK_LOCAL_MEM_FENCE);
 	if (tnum == 0)
 		dC[wgNum] = prods[0];
 }
