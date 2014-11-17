@@ -65,9 +65,10 @@ def scal(t1, t2):
 	res = np.sum(c)
 	return (res)
 
-
+@profile
 def omeg(temp, temp2):
-	n = temp.shape[2]
+#	n = temp.shape[2]
+	n = 20
 	x = np.arange(129)
 	om = np.empty((n, n, 129 * 2 - 1))
 	for j in range(0, n):
@@ -80,10 +81,10 @@ def omeg(temp, temp2):
 				boo = temp[:, :, i]
 				if k < 129 - 1:
 #					t2[:, 129 - 1 - k:] = temp[:, :k + 1, i].copy()
-					t2[:, 129 - 1 - k:] = boo[:, :k + 1].copy()
+					t2[:, 129 - 1 - k:] = boo[:, :k + 1]
 				elif k > 129 - 1:
 #					t2[:, :257 - k] = temp[:, k - 128:, i].copy()
-					t2[:, :257 - k] = boo[:, k - 128:].copy()
+					t2[:, :257 - k] = boo[:, k - 128:]
 				else:
 					t2 = temp[:, :, i].copy()
 		#		if i == 0:
@@ -188,11 +189,12 @@ def omeg_out(t1, t2, file_name):
 	fd.close()
 
 temp = get_temp()
-norme = normalize_temp(temp)
-comp = get_comp(temp)
-omeg_out(temp, comp, 'omeg7')
-omeg_out(comp, temp, 'omeg8')
-omeg_out(comp, comp, 'omeg9')
+om = omeg(temp, temp)
+#norme = normalize_temp(temp)
+#comp = get_comp(temp)
+#omeg_out(temp, comp, 'omeg7')
+#omeg_out(comp, temp, 'omeg8')
+#omeg_out(comp, comp, 'omeg9')
 #temp3 = temp[:, :, :]
 #om = new_omeg(temp3, temp3)
 #over = omeg(temp, temp2)
