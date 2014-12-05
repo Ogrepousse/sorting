@@ -68,6 +68,7 @@ class t_env(object):
 	#	self.overlap_c = env_fct.get_overlap(self, 1, 'omeg7')
 	#	self.overlap_d = env_fct.get_overlap(self, 1, 'omeg9')
 #		self.overlap = env_fct.get_overlap(self)
+		print('overlap loaded')
 
 	def del_overlap(self):
 		try:
@@ -86,8 +87,10 @@ class t_env(object):
 	def set_bij(self, a, div):
 		"""calculate all bij and beta_ij for each blocks"""
 
+		print('calculate bij')
 		self.big_bij = gab.get_all_bij(self, a, div, self.al, self.temp, self.size)
 		self.big_beta = gab.get_all_bij(self, a, div, self.al, self.comp, self.size)
+		print('bij ok')
 
 	def set_cl(self):
 		self.ctx = cl.create_some_context()
@@ -105,7 +108,7 @@ class t_env(object):
 		self.set_norme()
 		self.set_lim()
 		self.set_overlap()
-		self.set_cl()
+	#	self.set_cl()
 
 	def maj_bij(self, k, b_past):
 		if k > 0:

@@ -106,7 +106,7 @@ def first_part(a):
 		print('div', div)
 		return (median, mad, ti, blc, div)
 
-@profile
+#@profile
 def core(t_env, a, ti, blc, div):
 	t_env.setup_two(a, ti, div)
 	scal_prod.browse_block(t_env, a, blc, ti, div)

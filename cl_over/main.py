@@ -65,5 +65,6 @@ def omeg(temp, temp2):
 	return (om)
 
 #r = f1()
+prog.lol(queue, (9,4), (3,2))
 print('hello')
 #om = omeg(A, A)

@@ -74,7 +74,7 @@ def get_overlap(env, width = 2, file_name = 'omeg5'):
 	fd.close()
 	tab = tab.reshape(x, y, z)
 
-#### second overlap	
+#### second overlap
 #	o = scipy.io.loadmat('../files/ALL_norm.overlap1')
 #	over = o['c_overlap'].astype(np.float64)
 #	over = over[:, :, ::-1]

@@ -27,7 +27,7 @@ def is_explored(exploration, bij_bool):
 		return (0)
 	return (1)
 
-@profile
+#@profile
 def get_max(bij, exploration, bij_bool):
 	"""return a tuple with the coordinates of the max value of bij, tuples (i, j) already visited and time i explored are ignored"""
 
@@ -52,7 +52,7 @@ def substract_signal(a, l, aij, temp, c, alpha, comp2, limit, b):
 	alpha = 0
 	a[:, l[c[0]] - 64 : l[c[0]] + 65] -= aij * temp[:, :, c[1]] + alpha * comp2[:, :, c[1]]
 
-@profile
+#@profile
 def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save, b_prec):
 	"""get i and for max value of bij, then check if aij value is correct"""
 
@@ -81,7 +81,7 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save
 			bij_bool[c[0], :] = True
 		return (0)
 
-@profile
+#@profile
 def maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha):
 	"""recalculate the value of bij and beta_ij with the precacultate matric overlap"""
 
@@ -94,7 +94,7 @@ def maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha):
 #	maj_bij(t_env, beta_ij, c, aij, omeg_c, l)
 #	maj_bij(t_env, beta_ij, c, alpha, omeg_d, l)
 
-@profile
+#@profile
 def maj_bij(t_env, bij, c, aij, omeg, l):
 	"""update the bij matrix with the precalculate matrix omeg"""
 
@@ -152,7 +152,7 @@ def browse_block(t_env, a, blc, ti, div):
 	#	print('haha', l)
 		exploration = np.zeros(l.shape[0])
 		bij = small_bij(t_env.big_bij, k, t_env.size)
-		
+		print('ololo', bij.shape)	
 		b_save = bij.copy()
 		beta_ij = small_bij(t_env.big_beta, k, t_env.size)
 		bij_bool = np.zeros(bij.shape, dtype = bool)

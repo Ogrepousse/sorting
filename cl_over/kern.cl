@@ -5,6 +5,7 @@ __kernel void	test_v1(const int X, const int Y, const int Z, __global float *a, 
 	uint	i = get_global_id(0);
 	uint	j = get_global_id(1);
 	int		x, y, z;
+	int		t;
 	float	tmp;
 
 	tmp = 0;
@@ -13,7 +14,8 @@ __kernel void	test_v1(const int X, const int Y, const int Z, __global float *a, 
 		//decompostion des coordonnees
 		x = z / Y;
 		y = z - x * Y;
-		tmp += a[x * Y * Z + y * Z + i] * a[x * Y * Z + y * Z + j];
+		t = x * Y * Z + y * Z;
+		tmp += a[t + i] * a[t + j];
 	}
 	res[i * Z + j] = tmp;
 }
@@ -36,9 +38,15 @@ __kernel void	test_v2(const int X, const int Y, const int Z, __global float *a, 
 	res[i * Z + j] = tmp;
 }
 
-__kernel void	lol(__global float* a, __local float* l)
+__kernel void	lol(void)
 {
 	uint i = get_local_id(0);
+	uint i2 = get_local_id(1);
+	uint j = get_global_id(0);
+	uint j2 = get_global_id(1);
+	uint k = get_group_id(0);
+	uint size = get_local_size(0);
 
-	l[i] = a[i];
+	printf("%d %d %d %d %d %d\n", j, j2, i, i2, k, size);
+	barrier(CLK_GLOBAL_MEM_FENCE);
 }
