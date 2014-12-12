@@ -4,6 +4,7 @@ import pyopencl.array
 import sys
 import scipy.io
 from matplotlib import pyplot as plt
+from numpy.lib.stride_tricks import as_strided
 
 def get_temp():
 	a_t = scipy.io.loadmat('../../files/ALL.templates1')
@@ -46,7 +47,8 @@ def gv1():
 	cl.enqueue_copy(queue, bij, bij_buff)
 
 
-def get_b(a, l, temp):
+def get_b():
+	l = time
 	bij = np.empty((l.shape[0], temp.shape[2]))
 	s = np.empty((l.shape[0], 252, 129))
 	for i in range(bij.shape[0]):
@@ -63,6 +65,21 @@ def get_bis(a, l, temp):
 			bij[i, j] = np.sum(si * temp[:, :, j])
 	return (bij)
 
+
+def get_with_dot():
+	b = as_strided(a, (a.shape[1], a.shape[0], a.shape[1]), (a.itemsize, a.shape[1] * a.itemsize, a.itemsize))
+	b = b[time - 129 / 2, :, :129]
+	b = b.reshape(3, 129*252)
+	bij = np.dot(b, temp2.T)
+	return (bij)
+
+
+def	trans_temp():
+	temp2 = np.transpose(temp, (2, 0, 1))
+	temp2 = temp2.reshape(temp.shape[2], temp.shape[0] * temp.shape[1])
+	return (temp2)
+
+temp2 = trans_temp()
 
 #tempi = np.empty((252 * 129), dtype = np.float32)
 #tempi_buf = cl.Buffer(ctx, mf.WRITE_ONLY, tempi.nbytes)
