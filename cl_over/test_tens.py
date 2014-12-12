@@ -23,8 +23,8 @@ fd = open('kern_tens.cl', 'r')
 kern = "".join(fd.readlines())
 prog = cl.Program(ctx, kern).build()
 
-temp = get_temp()
-a = np.random.randint(0, 100, (252, 500)) / 100. - 0.5
+temp = get_temp().astype(np.float32)
+a = (np.random.randint(0, 100, (252, 500)) / 100. - 0.5).astype(np.float32)
 amp = np.random.randint(13, 100, 3) / 100. * 3
 time = np.array([150, 250, 350])
 for i in range(time.shape[0]):
@@ -42,7 +42,7 @@ l_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = time.astype(np
 bij_buff = cl.Buffer(ctx, mf.WRITE_ONLY, bij.nbytes)
 
 def gv1():
-	prog.get_bij_v1(queue, (time.shape[0], temp.shape[2]), None, np.int32(252), np.int32(129), np.int32(382), a_buf, temp_buf, l_buf, bij_buff)
+	prog.get_bij_v1(queue, (time.shape[0], temp.shape[2]), None, np.int32(252), np.int32(129), np.int32(382), np.int32(500), a_buf, temp_buf, l_buf, bij_buff)
 	cl.enqueue_copy(queue, bij, bij_buff)
 
 
@@ -55,20 +55,34 @@ def get_b(a, l, temp):
 	bij = np.tensordot(s[::], temp, 2)
 	return (bij)
 
+def get_bis(a, l, temp):
+	bij = np.empty((l.shape[0], temp.shape[2]))
+	for i in range(l.shape[0]):
+		si = a[:, l[i] - 129 / 2 : l[i] + 129 / 2 + 1]
+		for j in range(temp.shape[2]):
+			bij[i, j] = np.sum(si * temp[:, :, j])
+	return (bij)
+
 
 #tempi = np.empty((252 * 129), dtype = np.float32)
-##tempi_buf = cl.Buffer(ctx, mf.WRITE_ONLY, tempi.nbytes)
+#tempi_buf = cl.Buffer(ctx, mf.WRITE_ONLY, tempi.nbytes)
 #prog.get_temp_x(queue, (1,), None, np.int32(252), np.int32(129), np.int32(382), temp_buf, tempi_buf)
 #cl.enqueue_copy(queue, tempi, tempi_buf)
 #tempi = tempi.reshape(252, 129)
 
-a_bis = np.arange(10*3).reshape(3, 10)
-a_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = a_bis.reshape(30).astype(np.float32))
-api = np.empty(3 * 7, dtype = np.float32)
-api_buf = cl.Buffer(ctx, mf.WRITE_ONLY, api.nbytes)
-prog.get_sig(queue, (1,), None, np.int32(3), np.int32(7), np.int32(382), a_buf, api_buf)
-cl.enqueue_copy(queue, api, api_buf)
-api = api.reshape(3, 7)
+#a_bis = np.arange(15*4).reshape(4, 15)
+#a_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = a_bis.reshape(4 * 15).astype(np.float32))
+#api = np.empty(4 * 7, dtype = np.float32)
+#api_buf = cl.Buffer(ctx, mf.WRITE_ONLY, api.nbytes)
+#prog.get_sig(queue, (1,), None, np.int32(4), np.int32(7), np.int32(382), a_buf, api_buf)
+#cl.enqueue_copy(queue, api, api_buf)
+#api = api.reshape(4, 7)
+
+#a = np.arange(3*10).reshape(3, 10)
+#t = np.arange(3*4*5).reshape(3, 4, 5)
+#res = np.empty(1, dtype = np.float32)
+#a_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = a.reshape(3*10).astype(np.float32))
+#t_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = t.reshape(3*4*5).astype(np.float32))
 
 
 #plt.show()
