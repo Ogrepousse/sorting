@@ -74,12 +74,24 @@ def get_with_dot():
 	return (bij)
 
 
+def	get_with_cl_dot():
+	b = as_strided(a, (a.shape[1], a.shape[0], a.shape[1]), (a.itemsize, a.shape[1] * a.itemsize, a.itemsize))
+	b = b[time - 129 / 2, :, :129]
+	b = b.reshape(3, 129*252)
+	b = b.astype(np.float32)
+	b_array = cl.array.to_device(queue, b)
+	t_array = cl.array.to_device(queue, temp2.T)
+	bij_array = cl.array.dot(b_array, t_array)
+	res = bij_array.get()
+	return (res)
+
 def	trans_temp():
 	temp2 = np.transpose(temp, (2, 0, 1))
 	temp2 = temp2.reshape(temp.shape[2], temp.shape[0] * temp.shape[1])
 	return (temp2)
 
 temp2 = trans_temp()
+temp2 = temp2.astype(np.float32)
 
 #tempi = np.empty((252 * 129), dtype = np.float32)
 #tempi_buf = cl.Buffer(ctx, mf.WRITE_ONLY, tempi.nbytes)
