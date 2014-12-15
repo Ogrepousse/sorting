@@ -1,0 +1,14 @@
+fonction a tester :
+
+gv1 : calcul les bij avec pyopencl avec un kernel basique fait maison
+
+get_b : version actuelle du calcul des bij dans le programme (numpy)
+
+get_with_dot : version avec le produit matriciel des matrice reformées (ici calcul fait avec numpy)
+
+get_with_cl_dot : meme chose avec pyopencl, j'ai utilisé le kernel du lien que tu m'a envoyé. Par contre j'ai pas pu tester
+                  cette fonction avec des matrices de la taille de celle qu'on manipule j'obtiens un segfault, il me semble que j'ai pas assez de memoire
+                  
+                  
+                  
+Voila il suffit de faire tourner le script et apres ya plus qu'a lancer les fonctions avec un timer
