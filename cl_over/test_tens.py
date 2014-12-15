@@ -15,9 +15,10 @@ def get_temp():
 
 
 #initialisation pyopencl
-platform = cl.get_platforms()
-dev = platform[0].get_devices(device_type = cl.device_type.CPU)
-ctx = cl.Context(devices = dev)
+#platform = cl.get_platforms()
+#dev = platform[0].get_devices(device_type = cl.device_type.CPU)
+#ctx = cl.Context(devices = dev)
+ctx = cl.create_some_context()
 queue = cl.CommandQueue(ctx)
 mf = cl.mem_flags
 
