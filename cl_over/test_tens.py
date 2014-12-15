@@ -5,6 +5,7 @@ import sys
 import scipy.io
 from matplotlib import pyplot as plt
 from numpy.lib.stride_tricks import as_strided
+from fractions import gcd
 
 def get_temp():
 	a_t = scipy.io.loadmat('../../files/ALL.templates1')
@@ -23,6 +24,7 @@ mf = cl.mem_flags
 fd = open('kern_tens.cl', 'r')
 kern = "".join(fd.readlines())
 prog = cl.Program(ctx, kern).build()
+fd.close()
 
 temp = get_temp().astype(np.float32)
 a = (np.random.randint(0, 100, (252, 500)) / 100. - 0.5).astype(np.float32)
@@ -48,6 +50,7 @@ def gv1():
 
 
 def get_b():
+	"""version actuelle numpy"""
 	l = time
 	bij = np.empty((l.shape[0], temp.shape[2]))
 	s = np.empty((l.shape[0], 252, 129))
@@ -58,6 +61,7 @@ def get_b():
 	return (bij)
 
 def get_bis(a, l, temp):
+	"""version test python (lent)"""
 	bij = np.empty((l.shape[0], temp.shape[2]))
 	for i in range(l.shape[0]):
 		si = a[:, l[i] - 129 / 2 : l[i] + 129 / 2 + 1]
@@ -67,6 +71,7 @@ def get_bis(a, l, temp):
 
 
 def get_with_dot():
+	"""version produit matricielle avec numpy"""
 	b = as_strided(a, (a.shape[1], a.shape[0], a.shape[1]), (a.itemsize, a.shape[1] * a.itemsize, a.itemsize))
 	b = b[time - 129 / 2, :, :129]
 	b = b.reshape(3, 129*252)
@@ -75,23 +80,87 @@ def get_with_dot():
 
 
 def	get_with_cl_dot():
+	"""version produit matricielle avec opencl"""
 	b = as_strided(a, (a.shape[1], a.shape[0], a.shape[1]), (a.itemsize, a.shape[1] * a.itemsize, a.itemsize))
 	b = b[time - 129 / 2, :, :129]
 	b = b.reshape(3, 129*252)
 	b = b.astype(np.float32)
-	b_array = cl.array.to_device(queue, b)
-	t_array = cl.array.to_device(queue, temp2.T)
-	bij_array = cl.array.dot(b_array, t_array)
-	res = bij_array.get()
+
+	a_h = b.shape[0]
+	a_w = b.shape[1]
+	b_h = a_w
+	b_w = temp2.shape[1]
+	block_size = 1
+#	block_size = gcd(a_h, b_w)
+
+	res = np.empty((a_h, b_w), dtype = np.float32)
+
+	kernel_params = {"block_size": block_size, "w_a":a_w, "h_a":a_h, "w_b":b_w}
+	print 'lol'
+	d_a_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = b)
+	d_b_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = temp2)
+	d_c_buf = cl.Buffer(ctx, mf.WRITE_ONLY | mf.COPY_HOST_PTR, hostbuf = res)
+	print 'b'
+	prog2 = cl.Program(ctx, kern2 % kernel_params).build()
+	
+	print 'a'
+	prog2.matrixMul(queue, res.shape[::-1], (block_size, block_size), d_c_buf, d_a_buf, d_b_buf)
+	cl.enqueue_copy(queue, res, d_c_buf).wait()
+
 	return (res)
 
+
+
+def lolderire():
+	a_h = 7
+	a_w = 14
+	b_h = a_w
+	b_w = 21
+
+	h_a = np.arange(a_h * a_w, dtype = np.float32).reshape(a_h, a_w)
+	h_b = np.arange(b_h * b_w, dtype = np.float32).reshape(b_h, b_w)
+	h_c = np.empty((a_h, b_w), dtype = np.float32)
+
+	block_size = gcd(a_h, b_w)
+#	block_size = 1
+	print block_size
+	assert a_w % block_size == 0
+	assert a_h % block_size == 0
+	assert b_w % block_size == 0
+
+#	block_size = 1
+	kernel_params = {"block_size": block_size, "w_a": a_w, "h_a":a_h, "w_b": b_w}
+
+	fd = open('dot_matrix.cl', 'r')
+	kern2 = "".join(fd.readlines())
+	prog2 = cl.Program(ctx, kern2 % kernel_params).build()
+	fd.close()
+
+	d_a_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = h_a)
+	d_b_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = h_b)
+	d_c_buf = cl.Buffer(ctx, mf.WRITE_ONLY | mf.COPY_HOST_PTR, hostbuf = h_c)
+
+	prog2.matrixMul(queue, h_c.shape[::-1], (block_size, block_size), d_c_buf, d_a_buf, d_b_buf)
+	cl.enqueue_copy(queue, h_c, d_c_buf).wait()
+	print h_a
+	print h_b
+	print h_c
+	print np.dot(h_a, h_b)
+	print np.allclose(np.dot(h_a, h_b), h_c)
+	print block_size
+
+
 def	trans_temp():
+	"""transforme le format des templates"""
 	temp2 = np.transpose(temp, (2, 0, 1))
 	temp2 = temp2.reshape(temp.shape[2], temp.shape[0] * temp.shape[1])
 	return (temp2)
 
 temp2 = trans_temp()
 temp2 = temp2.astype(np.float32)
+fd = open('dot_matrix.cl', 'r')
+kern2 = "".join(fd.readlines())
+fd.close()
 
 #tempi = np.empty((252 * 129), dtype = np.float32)
 #tempi_buf = cl.Buffer(ctx, mf.WRITE_ONLY, tempi.nbytes)
