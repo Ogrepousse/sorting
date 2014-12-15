@@ -1,3 +1,6 @@
+Le script a executer c'est test_tens.py
+
+
 fonction a tester :
 
 gv1 : calcul les bij avec pyopencl avec un kernel basique fait maison
