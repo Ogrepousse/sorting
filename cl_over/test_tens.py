@@ -14,6 +14,13 @@ def get_temp():
 	return (t)
 
 
+def get_temp_without_template():
+	temp = np.zeros((252, 129, 382), dtype = np.float32)
+	x = np.arange(20, dtype = np.float32)
+	temp[:, 44:64, 0] = x
+	temp[:, 64:84, 0] = x[::-1]
+	return (temp)
+
 #initialisation pyopencl
 #platform = cl.get_platforms()
 #dev = platform[0].get_devices(device_type = cl.device_type.CPU)
@@ -27,7 +34,7 @@ kern = "".join(fd.readlines())
 prog = cl.Program(ctx, kern).build()
 fd.close()
 
-temp = get_temp().astype(np.float32)
+temp = get_temp_without_template().astype(np.float32)
 a = (np.random.randint(0, 100, (252, 500)) / 100. - 0.5).astype(np.float32)
 amp = np.random.randint(13, 100, 3) / 100. * 3
 time = np.array([150, 250, 350])
