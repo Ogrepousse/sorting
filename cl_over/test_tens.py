@@ -103,15 +103,13 @@ def	get_with_cl_dot():
 
 	res = np.empty((a_h, b_w), dtype = np.float32)
 
+
 	kernel_params = {"block_size": block_size, "w_a":a_w, "h_a":a_h, "w_b":b_w}
-	print 'lol'
 	d_a_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = b)
 	d_b_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = temp2)
 	d_c_buf = cl.Buffer(ctx, mf.WRITE_ONLY | mf.COPY_HOST_PTR, hostbuf = res)
-	print 'b'
 	prog2 = cl.Program(ctx, kern2 % kernel_params).build()
-	
-	print 'a'
+
 	prog2.matrixMul(queue, res.shape[::-1], (block_size, block_size), d_c_buf, d_a_buf, d_b_buf)
 	cl.enqueue_copy(queue, res, d_c_buf).wait()
 
@@ -166,6 +164,7 @@ def	trans_temp():
 
 temp2 = trans_temp()
 temp2 = temp2.astype(np.float32)
+temp2 = temp2.T
 fd = open('dot_matrix.cl', 'r')
 kern2 = "".join(fd.readlines())
 fd.close()
