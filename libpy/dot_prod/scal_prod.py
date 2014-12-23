@@ -57,7 +57,6 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save
 	"""get i and for max value of bij, then check if aij value is correct"""
 
 	c = get_max(bij, exploration, bij_bool)
-#	bij[c] = -sys.maxint +10000
 	bij_bool[c] = True
 	aij = bij[c] / t_env.norme[c[1]]
 	alpha = beta_ij[c] / t_env.norme2[c[1]]
@@ -66,11 +65,9 @@ def part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save
 	win2 = t_env.win_mega
 	if aij > limit[0] and aij < limit[1]:
 		if (l[c[0]] < div[k, 1] - win) and (l[c[0]] > div[k, 0] + win) and (l[c[0]] < div[-1, 1] - win2) and (l[c[0]] > div[0, 0] + win2):
-		#	aij = bij[c]
 			t_env.fdout.write(str(aij) + ' ' + str(c[1]) + ' ' + str(l[c[0]] + t_env.index) + '\n')
-			substract_signal(a, l, aij, t_env.temp, c, alpha, t_env.comp2, limit, b)
-#			maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
-	#		maj_scalar(t_env, c, b_save, beta_ij, l, aij, alpha)
+		#	substract_signal(a, l, aij, t_env.temp, c, alpha, t_env.comp2, limit, b)
+			#this line is used for plotting and debugging, useless in the algorithm
 		maj_scalar(t_env, c, bij, beta_ij, l, aij, alpha)
 		bij[c] = -sys.maxint / 2
 		return (1)
@@ -118,13 +115,6 @@ def maj_bij(t_env, bij, c, aij, omeg, l):
 def get_bij(a, l, temp):
 	"""calculate the matrix bij"""
 
-#	print('obtention des bij')
-#	print(l.shape)
-#	r = np.arange(-64, 65).reshape(129, 1)
-#	l2 = l.reshape(1, l.shape[0])
-#	s = a[:, r + l2]
-#	bij = np.tensordot(s[::], temp, ([0, 1], [0, 1]))
-
 	bij = np.empty((l.shape[0], temp.shape[2]))
 	s = np.empty((l.shape[0], a.shape[0], temp.shape[1]))
 	for i in range(bij.shape[0]):
@@ -144,22 +134,16 @@ def browse_block(t_env, a, blc, ti, div):
 	print('parcours', blc.shape[0])
 	#parcours des blocs
 	b_save = 0
-#	print('hehe', t_env.al)
 	for k in range(blc.shape[0]):
 		print('entre block', k)
-	#	t_env.fdout.write("bloque " + str(k) + "\n")
 		l = small_time(t_env.al, k, t_env.size)
-	#	print('haha', l)
 		exploration = np.zeros(l.shape[0])
 		bij = small_bij(t_env.big_bij, k, t_env.size)
-		print('ololo', bij.shape)	
 		b_save = bij.copy()
 		beta_ij = small_bij(t_env.big_beta, k, t_env.size)
 		bij_bool = np.zeros(bij.shape, dtype = bool)
 		bol = 0
 		bij2 = bij
 		while is_explored(exploration, bij_bool):
-	#		if bol:
-	#			bij = get_bij(a, l, t_env.temp)
 			b_prec = bij2.copy()
 			bol = part_aij(t_env, bij, a, exploration, bij_bool, l, beta_ij, div, k, b, b_save, b_prec)

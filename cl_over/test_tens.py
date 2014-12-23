@@ -52,11 +52,12 @@ temp_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = temp.reshap
 l_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = time.astype(np.int32))
 bij_buff = cl.Buffer(ctx, mf.WRITE_ONLY, bij.nbytes)
 
+@profile
 def gv1():
-	prog.get_bij_v1(queue, (time.shape[0], temp.shape[2]), None, np.int32(252), np.int32(129), np.int32(382), np.int32(500), a_buf, temp_buf, l_buf, bij_buff)
-	cl.enqueue_copy(queue, bij, bij_buff)
+	prog.get_bij_v1(queue, (time.shape[0], temp.shape[2]), None, np.int32(252), np.int32(129), np.int32(382), np.int32(500), a_buf, temp_buf, l_buf, bij_buff).wait()
+	cl.enqueue_copy(queue, bij, bij_buff).wait()
 
-
+@profile
 def get_b():
 	"""version actuelle numpy"""
 	l = time
@@ -77,16 +78,16 @@ def get_bis(a, l, temp):
 			bij[i, j] = np.sum(si * temp[:, :, j])
 	return (bij)
 
-
+@profile
 def get_with_dot():
 	"""version produit matricielle avec numpy"""
 	b = as_strided(a, (a.shape[1], a.shape[0], a.shape[1]), (a.itemsize, a.shape[1] * a.itemsize, a.itemsize))
 	b = b[time - 129 / 2, :, :129]
 	b = b.reshape(3, 129*252)
-	bij = np.dot(b, temp2.T)
+	bij = np.dot(b, temp2)
 	return (bij)
 
-
+@profile
 def	get_with_cl_dot():
 	"""version produit matricielle avec opencl"""
 	b = as_strided(a, (a.shape[1], a.shape[0], a.shape[1]), (a.itemsize, a.shape[1] * a.itemsize, a.itemsize))
@@ -106,11 +107,12 @@ def	get_with_cl_dot():
 
 	kernel_params = {"block_size": block_size, "w_a":a_w, "h_a":a_h, "w_b":b_w}
 	d_a_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = b)
-	d_b_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = temp2)
-	d_c_buf = cl.Buffer(ctx, mf.WRITE_ONLY | mf.COPY_HOST_PTR, hostbuf = res)
+#	d_b_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = temp2)
+#	d_c_buf = cl.Buffer(ctx, mf.WRITE_ONLY | mf.COPY_HOST_PTR, hostbuf = res)
+	d_c_buf = cl.Buffer(ctx, mf.WRITE_ONLY, res.nbytes)
 	prog2 = cl.Program(ctx, kern2 % kernel_params).build()
 
-	prog2.matrixMul(queue, res.shape[::-1], (block_size, block_size), d_c_buf, d_a_buf, d_b_buf)
+	prog2.matrixMul(queue, res.shape[::-1], (block_size, block_size), d_c_buf, d_a_buf, d_b_buf).wait()
 	cl.enqueue_copy(queue, res, d_c_buf).wait()
 
 	return (res)
@@ -165,9 +167,15 @@ def	trans_temp():
 temp2 = trans_temp()
 temp2 = temp2.astype(np.float32)
 temp2 = temp2.T
+d_b_buf = cl.Buffer(ctx, mf.READ_ONLY | mf.COPY_HOST_PTR, hostbuf = temp2)
 fd = open('dot_matrix.cl', 'r')
 kern2 = "".join(fd.readlines())
 fd.close()
+
+gv1()
+get_b()
+get_with_dot()
+get_with_cl_dot()
 
 #tempi = np.empty((252 * 129), dtype = np.float32)
 #tempi_buf = cl.Buffer(ctx, mf.WRITE_ONLY, tempi.nbytes)

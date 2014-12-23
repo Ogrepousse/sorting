@@ -11,11 +11,11 @@ class t_env(object):
 		self.space_block = 130 #maximum time between two spike in a same block
 		self.size_block = 500 #maximum length for a block
 		self.win_over = 129 #size of the overlap window between each block
-		self.win_mega = 129 * 2
+		self.win_mega = 129 * 2 #size of the overlap window between each mega block
 		self.threshold = 6 #threshold factor for spike discrimination
 		self.nb_octet = 2 #number of octet for the data
-		self.mega_block = 2000 #number of units of time to divide the signal
-		self.fdout = open('output', 'w')
+		self.mega_block = 50000 #number of units of time to divide the signal
+		self.fdout = open('output', 'w') #name of the output
 		self.index = 0
 		print('environnement cree')
 
@@ -67,7 +67,6 @@ class t_env(object):
 	#	self.overlap_b = env_fct.get_overlap(self, 1, 'omeg8')
 	#	self.overlap_c = env_fct.get_overlap(self, 1, 'omeg7')
 	#	self.overlap_d = env_fct.get_overlap(self, 1, 'omeg9')
-#		self.overlap = env_fct.get_overlap(self)
 		print('overlap loaded')
 
 	def del_overlap(self):

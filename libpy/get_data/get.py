@@ -1,6 +1,8 @@
 import numpy as np
 
 def read_header(t_env, file_name = '../files/ALL.filtered'):
+	"""open the data file and set the file descriptor after the header,
+	return the file descriptor and a string containing information from the header"""
 
 	fd = open(file_name, 'rb')
 	ret = -1
